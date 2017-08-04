@@ -24,7 +24,7 @@ Spire.PDF for .NET can protect PDF documents by setting passwords and digital si
 
 Document Settings features
 
-Document information can be set with Free Spire.PDF for .NET including custom metadata, document properties, page orientation, and page size. Wherein, document properties consist of document restrictions (printing, document assembly, page extraction, comment etc. allowed or not) and document description about file title, author, subject, keywords and so on. By using Spire.PDF for.NET, viewer preferences can be set with position, title display, resize, page mode and print scaling etc.
+Document information can be set with Spire.PDF for .NET including custom metadata, document properties, page orientation, and page size. Wherein, document properties consist of document restrictions (printing, document assembly, page extraction, comment etc. allowed or not) and document description about file title, author, subject, keywords and so on. By using Spire.PDF for.NET, viewer preferences can be set with position, title display, resize, page mode and print scaling etc.
 
 
 Check here for detailed information:
