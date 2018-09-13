@@ -1,7 +1,7 @@
 Spire.PDF-for-.NET
 =======================
 
-Spire.PDF for .NET is a professional PDF component applied to create, write, edit, convert, print, handle and read PDF files on any .NET applications. Using this .NET PDF library, you can implement rich capabilities to create PDF files from scratch or process existing PDF documents. Many rich features can be supported, such as security setting, PDF text/attachment/image extract, PDF merge/split, metadata update, section and paragraph optimizing, graph/image drawing and inserting, table creation and processing, and importing data etc.
+Spire.PDF for .NET is a professional PDF component applied to create, write, edit, convert, print, handle and read PDF files on any .NET applications. Using this .NET PDF library, you can implement rich capabilities to create PDF files from scratch or process existing PDF documents. Many rich features can be supported, such as security setting, PDF text/attachment/image extract, PDF merge/split, metadata update, section and paragraph optimizing, graph/image drawing and inserting, table creation and processing, and importing data etc. Now Spire.PDF supports to work on .NET core.
 
 <h3>Main Functions</h3>
 
