@@ -11,7 +11,7 @@ Spire.PDF for .NET is a totally independent .NET PDF library. It Does NOT requir
 
 <b>High Quality PDF File Conversion</b>
 
-Spire.PDF for .NET supports converting HTML, RTF, XPS, Text and Image to PDF documents with efficient performance. Developers can transform PDF to XPS, EMF, JPG, PNG, BMP, TIFF, Text format，word(.doc, .docx) document, PostScript, PCL. Furthermore, along with Spire.Doc for .NET and Spire.XLS for .NET, developers can convert Word (Doc/Docx), Excel (Xls/Xlsx/Xlsb) and XML to PDF.
+Spire.PDF for .NET supports converting HTML, RTF, XPS, Text and Image to PDF documents with efficient performance. Developers can transform PDF to XPS, EMF, JPG, PNG, BMP, TIFF, Text format，word(.doc, .docx) document, PostScript and PCL(Printer Command Language). Furthermore, along with Spire.Doc for .NET and Spire.XLS for .NET, developers can convert Word (Doc/Docx), Excel (Xls/Xlsx/Xlsb) and XML to PDF.
 
 <b>Easily Manipulate document and Form fields</b>
 
