@@ -26,17 +26,14 @@ namespace SetXMPMetadata
             PdfDocument doc = new PdfDocument();
  	    doc.LoadFromFile(input);
 
-            //Set xmpMetadata 
-            XmpMetadata meta = doc.XmpMetaData;
-            meta.SetAuthor("E-iceblue");
-            meta.SetTitle("Set XMP Metadata in PDF");
-            meta.SetSubject("XMP Metadata");
-            meta.SetProducer("E-icenlue Co,.Ltd");
-            meta.SetCreateDate(System.DateTime.Today);
-            meta.SetCreator("Spire.PDF");
-            meta.SetKeywords("XMP");
-            meta.SetModifyDate(System.DateTime.Today);        
-            meta.SetCustomProperty("Field1", "NewValue");
+           //Set  XMP Metadata 
+            doc.DocumentInformation.Author = "E-iceblue";
+            doc.DocumentInformation.Creator = "Spire.PDF";
+            doc.DocumentInformation.SetCustomProperty("Field1", "NewValue");
+            doc.DocumentInformation.Keywords = "XMP";
+            doc.DocumentInformation.Producer = "E-icenlue Co,.Ltd";
+            doc.DocumentInformation.Subject = "XMP Metadata";
+            doc.DocumentInformation.Title = "Set XMP Metadata in PDF"; 
 
             string output = "SetXMPMetadata.pdf";
 
