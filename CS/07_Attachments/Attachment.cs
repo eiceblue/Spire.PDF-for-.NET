@@ -104,18 +104,18 @@ namespace Attachment
             y = y + size.Height + 2;
 
             location = new PointF(x, y);
-            label = "Hawaii Killer Font";
-            data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\Hawaii_Killer.ttf");
+            label = "PT_Serif-Caption-Web-Regular Font";
+            data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\PT_Serif-Caption-Web-Regular.ttf");
             size = font2.MeasureString(label);
             bounds = new RectangleF(location, size);
             page.Canvas.DrawString(label, font2, PdfBrushes.DarkOrange, bounds);
             bounds = new RectangleF(bounds.Right + 3, bounds.Top, font2.Height / 2, font2.Height);
             PdfAttachmentAnnotation annotation4
-                = new PdfAttachmentAnnotation(bounds, "Hawaii_Killer.ttf", data);
+                = new PdfAttachmentAnnotation(bounds, "PT_Serif-Caption-Web-Regular.ttf", data);
             annotation4.Color = Color.CadetBlue;
             annotation4.Flags = PdfAnnotationFlags.NoRotate;
             annotation4.Icon = PdfAttachmentIcon.Paperclip;
-            annotation4.Text = "Hawaii Killer Font, from http://www.1001freefonts.com";
+            annotation4.Text = "PT_Serif-Caption-Web-Regular, from https://company.paratype.com";
             page.AnnotationsWidget.Add(annotation4);
             y = y + size.Height + 2;
 
