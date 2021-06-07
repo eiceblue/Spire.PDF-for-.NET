@@ -39,6 +39,15 @@ namespace ImageAndPageNumber
             doc.Template.Left = new PdfPageTemplateElement(margins.Left, doc.PageSettings.Size.Height);
             doc.Template.Right = new PdfPageTemplateElement(margins.Right, doc.PageSettings.Size.Height);
 
+           //Create one page
+            PdfPageBase page = doc.Pages.Add();            
+
+            //Draw the text
+            page.Canvas.DrawString("Hello, World!",
+                                   new PdfFont(PdfFontFamily.Helvetica, 30f),
+                                   new PdfSolidBrush(Color.Black),
+                                   10, 10);
+
             //save the file
             string output = "ImageandPageNumberinHeaderFootersection_out.pdf";
             doc.SaveToFile(output,FileFormat.PDF);
