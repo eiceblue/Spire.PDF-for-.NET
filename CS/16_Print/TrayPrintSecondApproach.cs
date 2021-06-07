@@ -14,7 +14,7 @@ using Spire.Pdf.General;
 using Spire.Pdf.General.Find;
 using System.Drawing.Printing;
 using Spire.Pdf.Print;
-namespace TrayPrintFirstApproach
+namespace TrayPrintSecondApproach
 {
     public partial class Form1 : Form
     {
@@ -28,7 +28,7 @@ namespace TrayPrintFirstApproach
             //Initialize an object of PdfDocument class
             PdfDocument doc = new PdfDocument();
             //Load the PDF document
-            doc.LoadFromFile(@"test.pdf");
+            doc.LoadFromFile(@"..\..\..\..\..\..\Data\PrintPdfDocument.pdf");
 
             // Set colour printing. If false, printing in black and white
             doc.PrintSettings.Color = true;
