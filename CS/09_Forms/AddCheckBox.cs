@@ -32,7 +32,7 @@ namespace AddCheckBox
             checkboxField.Bounds = new RectangleF(60, 300, checkboxWidth, checkboxHeight);
             checkboxField.BorderWidth = 0.75f;
             checkboxField.Checked = true;
-            checkboxField.Style = PdfCheckBoxStyle.Cross;
+            checkboxField.Style = PdfCheckBoxStyle.Check;
             checkboxField.Required = true;
 
             //Add in form
