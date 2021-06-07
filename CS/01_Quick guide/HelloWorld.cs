@@ -16,10 +16,10 @@ namespace HelloWorld
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document.
+            //Create a pdf document
             PdfDocument doc = new PdfDocument();
 
-            // Create one page
+            //Create one page
             PdfPageBase page = doc.Pages.Add();            
 
             //Draw the text
@@ -28,13 +28,14 @@ namespace HelloWorld
                                    new PdfSolidBrush(Color.Black),
                                    10, 10);
 
-            //Save pdf file.
-            doc.SaveToFile("HelloWorld.pdf");
+            String result = "HelloWorld.pdf";
+
+            //Save the document
+            doc.SaveToFile(result);
             doc.Close();
 
-            //Launching the Pdf file.
-            PDFDocumentViewer("HelloWorld.pdf");
-
+            //Launch the Pdf file
+            PDFDocumentViewer(result);
         }
 
         private void PDFDocumentViewer(string fileName)
