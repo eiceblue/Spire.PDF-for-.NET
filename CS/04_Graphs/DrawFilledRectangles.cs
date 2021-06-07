@@ -34,7 +34,7 @@ namespace DrawFilledRectangles
             //Draw a filled rectangle
             page.Canvas.DrawRectangle(pen, brush, new Rectangle(new Point(x, y), new Size(width, height)));
 
-            //restor graphics
+            //restore graphics
             page.Canvas.Restore(state);
 
             String result = "DrawFilledRectangles_out.pdf";
