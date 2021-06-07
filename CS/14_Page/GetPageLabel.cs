@@ -29,10 +29,10 @@ namespace GetPageLabel
             //Create a StringBuilder instance
             StringBuilder sb = new StringBuilder();
 
-            //Get the lables of the pages in the PDF file
+            //Get the labels of the pages in the PDF file
             for (int i = 0; i < pdf.Pages.Count; i++)
             {
-                sb.AppendLine("The page lable of page "+(i+1)+" is \""+pdf.Pages[i].PageLabel+"\"");
+                sb.AppendLine("The page label of page "+(i+1)+" is \""+pdf.Pages[i].PageLabel+"\"");
             }
 
             String result="PageLabels.txt";
