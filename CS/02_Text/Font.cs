@@ -68,10 +68,10 @@ namespace Font
             page.Canvas.DrawString("Font Family: Batang - Not Embedded", trueTypeFont, brush, 40, (y = y + 16f));
 
             //Font file
-            String fontFileName = @"..\..\..\..\..\..\Data\Hawaii_Killer.ttf";
+            String fontFileName = @"..\..\..\..\..\..\Data\PT_Serif-Caption-Web-Regular.ttf";
             trueTypeFont = new PdfTrueTypeFont(fontFileName, 20f);
-            page.Canvas.DrawString("Hawaii Killer Font", trueTypeFont, brush, 40, (y = y + 36f));
-            page.Canvas.DrawString("Hawaii Killer Font, from http://www.1001freefonts.com", new PdfFont(PdfFontFamily.Helvetica, 8f), brush, 40, (y = y + 40f));
+            page.Canvas.DrawString("PT Serif Caption Font", trueTypeFont, brush, 40, (y = y + 36f));
+            page.Canvas.DrawString("PT Serif Caption Font", new PdfFont(PdfFontFamily.Helvetica, 8f), brush, 40, (y = y + 40f));
 
             //Cjk font
             PdfCjkStandardFont cjkFont = new PdfCjkStandardFont(PdfCjkFontFamily.MonotypeHeiMedium, 14f);
