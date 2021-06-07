@@ -22,7 +22,7 @@ namespace ConvertImageToPDF
             PdfPageBase page = pdf.Pages.Add();
 
             //Load a tiff image from system
-            PdfImage image = PdfImage.FromFile(@"..\..\..\..\..\..\Data\Water.jpg");
+            PdfImage image = PdfImage.FromFile(@"..\..\..\..\..\..\Data\bg.png");
             //Set image display location and size in PDF
             //Calculate rate
             float widthFitRate = image.PhysicalDimension.Width / page.Canvas.ClientSize.Width;
