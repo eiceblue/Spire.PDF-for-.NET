@@ -40,7 +40,7 @@ namespace SetRectangleTransparency
             page.Canvas.SetTransparency(0.2f, 0.2f, mode);
             page.Canvas.DrawRectangle(pen, brush, new Rectangle(new Point(x, y), new Size(width, height)));
 
-            //Restor graphics
+            //Restore graphics
             page.Canvas.Restore(state);
 
             String result = "SetRectangleTransparency_out.pdf";
