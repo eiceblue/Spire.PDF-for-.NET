@@ -23,7 +23,7 @@ namespace ConvertImageStreamToPDF
             PdfPageBase page = section.Pages.Add();
 
             // Create a FileStream object to read the imag file
-            FileStream fs = File.OpenRead(@"..\..\..\..\..\..\Data\Water.jpg");
+            FileStream fs = File.OpenRead(@"..\..\..\..\..\..\Data\bg.png");
             // Read the image into Byte array
             byte[] data = new byte[fs.Length];
             fs.Read(data, 0, data.Length);
