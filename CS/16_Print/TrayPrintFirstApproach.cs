@@ -50,7 +50,7 @@ namespace TrayPrintFirstApproach
 
         private static void pPrintPages(int pStart, int pEnd, PaperSource pSource, bool pDuplex, bool IsColour, bool IsLandscape)
         {
-            PdfDocument doc = new Spire.Pdf.PdfDocument("test.pdf");
+            PdfDocument doc = new Spire.Pdf.PdfDocument(@"..\..\..\..\..\..\Data\PrintPdfDocument.pdf");
             doc.PrintSettings.SelectPageRange(pStart, pEnd);
 
             
