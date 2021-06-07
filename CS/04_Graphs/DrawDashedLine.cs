@@ -39,7 +39,7 @@ namespace DrawDashedLine
             //Draw two crossed lines
             page.Canvas.DrawLine(pen, x, y, x + width, y);
 
-            //Restor graphics
+            //Restore graphics
             page.Canvas.Restore(state);
 
             String result = "DrawDashedLine_out.pdf";
