@@ -144,11 +144,11 @@ namespace Annotation
             annotation.AnnotationIntent = PdfAnnotationIntent.FreeTextCallout;
             annotation.Border = new PdfAnnotationBorder(0.5f);
             annotation.BorderColor = Color.Red;
-            location = new PointF(bounds.Right + 105, page.ActualSize.Height -bounds.Top - 80);
+            location = new PointF(bounds.Right + 16, bounds.Top - 16);
             annotation.CalloutLines
                 = new PointF[] { 
-                    new PointF(bounds.Right + 85, page.ActualSize.Height -bounds.Top - 85),
-                    new PointF(bounds.Right + 105, page.ActualSize.Height -bounds.Top - 80), 
+                    new PointF(bounds.Right, bounds.Top),
+                    new PointF(bounds.Right+8, bounds.Top - 8), 
                     location };
             annotation.Color = Color.Yellow;
             annotation.Flags = PdfAnnotationFlags.Locked;
