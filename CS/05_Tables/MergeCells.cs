@@ -39,7 +39,7 @@ namespace MergeCells
             //Add rows
             PdfGridRow row0 = grid.Rows.Add();
             PdfGridRow row1 = grid.Rows.Add();
-            float height = 20.0f;
+            float height = 21.0f;
 
             //Set the height
             for (int i = 0; i < grid.Rows.Count; i++)
