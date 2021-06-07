@@ -45,7 +45,7 @@ namespace DrawRectangles
             PdfBrush brush = new PdfSolidBrush(new PdfSeparationColor(cs, 0.1f));
             page.Canvas.DrawRectangle(pen1, brush, new Rectangle(new Point(x, y), new Size(width, height)));
 
-            //Restor graphics
+            //Restore graphics
             page.Canvas.Restore(state);
 
             String result = "DrawRectangles_out.pdf";
