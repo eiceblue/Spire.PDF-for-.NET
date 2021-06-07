@@ -130,7 +130,7 @@ namespace AddFormField
             pageNumberLabel.Draw(bottomSpace.Graphics, pageSize.Width - margin.Right, y);
 
             PdfImage headerImage
-                = PdfImage.FromFile(@"..\..\..\..\..\..\..\Data\Header.png");
+                = PdfImage.FromFile(@"..\..\..\..\..\..\Data\Header.png");
             PointF pageLeftTop = new PointF(-margin.Left, -margin.Top);
             PdfPageTemplateElement header = new PdfPageTemplateElement(pageLeftTop, headerImage.PhysicalDimension);
             header.Foreground = false;
@@ -139,7 +139,7 @@ namespace AddFormField
             doc.Template.Stamps.Add(header);
 
             PdfImage footerImage
-                = PdfImage.FromFile(@"..\..\..\..\..\..\..\Data\Footer.png");
+                = PdfImage.FromFile(@"..\..\..\..\..\..\Data\Footer.png");
             y = pageSize.Height - footerImage.PhysicalDimension.Height;
             PointF footerLocation = new PointF(-margin.Left, y);
             PdfPageTemplateElement footer = new PdfPageTemplateElement(footerLocation, footerImage.PhysicalDimension);
