@@ -33,7 +33,7 @@ namespace AddImageStamp
 
             //Create an instance of PdfAppearance 
             PdfAppearance loApprearance = new PdfAppearance(loStamp);
-            PdfImage image = PdfImage.FromFile("..\\..\\..\\..\\..\\..\\..\\Data\\image stamp.jpg");
+            PdfImage image = PdfImage.FromFile("..\\..\\..\\..\\..\\..\\Data\\image stamp.jpg");
             PdfTemplate template = new PdfTemplate(210, 210);
 
             //Draw a pdf image into pdf template
