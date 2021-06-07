@@ -31,7 +31,7 @@ namespace EmbedSoundFile
             PdfPageBase page = doc.Pages[0];
 
             //Create a sound action
-            PdfSoundAction soundAction = new PdfSoundAction("..\\..\\..\\..\\..\\..\\Data\\5 apple song.mp3");
+            PdfSoundAction soundAction = new PdfSoundAction("..\\..\\..\\..\\..\\..\\Data\\Music.wav");
             soundAction.Sound.Bits = 15;
             soundAction.Sound.Channels = PdfSoundChannels.Stereo;
             soundAction.Sound.Encoding = PdfSoundEncoding.Signed;
