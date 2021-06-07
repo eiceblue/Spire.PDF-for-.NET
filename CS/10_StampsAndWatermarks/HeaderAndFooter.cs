@@ -58,14 +58,14 @@ namespace HeaderAndFooter
 
                 //Draw header image into newPage
                 newPage.Canvas.SetTransparency(0.5f);
-                PdfImage headerImage= PdfImage.FromFile(@"..\..\..\..\..\..\Data\Header.png");
+                PdfImage headerImage= PdfImage.FromFile(@"..\..\..\..\..\..\..\Data\Header.png");
                 newPage.Canvas.DrawImage(headerImage, new PointF(0, 0));
 
                 //Draw header text into newPage
                 newPage.Canvas.DrawString("Demo of Spire.Pdf", font, brush, x + width, y, rightAlign);
 
                 //Draw footer image into newPage
-                PdfImage footerImage = PdfImage.FromFile(@"..\..\..\..\..\..\Data\Footer.png");
+                PdfImage footerImage = PdfImage.FromFile(@"..\..\..\..\..\..\..\Data\Footer.png");
                 newPage.Canvas.DrawImage(footerImage, new PointF(0, newPage.Canvas.ClientSize.Height - footerImage.PhysicalDimension.Height));
 
                 brush = PdfBrushes.DarkBlue;
