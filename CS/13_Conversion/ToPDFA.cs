@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Spire.Pdf;
+using Spire.Pdf.Conversion;
 
 namespace ToPDFA
 {
@@ -21,23 +22,9 @@ namespace ToPDFA
             //Pdf file
             String input = @"..\..\..\..\..\..\Data\ToPDFA.pdf";
 
-            //Open pdf document
-            PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(input);
-            PdfNewDocument newDoc = new PdfNewDocument();
-            newDoc.Conformance = PdfConformanceLevel.Pdf_A1B;
-            foreach (PdfPageBase page in doc.Pages)
-            {
-                SizeF size = page.Size;
-                PdfPageBase p = newDoc.Pages.Add(size, new Spire.Pdf.Graphics.PdfMargins(0));
-                page.CreateTemplate().Draw(p, 0, 0);
-            }
-            
-
+            PdfStandardsConverter converter = new PdfStandardsConverter(input);
             string output = "ToPDFA-result.pdf";
-
-            newDoc.Save(output);
-            newDoc.Close();
+            converter.ToPdfA1B(output);
 
             //Launch the result file.
             PDFDocumentViewer(output);
