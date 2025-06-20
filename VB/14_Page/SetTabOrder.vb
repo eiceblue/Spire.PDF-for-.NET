@@ -8,20 +8,31 @@ Namespace SetTabOrder
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load old PDF from disk.
+			' Create a new instance of PdfDocument object
 			Dim pdf As New PdfDocument()
+
+			' Load the PDF file from the specified path
 			pdf.LoadFromFile("..\..\..\..\..\..\Data\SetTabOrder.pdf")
 
-			'Set using document structure
+			' Disable incremental update for the file info
 			pdf.FileInfo.IncrementalUpdate = False
+
+			' Get the first page of the PDF document
 			Dim page As PdfPageBase = pdf.Pages(0)
+
+			' Set the tab order of the page using the structure order
 			page.SetTabOrder(TabOrder.Structure)
 
-			'Save the file
+			' Specify the output file name
 			Dim result As String = "SetTabOrder_output.pdf"
+
+			' Save the modified PDF document to the output file
 			pdf.SaveToFile(result)
 
-			'Launch the file.
+			' Close the PDF document
+			pdf.Close()
+
+			' Launch the file
 			DocumentViewer(result)
 		End Sub
 		Private Sub DocumentViewer(ByVal filename As String)

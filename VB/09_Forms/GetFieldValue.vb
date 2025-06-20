@@ -1,33 +1,34 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Widget
-Imports System.ComponentModel
-Imports System.Text
 
 Namespace GetFieldValue
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object.
+            Dim doc As New PdfDocument()
 
-			'Load from file
-			doc.LoadFromFile("..\..\..\..\..\..\Data\TextBoxSampleB_1.pdf")
+            ' Load an existing PDF file from the specified path.
+            doc.LoadFromFile("..\..\..\..\..\..\Data\TextBoxSampleB_1.pdf")
 
-			'Get form fields
-			Dim formWidget As PdfFormWidget = TryCast(doc.Form, PdfFormWidget)
+            ' Get the form widget from the loaded document and cast it to a PdfFormWidget object.
+            Dim formWidget As PdfFormWidget = TryCast(doc.Form, PdfFormWidget)
 
-			'Get textbox
-			Dim textbox As PdfTextBoxFieldWidget = TryCast(formWidget.FieldsWidget("Text1"), PdfTextBoxFieldWidget)
+            ' Get the textbox field widget named "Text1" from the form widget.
+            Dim textbox As PdfTextBoxFieldWidget = TryCast(formWidget.FieldsWidget("Text1"), PdfTextBoxFieldWidget)
 
-			'Get the text of the textbox
-			Dim text As String = textbox.Text
+            ' Get the text value of the textbox field.
+            Dim text As String = textbox.Text
 
-			MessageBox.Show("The value of the field named " & textbox.Name & " is " & text)
+            ' Display a message box showing the value of the textbox field.
+            MessageBox.Show("The value of the field named " & textbox.Name & " is " & text)
 
-		End Sub
-	End Class
+            ' Close the document
+            doc.Close()
+        End Sub
+    End Class
 End Namespace

@@ -1,11 +1,5 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
 Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Drawing.Printing
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace RotateNewPDF
 	Partial Public Class Form1
@@ -15,58 +9,63 @@ Namespace RotateNewPDF
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PDF document
 			Dim doc As New PdfDocument()
 
-			'Create PdfUnitConvertor to convert the unit
+			' Create a PdfUnitConvertor to convert units
 			Dim unitCvtr As New PdfUnitConvertor()
 
-			'Setting for page margin
+			' Set the page margins
 			Dim margin As New PdfMargins()
-			margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
+			margin.Top = unitCvtr.ConvertUnits(2.54F, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
 			margin.Bottom = margin.Top
-			margin.Left = unitCvtr.ConvertUnits(2.0f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
+			margin.Left = unitCvtr.ConvertUnits(2.0F, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
 			margin.Right = margin.Left
 
-			'Create PdfSection
+			' Create a new section in the document
 			Dim section As PdfSection = doc.Sections.Add()
 
-			'Set "A4" for Pdf page
+			' Set the page size to "A4"
 			section.PageSettings.Size = PdfPageSize.A4
 
-			'Set page margin
+			' Set the page margins
 			section.PageSettings.Margins = margin
 
-			'Set rotating angle
+			' Set the rotation angle of the page to 90 degrees clockwise
 			section.PageSettings.Rotate = PdfPageRotateAngle.RotateAngle90
 
-			'Add the page
+			' Add a new page to the section
 			Dim page As PdfPageBase = section.Pages.Add()
 
-			'Define a PdfBrush
+			' Define a brush for drawing
 			Dim brush As PdfBrush = PdfBrushes.Black
 
-			'Define a font
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 13f, FontStyle.Bold), True)
+			' Define a font for text
+			Dim font As New PdfTrueTypeFont(New Font("Arial", 13.0F, FontStyle.Bold), True)
 
-			'Set the string format 
+			' Set the string format for text
 			Dim format As New PdfStringFormat(PdfTextAlignment.Left)
 
-			'Set the position for drawing 
+			' Set the position for drawing text
 			Dim x As Single = 0
 			Dim y As Single = 50
 
-			'Text string 
-			Dim specification As String = "The sample demonstrates how to rotate page when creating a PDF document."
+			' Specify the text string
+			Dim specification As String = "The sample demonstrates how to rotate a page when creating a PDF document."
 
-			'Draw text string on page canvas
+			' Draw the text string on the page canvas
 			page.Canvas.DrawString(specification, font, brush, x, y, format)
 
+			' Specify the output file name
 			Dim result As String = "RotateNewPDF_out.pdf"
 
-			'Save the document
+			' Save the document to the output file
 			doc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

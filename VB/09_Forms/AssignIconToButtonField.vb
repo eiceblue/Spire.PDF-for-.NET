@@ -1,63 +1,84 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Fields
 Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Text
 
 Namespace AssignIconToButtonField
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PDF document
+            Dim doc As New PdfDocument()
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a PDF document       
-			Dim doc As New PdfDocument()
-			Dim page As PdfPageBase = doc.Pages.Add()
+            ' Add a new page to the document
+            Dim page As PdfPageBase = doc.Pages.Add()
 
-			'Create a Button
-			Dim btn As New PdfButtonField(page, "button1")
-			btn.Bounds = New RectangleF(0, 50, 120, 100)
-			btn.HighlightMode = PdfHighlightMode.Push
-			btn.LayoutMode = PdfButtonLayoutMode.CaptionOverlayIcon
+            ' Create a new button field
+            Dim btn As New PdfButtonField(page, "button1")
 
-			'Set text and icon for Normal appearance
-			btn.Text = "Normal Text"
-			btn.Icon = PdfImage.FromFile("..\..\..\..\..\..\Data\E-iceblueLogo.png")
+            ' Set the bounds (position and size) of the button
+            btn.Bounds = New RectangleF(0, 50, 120, 100)
 
-			'Set text and icon for Click appearance (Can only be set when highlight mode is Push)
-			btn.AlternateText = "Alternate Text"
-			btn.AlternateIcon = PdfImage.FromFile("..\..\..\..\..\..\Data\PdfImage.png")
+            ' Set the highlight mode of the button to "Push"
+            btn.HighlightMode = PdfHighlightMode.Push
 
-			'Set text and icon for Rollover appearance (Can only be set when highlight mode is Push)
-			btn.RolloverText = "Rollover Text"
-			btn.RolloverIcon = PdfImage.FromFile("..\..\..\..\..\..\Data\PDFJAVA.png")
+            ' Set the layout mode of the button to display caption overlaying the icon
+            btn.LayoutMode = PdfButtonLayoutMode.CaptionOverlayIcon
 
-			'Set icon layout
-			btn.IconLayout.Spaces = New Single() { 0.5f, 0.5f }
-			btn.IconLayout.ScaleMode = PdfButtonIconScaleMode.Proportional
-			btn.IconLayout.ScaleReason = PdfButtonIconScaleReason.Always
-			btn.IconLayout.IsFitBounds = False
+            ' Set the caption text of the button
+            btn.Text = "Normal Text"
 
-			'Add the button to the document
-			doc.Form.Fields.Add(btn)
+            ' Set the icon image of the button using an image file
+            btn.Icon = PdfImage.FromFile("..\..\..\..\..\..\Data\E-iceblueLogo.png")
 
-			Dim result As String = "AssignIconToButtonField-result.pdf"
+            ' Set the alternate text of the button
+            btn.AlternateText = "Alternate Text"
 
-			'Save the document
-			doc.SaveToFile(result)
+            ' Set the alternate icon image of the button using an image file
+            btn.AlternateIcon = PdfImage.FromFile("..\..\..\..\..\..\Data\PdfImage.png")
 
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
+            ' Set the rollover text of the button
+            btn.RolloverText = "Rollover Text"
 
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
+            ' Set the rollover icon image of the button using an image file
+            btn.RolloverIcon = PdfImage.FromFile("..\..\..\..\..\..\Data\PDFJAVA.png")
 
-		End Sub
-	End Class
+            ' Set the spaces between the icon and the caption
+            btn.IconLayout.Spaces = New Single() {0.5F, 0.5F}
+
+            ' Set the scale mode for the button icon as proportional
+            btn.IconLayout.ScaleMode = PdfButtonIconScaleMode.Proportional
+
+            ' Set the reason for scaling the button icon always
+            btn.IconLayout.ScaleReason = PdfButtonIconScaleReason.Always
+
+            ' Disable fitting the icon within the button bounds
+            btn.IconLayout.IsFitBounds = False
+
+            ' Add the button field to the document's form fields collection
+            doc.Form.Fields.Add(btn)
+
+            ' Set the output file path
+            Dim result As String = "AssignIconToButtonField-result.pdf"
+
+            ' Save the modified document to the output file
+            doc.SaveToFile(result)
+
+            ' Close the document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+
+        End Sub
+    End Class
 End Namespace

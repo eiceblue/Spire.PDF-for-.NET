@@ -1,69 +1,74 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Exporting
 Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
+Imports Spire.Pdf.Utilities
 
 Namespace ReplaceImageWithText
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
-			Dim doc As New PdfDocument()
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-			'Load file from disk.
-			doc.LoadFromFile("..\..\..\..\..\..\Data\ReplaceImage.pdf")
+            ' Load an existing PDF file
+            doc.LoadFromFile("..\..\..\..\..\..\Data\ReplaceImage.pdf")
 
-			'Get the first page.
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Get the first page of the document
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			'Get images of the first page.
-			Dim imageInfo() As PdfImageInfo = page.ImagesInfo
+            ' Create a PdfImageHelper object for image manipulation
+            Dim helper As New PdfImageHelper()
 
-			'Get width and height of image
-			Dim widthInPixel As Single = imageInfo(0).Image.Width
-			Dim heightInPixel As Single = imageInfo(0).Image.Height
+            ' Get information about the images on the page
+            Dim images() As PdfImageInfo = helper.GetImagesInfo(page)
 
-			'Convert unit from Pixel to Point
-			Dim convertor As New PdfUnitConvertor()
-			Dim width As Single = convertor.ConvertFromPixels(widthInPixel, PdfGraphicsUnit.Point)
-			Dim height As Single = convertor.ConvertFromPixels(heightInPixel, PdfGraphicsUnit.Point)
+            ' Get the width and height of the first image
+            Dim widthInPixel As Single = images(0).Image.Width
+            Dim heightInPixel As Single = images(0).Image.Height
 
-			'Get location of image
-			Dim xPos As Single=imageInfo(0).Bounds.X
-			Dim yPos As Single=imageInfo(0).Bounds.Y
+            ' Convert the dimensions from pixels to points
+            Dim convertor As New PdfUnitConvertor()
+            Dim width As Single = convertor.ConvertFromPixels(widthInPixel, PdfGraphicsUnit.Point)
+            Dim height As Single = convertor.ConvertFromPixels(heightInPixel, PdfGraphicsUnit.Point)
 
-			'Remove the image
-			page.DeleteImage(imageInfo(0).Image)
+            ' Get the X and Y positions of the first image
+            Dim xPos As Single = images(0).Bounds.X
+            Dim yPos As Single = images(0).Bounds.Y
 
-			'Define a rectangle
-			Dim rect As New RectangleF(New PointF(xPos, yPos), New SizeF(width, height))
+            ' Delete the first image from the page
+            helper.DeleteImage(images(0))
 
-			'Define string format
-			Dim format As New PdfStringFormat()
-			format.Alignment= PdfTextAlignment.Center
-			format.LineAlignment= PdfVerticalAlignment.Middle
+            ' Create a rectangle with the specified position and size
+            Dim rect As New RectangleF(New PointF(xPos, yPos), New SizeF(width, height))
 
-			'Draw a string at the location of the image
-			page.Canvas.DrawString("ReplacedText", New PdfFont(PdfFontFamily.Helvetica, 18f), PdfBrushes.Purple, rect, format)
+            ' Create a string format for text alignment
+            Dim format As New PdfStringFormat()
+            format.Alignment = PdfTextAlignment.Center
+            format.LineAlignment = PdfVerticalAlignment.Middle
 
-			Dim result As String = "ReplaceImageWithText_out.pdf"
+            ' Draw a string ("ReplacedText") on the page using specified font, brush, rectangle, and format
+            page.Canvas.DrawString("ReplacedText", New PdfFont(PdfFontFamily.Helvetica, 18.0F), PdfBrushes.Purple, rect, format)
 
-			'Save the document
-			doc.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
+            ' Specify the output file name
+            Dim result As String = "ReplaceImageWithText_out.pdf"
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Save the modified document to the specified file
+            doc.SaveToFile(result)
+
+            ' Close the document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

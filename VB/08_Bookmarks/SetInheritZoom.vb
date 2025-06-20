@@ -1,8 +1,5 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Bookmarks
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace SetInheritZoom
 	Partial Public Class Form1
@@ -12,25 +9,32 @@ Namespace SetInheritZoom
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new PDF document
+			' Create a new PdfDocument instance
 			Dim pdfdoc As New PdfDocument()
 
-			'load the document from disk
+			' Load an existing PDF document from the specified file path
 			pdfdoc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
 
-			'Get bookmarks collections of the PDF file
+			' Get the collection of bookmarks from the document
 			Dim bookmarks As PdfBookmarkCollection = pdfdoc.Bookmarks
 
-			'Set Zoom level as 0, which the value is inherit zoom
+			' Iterate through each bookmark in the collection
 			For Each bookMark As PdfBookmark In bookmarks
-				bookMark.Destination.Zoom = 0.5f
+
+				' Set the zoom level of the bookmark's destination to 0.5 (50% zoom)
+				bookMark.Destination.Zoom = 0.5F
 			Next bookMark
 
+			' Specify the output file name
 			Dim result As String = "SetInheritZoom_out.pdf"
 
-			'Save the document
+			' Save the modified document to the specified file path
 			pdfdoc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the document
+			pdfdoc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal filename As String)

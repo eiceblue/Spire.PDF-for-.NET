@@ -1,49 +1,61 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Annotations
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace CreatePdfPolygonAnnotation
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a Pdf document.
-			Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PDF document object
+            Dim pdf As New PdfDocument()
 
-			'Add a new page to it.
-			Dim page As PdfPageBase = pdf.Pages.Add()
+            ' Add a new page to the PDF document
+            Dim page As PdfPageBase = pdf.Pages.Add()
 
-			'Initialize an instance of PdfPolygonAnnotation, specifying all vertex coordinates which can form a complete shape.
-			Dim polygon As New PdfPolygonAnnotation(page, New PointF() { New PointF(0, 30), New PointF(30, 15), New PointF(60, 30), New PointF(45, 50), New PointF(15, 50), New PointF(0, 30)})
+            ' Create a polygon annotation with specified points on the page
+            Dim polygon As New PdfPolygonAnnotation(page, New PointF() {New PointF(0, 30), New PointF(30, 15), New PointF(60, 30), New PointF(45, 50), New PointF(15, 50), New PointF(0, 30)})
 
-			'Set the border color, text, border effect and other properties of polygon annotation.
-			polygon.Color = Color.PaleVioletRed
-			polygon.Text = "This is a polygon annotation"
-			polygon.Author = "E-ICEBLUE"
-			polygon.Subject = "polygon annotation demo"
-			polygon.BorderEffect = PdfBorderEffect.BigCloud
-			polygon.ModifiedDate = Date.Now
+            ' Set the color of the polygon annotation to PaleVioletRed
+            polygon.Color = Color.PaleVioletRed
 
-			'Add the annotation to Pdf page and save the document.
-			page.AnnotationsWidget.Add(polygon)
+            ' Set the text content of the polygon annotation
+            polygon.Text = "This is a polygon annotation"
 
-			Dim result As String = "CreatePdfPolygonAnnotation_out.pdf"
+            ' Set the author name of the polygon annotation
+            polygon.Author = "E-ICEBLUE"
 
-			'Save the document
-			pdf.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Set the subject of the polygon annotation
+            polygon.Subject = "polygon annotation demo"
+
+            ' Set the border effect of the polygon annotation to BigCloud
+            polygon.BorderEffect = PdfBorderEffect.BigCloud
+
+            ' Set the modified date of the polygon annotation to current date and time
+            polygon.ModifiedDate = Date.Now
+
+            ' Add the polygon annotation to the page's annotation collection
+            page.Annotations.Add(polygon)
+
+            ' Specify the output file name for the PDF document
+            Dim result As String = "CreatePdfPolygonAnnotation_out.pdf"
+
+            ' Save the PDF document to the specified file
+            pdf.SaveToFile(result)
+
+            ' Close the PDF document
+            pdf.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal filename As String)
+            Try
+                Process.Start(filename)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

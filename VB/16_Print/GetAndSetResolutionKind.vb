@@ -1,7 +1,5 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Print
-Imports System.ComponentModel
-Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Text
 
@@ -13,16 +11,25 @@ Namespace GetAndSetResolutionKind
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			 Dim input As String = "..\..\..\..\..\..\Data\CustomDocumentProperties.pdf"
-			'Create a document
+			' Define the input file path
+			Dim input As String = "..\..\..\..\..\..\Data\CustomDocumentProperties.pdf"
+
+			' Create a new instance of PdfDocument
 			Dim doc As New PdfDocument()
+
+			' Load the PDF document from the specified input file
 			doc.LoadFromFile(input)
-			'Set PrinterResolutionKind
+
+			' Set the printer resolution kind to High
 			doc.PrintSettings.PrinterResolutionKind = PdfPrinterResolutionKind.High
 
-			'Get PrinterResolutionKind
+			' Get the current printer resolution kind
 			Dim kind As PdfPrinterResolutionKind = doc.PrintSettings.PrinterResolutionKind
+
+			' Create a StringBuilder to store the resolution kind information
 			Dim builder As New StringBuilder()
+
+			' Check the value of the printer resolution kind and append the corresponding information to the StringBuilder
 			Select Case kind
 				Case PdfPrinterResolutionKind.High
 					builder.AppendLine("High")
@@ -36,11 +43,16 @@ Namespace GetAndSetResolutionKind
 					builder.AppendLine("Custom")
 			End Select
 
-			'Write information to a txt file
+			' Define the output file path for the resolution kind information
 			Dim result As String = "GetAndSetResolutionKind_out.txt"
+
+			' Write the resolution kind information to the output file
 			File.WriteAllText(result, builder.ToString())
 
-			'Launch the file
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the file
 			DocumentViewer(result)
 		End Sub
 		Private Sub DocumentViewer(ByVal fileName As String)

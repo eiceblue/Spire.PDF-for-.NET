@@ -1,37 +1,39 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 
 Namespace DeleteAnnotation
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim input As String = "..\..\..\..\..\..\Data\DeleteAnnotation.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-			'Open pdf document
-			Dim doc As New PdfDocument()
-		doc.LoadFromFile(input)
+            ' Load an existing PDF file from the specified path
+            doc.LoadFromFile("..\..\..\..\..\..\Data\DeleteAnnotation.pdf")
 
-			'Remove the first annotation
-			doc.Pages(0).AnnotationsWidget.RemoveAt(0)
+            ' Clear the first annotation from the first page of the document
+            doc.Pages(0).Annotations.RemoveAt(0)
 
-			Dim output As String = "DeleteAnnotation.pdf"
+            ' Specify the output file name for the modified document
+            Dim output As String = "DeleteAnnotation.pdf"
 
-			'Save pdf document
-			doc.SaveToFile(output)
+            ' Save the modified document to the specified file
+            doc.SaveToFile(output)
 
-			'Launch the Pdf file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Close the document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

@@ -13,22 +13,27 @@ Namespace SignedByTimestamp
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+			' Specify the input file path
 			Dim inputFile As String = "..\..\..\..\..\..\Data\DigitalSignature.pdf"
 
-			'load a PDF document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
+
+			' Load the PDF document from the input file path
 			doc.LoadFromFile(inputFile)
 
-			'Load a certificate .pfx file
+			' Set the path of the certificate .pfx file
 			Dim pfxPath As String = "..\..\..\..\..\..\Data\gary.pfx"
+
+			' Load the certificate from the pfx file with the specified password and exportable flag
 			Dim cert As New PdfCertificate(pfxPath, "e-iceblue", System.Security.Cryptography.X509Certificates.X509KeyStorageFlags.Exportable)
 
-			'Add a signature to the specified position
+			' Add a signature to the specified position on the first page of the document using the loaded certificate
 			Dim signature As New PdfSignature(doc, doc.Pages(0), cert, "signature")
 			signature.Bounds = New RectangleF(New PointF(90, 550), New SizeF(180, 90))
 
-			'Set the signature content
-			signature.NameLabel = "Digitally signed by:Gary"
+			' Set the content of the signature
+			signature.NameLabel = "Digitally signed by: Gary"
 			signature.LocationInfoLabel = "Location:"
 			signature.LocationInfo = "CN"
 			signature.ReasonLabel = "Reason: "
@@ -39,15 +44,18 @@ Namespace SignedByTimestamp
 			signature.GraphicsMode = GraphicMode.SignImageAndSignDetail
 			signature.SignImageSource = PdfImage.FromFile("..\..\..\..\..\..\Data\logo.png")
 
-			'Configure a timestamp server
+			' Configure a timestamp server with the specified URL
 			Dim url As String = "https://freetsa.org/tsr"
 			signature.ConfigureTimestamp(url)
 
-			'Save to file
+			' Save the document to the specified output file path in PDF format
 			Dim output As String = "result.pdf"
 			doc.SaveToFile(output, FileFormat.PDF)
 
-			'Launch the file
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the file
 			PDFDocumentViewer(output)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)

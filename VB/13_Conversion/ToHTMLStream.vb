@@ -1,7 +1,5 @@
 ﻿Imports Spire.Pdf
-Imports System.ComponentModel
 Imports System.IO
-Imports System.Text
 
 Namespace ToHTMLStream
 	Partial Public Class Form1
@@ -9,16 +7,32 @@ Namespace ToHTMLStream
 		Public Sub New()
 			InitializeComponent()
 		End Sub
-
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document.
+			' Create a new PdfDocument object
 			Dim pdf As New PdfDocument()
-			'Load file from disk
-            pdf.LoadFromFile("..\..\..\..\..\..\..\Data\SampleB_1.pdf")
 
+			' Load the PDF file from the specified path
+			pdf.LoadFromFile("..\..\..\..\..\..\..\Data\SampleB_1.pdf")
+
+			' Create a new MemoryStream object
 			Dim ms As New MemoryStream()
-			'Save to HTML stream
+
+			' Save the PDF document to HTML format and write it to the MemoryStream object
 			pdf.SaveToStream(ms, FileFormat.HTML)
+			
+			' Write the content of the memory stream to an HTML file
+			File.WriteAllBytes("ToHtml.html",ms.ToArray())
+
+			' Close the PDF document
+			pdf.Close()
+			
+			PDFDocumentViewer("ToHtml.html")
+		End Sub
+		Private Sub PDFDocumentViewer(ByVal fileName As String)
+			Try
+				Process.Start(fileName)
+			Catch
+			End Try
 		End Sub
 	End Class
 End Namespace

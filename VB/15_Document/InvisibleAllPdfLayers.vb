@@ -1,8 +1,5 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Graphics.Layer
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace InvisibleAllPdfLayers
 	Partial Public Class Form1
@@ -12,25 +9,33 @@ Namespace InvisibleAllPdfLayers
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new PDF document.
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
 
-			'Load the file from disk.
+			' Load the PDF document from the specified file path
 			doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_5.pdf")
 
+			' Iterate through each layer in the document
 			For i As Integer = 0 To doc.Layers.Count - 1
-				'Show all the Pdf layers.
-				'doc.Layers[i].Visibility = PdfVisibility.On;
 
-				'Set all the Pdf layers invisible.
+				' Show all the Pdf layers
+				' doc.Layers(i).Visibility = PdfVisibility.On;
+
+				' Set all the Pdf layers to be invisible
 				doc.Layers(i).Visibility = PdfVisibility.Off
+
 			Next i
 
+			' Specify the output file path
 			Dim result As String = "InvisibleAllPdfLayers_out.pdf"
 
-			'Save the document
+			' Save the modified document to the output file
 			doc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

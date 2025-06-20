@@ -1,9 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace RotateExistingPDF
 	Partial Public Class Form1
@@ -13,29 +8,34 @@ Namespace RotateExistingPDF
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PDF document
 			Dim doc As New PdfDocument()
 
-			'Load an existing pdf from disk
+			' Load an existing PDF from disk
 			doc.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
 
-			'Get the first page of the loaded PDF file
+			' Get the first page of the loaded PDF file
 			Dim page As PdfPageBase = doc.Pages(0)
 
-			'Get the original rotation angle
+			' Get the original rotation angle of the page
 			Dim rotation As Integer = CInt(Fix(page.Rotation))
 
-			'Set the angle
+			' Set the rotation angle to rotate the page
 			rotation += CInt(Fix(PdfPageRotateAngle.RotateAngle270))
 
-			'Rotate the PDF page based on
+			' Rotate the PDF page based on the new angle
 			page.Rotation = CType(rotation, PdfPageRotateAngle)
 
+			' Specify the output file name
 			Dim result As String = "RotateExistingPDF_out.pdf"
 
-			'Save the document
+			' Save the modified document to the output file
 			doc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

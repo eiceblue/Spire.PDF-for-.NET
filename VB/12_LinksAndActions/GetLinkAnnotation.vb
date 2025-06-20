@@ -1,9 +1,7 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Annotations
-Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace GetLinkAnnotation
 	Partial Public Class Form1
@@ -13,45 +11,49 @@ Namespace GetLinkAnnotation
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
 
-			'Load file from disk
+			' Load a PDF file into the document
 			doc.LoadFromFile("..\..\..\..\..\..\Data\LinkAnnotation.pdf")
 
-			'Get the first page
+			' Get the first page of the document
 			Dim page As PdfPageBase = doc.Pages(0)
 
-			'Get the annotation collection
-			Dim annotations As PdfAnnotationCollection = page.AnnotationsWidget
+			' Get the collection of annotations on the page
+            Dim annotations As PdfAnnotationCollection = page.Annotations
 
-			'Create StringBuilder to save 
+			' Create a StringBuilder object to store the results
 			Dim content As New StringBuilder()
 
-			'Verify whether widgetCollection is not null or not
+			' Check if there are any annotations on the page
 			If annotations.Count > 0 Then
-				'traverse the PdfAnnotationCollection
+				' Traverse the PdfAnnotationCollection
 				For Each pdfAnnotation As PdfAnnotation In annotations
-					'if it is PdfTextWebLinkAnnotationWidget
+					' Check if the annotation is of type PdfTextWebLinkAnnotationWidget
 					If TypeOf pdfAnnotation Is PdfTextWebLinkAnnotationWidget Then
 
-						'Get the Url
+						' Get the URL from the WebLinkAnnotation
 						Dim WebLinkAnnotation As PdfTextWebLinkAnnotationWidget = TryCast(pdfAnnotation, PdfTextWebLinkAnnotationWidget)
 						Dim url As String = WebLinkAnnotation.Url
 
-						'Add strings to StringBuilder
-						content.AppendLine("The url of link annotation is " & url)
-						content.AppendLine("The text of link annotation is " & WebLinkAnnotation.Text)
+						' Add information about the URL and text to the StringBuilder
+						content.AppendLine("The URL of the link annotation is " & url)
+						content.AppendLine("The text of the link annotation is " & WebLinkAnnotation.Text)
 					End If
 				Next pdfAnnotation
 			End If
 
+			' Specify the output file name
 			Dim result As String = "GetLinkAnnotation_out.txt"
 
-			'Save them to a txt file
+			' Write the content of the StringBuilder to a text file
 			File.WriteAllText(result, content.ToString())
 
-			'Launch the file
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the file
 			DocumentViewer(result)
 		End Sub
 		Private Sub DocumentViewer(ByVal fileName As String)

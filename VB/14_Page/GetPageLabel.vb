@@ -1,5 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
 
@@ -11,25 +10,30 @@ Namespace GetPageLabel
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a PdfDocument instance
+			' Create a new PdfDocument object
 			Dim pdf As New PdfDocument()
 
-			'Load the PDF file
+			' Load the PDF file
 			pdf.LoadFromFile("..\..\..\..\..\..\Data\PageLabel.pdf")
 
-			'Create a StringBuilder instance
+			' Create a StringBuilder instance
 			Dim sb As New StringBuilder()
 
-			'Get the labels of the pages in the PDF file
+			' Get the labels of the pages in the PDF file
 			For i As Integer = 0 To pdf.Pages.Count - 1
-				sb.AppendLine("The page label of page " & (i+1) & " is """ & pdf.Pages(i).PageLabel & """")
+				sb.AppendLine("The page label of page " & (i + 1) & " is """ & pdf.Pages(i).PageLabel & """")
 			Next i
 
-			Dim result As String="PageLabels.txt"
-			'Save to a .txt file
+			' Specify the output file path for the text file
+			Dim result As String = "PageLabels.txt"
+
+			' Save the page labels to a text file
 			File.WriteAllText(result, sb.ToString())
 
-			'Launch file
+			' Close the PDF document
+			pdf.Close()
+
+			' Launch the file
 			PDFDocumentViewer(result)
 
 		End Sub

@@ -1,6 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 
 Namespace ToDocx
 	Partial Public Class Form1
@@ -10,16 +8,22 @@ Namespace ToDocx
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load a pdf document
+			' Specify the file path of the PDF document to be loaded
 			Dim file As String = "..\..\..\..\..\..\Data\ToDocx.pdf"
+
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
+
+			' Load the PDF document from the specified file path
 			doc.LoadFromFile(file)
 
-			'Convert to docx file.
+			' Convert the PDF document to a DOCX file format
 			doc.SaveToFile("ToDocx.docx", FileFormat.DOCX)
+
+			' Close the PDF document
 			doc.Close()
 
-			'Launch the file.
+			' Launch the file
 			Process.Start("ToDocx.docx")
 		End Sub
 	End Class

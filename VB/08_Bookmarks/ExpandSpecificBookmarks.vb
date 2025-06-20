@@ -9,19 +9,28 @@ Namespace ExpandSpecificBookmarks
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load old PDF from disk.
+			' Create a new PdfDocument instance
 			Dim pdf As New PdfDocument()
+
+			' Load an existing PDF document from the specified file path
 			pdf.LoadFromFile("..\..\..\..\..\..\Data\ExpandSpecificBookmarks.pdf")
 
-			'Set BookMarkExpandOrCollapse as "true" for the first bookmarks and "false" for the first level of the second bookmarks  
+			' Set the ExpandBookmark property to "true" for the first bookmark
 			pdf.Bookmarks(0).ExpandBookmark = True
+
+			' Set the ExpandBookmark property to "false" for the first level of bookmarks in the second bookmark collection
 			TryCast(pdf.Bookmarks(1), PdfBookmarkCollection)(0).ExpandBookmark = False
 
-			'Save the file
+			' Specify the output file name
 			Dim result As String = "ExpandSpecificBookmarks_output.pdf"
+
+			' Save the modified document to the specified file path
 			pdf.SaveToFile(result)
 
-			'Launch the file.
+			' Close the document
+			pdf.Close()
+
+			' Launch the file
 			DocumentViewer(result)
 		End Sub
 		Private Sub DocumentViewer(ByVal filename As String)

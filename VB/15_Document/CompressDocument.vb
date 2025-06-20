@@ -1,8 +1,5 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Exporting
-Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Text
+Imports Spire.Pdf.Utilities
 
 Namespace CompressDocument
 	Partial Public Class Form1
@@ -12,48 +9,52 @@ Namespace CompressDocument
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load the pdf document
+			' Create a new PdfDocument object.
 			Dim doc As New PdfDocument()
-		doc.LoadFromFile("..\..\..\..\..\..\Data\CompressDocument.pdf")
-			'Compress the content in document
+
+			' Load an existing PDF file from the specified path.
+			doc.LoadFromFile("..\..\..\..\..\..\Data\CompressDocument.pdf")
+
+			' Compress the content of the document.
 			CompressContent(doc)
 
-			'Compress the images in document
+			' Compress the images in the document.
 			CompressImage(doc)
 
-			'Save the document
+			' Save the compressed document to a new file named "CompressDocument_result.pdf".
 			doc.SaveToFile("CompressDocument_result.pdf")
 
-			'View the pdf document
+			' Close the document, releasing any resources associated with it.
+			doc.Close()
+
+			' View the pdf document.
 			PDFDocumentViewer("CompressDocument_result.pdf")
 		End Sub
 
+		' This method sets the compression level and incremental update for the document.
 		Private Sub CompressContent(ByVal doc As PdfDocument)
-			'Disable the incremental update
 			doc.FileInfo.IncrementalUpdate = False
-
-			'Set the compression level to best
 			doc.CompressionLevel = PdfCompressionLevel.Best
 		End Sub
 
+		' This method compresses the images in each page of the document.
 		Private Sub CompressImage(ByVal doc As PdfDocument)
-			'Disable the incremental update
 			doc.FileInfo.IncrementalUpdate = False
-
-			'Traverse all pages
 			For Each page As PdfPageBase In doc.Pages
 				If page IsNot Nothing Then
-					If page.ImagesInfo IsNot Nothing Then
-						For Each info As PdfImageInfo In page.ImagesInfo
-							page.TryCompressImage(info.Index)
-						Next info
+					Dim helper As New PdfImageHelper()
+					Dim pdfImageInfos() As Spire.Pdf.Utilities.PdfImageInfo = helper.GetImagesInfo(page)
+					If pdfImageInfos IsNot Nothing Then
+						For i As Integer = 0 To pdfImageInfos.Length - 1
+                  pdfImageInfos(i).TryCompressImage()
+						Next i
 					End If
 				End If
 			Next page
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)
 			Try
-				Process.Start(fileName)
+				System.Diagnostics.Process.Start(fileName)
 			Catch
 			End Try
 		End Sub

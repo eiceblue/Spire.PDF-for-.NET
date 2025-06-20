@@ -1,40 +1,52 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
+Imports Spire.Pdf.Texts
 Imports System.IO
 Namespace ExtractTextFromParticularPage
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim input As String = "..\..\..\..\..\..\Data\PDFTemplate-Az.pdf"
-			Dim doc As New PdfDocument()
-			' Read a pdf file
-			doc.LoadFromFile(input)
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Specify the input file path
+            Dim input As String = "..\..\..\..\..\..\Data\PDFTemplate-Az.pdf"
 
-			' Get the first page
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Create a new instance of PdfDocument
+            Dim doc As New PdfDocument()
 
-			' Extract text from page keeping white space
-			Dim text As String = page.ExtractText(True)
+            ' Load the PDF file
+            doc.LoadFromFile(input)
 
-			' Extract text from page without keeping white space
-			'String text = page.ExtractText(false);
+            ' Get the first page
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			Dim result As String = Path.GetFullPath("ExtractTextFromParticularPage_out.txt")
-			' Create a writer to put the extracted text
-			Dim tw As TextWriter = New StreamWriter(result)
+            ' Create PdfTextExtractOptions and set it to extract all text
+            Dim options As PdfTextExtractOptions = New PdfTextExtractOptions
+            options.IsExtractAllText = True
 
-			' Write a line of text to the file
-			tw.WriteLine(text)
+            ' Create a PdfTextExtractor instance for the page
+            Dim pdfTextExtractor As PdfTextExtractor = New PdfTextExtractor(page)
 
-			' Close the stream
-			tw.Close()
+            ' Extract the text from the page using the specified options
+            Dim text As String = pdfTextExtractor.ExtractText(options)
 
-			MessageBox.Show(vbLf & "Text extracted successfully from particular pages of PDF Document." & vbLf & "File saved at " & result)
-		End Sub
-	End Class
+            ' Specify the output file path
+            Dim result As String = Path.GetFullPath("ExtractTextFromParticularPage_out.txt")
+
+            ' Create a TextWriter instance for the output file
+            Dim tw As TextWriter = New StreamWriter(result)
+
+            ' Write the extracted text to the output file
+            tw.WriteLine(text)
+
+            ' Close the TextWriter
+            tw.Close()
+
+            ' Close the document
+            doc.Close()
+
+            MessageBox.Show(vbLf & "Text extracted successfully from particular pages of PDF Document." & vbLf & "File saved at " & result)
+        End Sub
+    End Class
 End Namespace

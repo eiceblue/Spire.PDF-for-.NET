@@ -1,54 +1,56 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
 Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.IO
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace SplitFileByParticularPage
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
-			Dim oldPdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new instance of PdfDocument object for the original PDF
+            Dim oldPdf As New PdfDocument()
 
-			'Load an existing pdf from disk
-			oldPdf.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
+            ' Load the original PDF file from the specified path
+            oldPdf.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
 
-			'Create a new PDF document
-			Dim newPdf As New PdfDocument()
+            ' Create a new instance of PdfDocument object for the modified PDF
+            Dim newPdf As New PdfDocument()
 
-			'Initialize a new instance of PdfPageBase class
-			Dim page As PdfPageBase
+            ' Declare a variable to store the PdfPageBase object
+            Dim page As PdfPageBase
 
-			'Specify the pages which you want them to be split
-			For i As Integer = 1 To 2
-				'Add same size page for newPdf
-				page = newPdf.Pages.Add(oldPdf.Pages(i).Size, New Spire.Pdf.Graphics.PdfMargins(0))
+            ' Iterate through pages 1 and 2 of the original PDF
+            For i As Integer = 1 To 2
+                ' Add a new page to the modified PDF with the same size as the current page in the original PDF, and set margins to 0
+                page = newPdf.Pages.Add(oldPdf.Pages(i).Size, New PdfMargins(0))
 
-				'Create template of the oldPdf page and draw into newPdf page
-				oldPdf.Pages(i).CreateTemplate().Draw(page, New PointF(0, 0))
-			Next i
+                ' Draw the template of the current page in the original PDF onto the new page at coordinates (0, 0)
+                oldPdf.Pages(i).CreateTemplate().Draw(page, New PointF(0, 0))
+            Next i
 
-			Dim result As String = "SplitFileByParticularPage_out.pdf"
+            ' Specify the filename for the output PDF
+            Dim result As String = "SplitFileByParticularPage_out.pdf"
 
-			'Save the document
-			newPdf.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
+            ' Save the modified PDF document to the output file
+            newPdf.SaveToFile(result)
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Close the modified PDF document
+            newPdf.Close()
+
+            ' Close the original PDF document
+            oldPdf.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

@@ -10,89 +10,117 @@ Namespace ImageAndPageNumber
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'create a PDF document
+			' Create a new instance of PdfDocument
 			Dim doc As New PdfDocument()
+
+			' Set the page size to A4
 			doc.PageSettings.Size = PdfPageSize.A4
 
-			'reset the default margins to 0
+			' Set the page margins to zero
 			doc.PageSettings.Margins = New PdfMargins(0)
 
-			'create a PdfMargins object, the parameters indicate the page margins you want to set
+			' Define the margins for the header and footer
 			Dim margins As New PdfMargins(50, 50, 50, 50)
 
-			'get page size
+			' Get the page size from the document's page settings
 			Dim pageSize As SizeF = doc.PageSettings.Size
 
-			'create a header template with content and apply it to page template
+			' Create a header template for the document using the specified margins and page size
 			doc.Template.Top = CreateHeaderTemplate(doc, margins, pageSize)
 
-			'create a footer template with content and apply it to page template
+			' Create a footer template for the document using the specified margins and page size
 			doc.Template.Bottom = CreateFooterTemplate(doc, margins, pageSize)
 
-			'apply blank templates to other parts of page template
+			' Create a left template for the document with the specified left margin and full page height
 			doc.Template.Left = New PdfPageTemplateElement(margins.Left, doc.PageSettings.Size.Height)
+
+			' Create a right template for the document with the specified right margin and full page height
 			doc.Template.Right = New PdfPageTemplateElement(margins.Right, doc.PageSettings.Size.Height)
-			
-				'Create one page
+
+			' Add a new page to the document
 			Dim page As PdfPageBase = doc.Pages.Add()
 
-			'Draw the text
-			page.Canvas.DrawString("Hello, World!", New PdfFont(PdfFontFamily.Helvetica, 30f), New PdfSolidBrush(Color.Black), 10, 10)
+			' Draw a string on the page as "Hello, World!" using the specified font, brush, and position
+			page.Canvas.DrawString("Hello, World!", New PdfFont(PdfFontFamily.Helvetica, 30.0F), New PdfSolidBrush(Color.Black), 10, 10)
 
-			'save the file
+			' Specify the output file path
 			Dim output As String = "ImageandPageNumberinHeaderFootersection_out.pdf"
-			doc.SaveToFile(output,FileFormat.PDF)
+
+			' Save the document to the output file in PDF format
+			doc.SaveToFile(output, FileFormat.PDF)
+
+			' Close the document
+			doc.Close()
+
+			' Launch the file
 			PDFDocumentViewer(output)
 		End Sub
 		Private Function CreateHeaderTemplate(ByVal doc As PdfDocument, ByVal margins As PdfMargins, ByVal pageSize As SizeF) As PdfPageTemplateElement
-			'create a PdfPageTemplateElement object as header space
+			' Create a new PdfPageTemplateElement with the specified width and top margins
 			Dim headerSpace As New PdfPageTemplateElement(pageSize.Width, margins.Top)
 			headerSpace.Foreground = False
 
-			'declare two float variables
+			' Set the initial coordinates for drawing elements
 			Dim x As Single = margins.Left
 			Dim y As Single = 0
 
-			'draw image in header space 
+			' Load the header image from file
 			Dim headerImage As PdfImage = PdfImage.FromFile("../../../../../../../Data/E-iceblueLogo.png")
-			Dim width As Single = headerImage.Width\2
-			Dim height As Single = headerImage.Height\2
+
+			' Calculate the width and height of the header image
+			Dim width As Single = headerImage.Width \ 2
+			Dim height As Single = headerImage.Height \ 2
+
+			' Draw the header image at the specified position with the calculated size
 			headerSpace.Graphics.DrawImage(headerImage, x, margins.Top - height - 5, width, height)
 
-			'draw line in header space
+			' Create a pen for drawing lines with light gray color and thickness of 1
 			Dim pen As New PdfPen(PdfBrushes.LightGray, 1)
+
+			' Draw a line across the page using the pen
 			headerSpace.Graphics.DrawLine(pen, x, y + margins.Top - 2, pageSize.Width - x, y + margins.Top - 2)
 
-			'return headerSpace
+			' Return the header template
 			Return headerSpace
 		End Function
 
 		Private Function CreateFooterTemplate(ByVal doc As PdfDocument, ByVal margins As PdfMargins, ByVal pageSize As SizeF) As PdfPageTemplateElement
-			'create a PdfPageTemplateElement object which works as footer space
+			' Create a new PdfPageTemplateElement with the specified width and bottom margins
 			Dim footerSpace As New PdfPageTemplateElement(pageSize.Width, margins.Bottom)
 			footerSpace.Foreground = False
 
-			'declare two float variables
+			' Set the initial coordinates for drawing elements
 			Dim x As Single = margins.Left
 			Dim y As Single = 0
 
-			'draw line in footer space
+			' Create a pen for drawing lines with gray color and thickness of 1
 			Dim pen As New PdfPen(PdfBrushes.Gray, 1)
+
+			' Draw a line across the page using the pen
 			footerSpace.Graphics.DrawLine(pen, x, y, pageSize.Width - x, y)
 
-			'draw text in footer space
+			' Update the y-coordinate for positioning the next element
 			y = y + 5
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 10f), True)
-			'draw dynamic field in footer space
+
+			' Create a font object with Arial font and size 10
+			Dim font As New PdfTrueTypeFont(New Font("Arial", 10.0F), True)
+
+			' Create page number and page count fields
 			Dim number As New PdfPageNumberField()
 			Dim count As New PdfPageCountField()
+
+			' Create a composite field with the specified font, color, format, and content
 			Dim compositeField As New PdfCompositeField(font, PdfBrushes.Black, "Page {0} of {1}", number, count)
 			compositeField.StringFormat = New PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Top)
+
+			' Measure the size of the composite field to calculate its bounds
 			Dim size As SizeF = font.MeasureString(compositeField.Text)
 			compositeField.Bounds = New RectangleF(x, y, size.Width, size.Height)
+
+			' Draw the composite field on the footer template
 			compositeField.Draw(footerSpace.Graphics)
 
-			'return footerSpace
+			' Return the footer template
 			Return footerSpace
 		End Function
 		Private Sub PDFDocumentViewer(ByVal fileName As String)

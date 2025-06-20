@@ -1,83 +1,86 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
 Imports Spire.Pdf.Grid
-Imports System.ComponentModel
-Imports System.Text
 
 Namespace MergeCells
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document and load file from disk
-			Dim doc As New PdfDocument()
-		doc.LoadFromFile("..\..\..\..\..\..\Data\MergeCells.pdf")
-			'Get the first page
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Load an existing PDF document from a file
+            doc.LoadFromFile("..\..\..\..\..\..\Data\MergeCells.pdf")
+            ' Get the first page of the loaded document
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			'Create a grid
-			Dim grid As New PdfGrid()
-			grid.Columns.Add(5)
+            ' Create a new PdfGrid object
+            Dim grid As New PdfGrid()
 
-			'Set the width
-			For j As Integer = 0 To grid.Columns.Count - 1
-				grid.Columns(j).Width = 100
-			Next j
+            ' Add 5 columns to the grid
+            grid.Columns.Add(5)
 
-			'Add rows
-			Dim row0 As PdfGridRow = grid.Rows.Add()
-			Dim row1 As PdfGridRow = grid.Rows.Add()
-			Dim height As Single = 21.0f
+            ' Set the width of each column in the grid
+            For j As Integer = 0 To grid.Columns.Count - 1
+                grid.Columns(j).Width = 100
+            Next j
 
-			'Set the height
-			For i As Integer = 0 To grid.Rows.Count - 1
-				grid.Rows(i).Height = height
-			Next i
+            ' Create two rows in the grid
+            Dim row0 As PdfGridRow = grid.Rows.Add()
+            Dim row1 As PdfGridRow = grid.Rows.Add()
 
-			grid.Draw(page, New PointF(50, 410))
+            ' Set the height of each row in the grid
+            Dim height As Single = 21.0F
+            For i As Integer = 0 To grid.Rows.Count - 1
+                grid.Rows(i).Height = height
+            Next i
 
-			row0.Style.Font = New PdfTrueTypeFont(New Font("Arial", 16f, FontStyle.Bold), True)
-			row1.Style.Font = New PdfTrueTypeFont(New Font("Arial", 16f, FontStyle.Italic), True)
+            ' Draw the grid on the page at a specified location
+            grid.Draw(page, New PointF(50, 410))
 
-			row0.Cells(0).Value = "Corporation"
+            ' Customize the font style for the cells in row0 and row1
+            row0.Style.Font = New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold), True)
+            row1.Style.Font = New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Italic), True)
 
-			'Merge two rows
-			row0.Cells(0).RowSpan = 2
+            ' Set the cell values and formatting for row0
+            row0.Cells(0).Value = "Corporation"
+            row0.Cells(0).RowSpan = 2
 
-			row0.Cells(1).Value = "B&K Undersea Photo"
-			row0.Cells(1).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
+            row0.Cells(1).Value = "B&K Undersea Photo"
+            row0.Cells(1).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
+            row0.Cells(1).ColumnSpan = 3
 
-			'Merge two columns
-			row0.Cells(1).ColumnSpan = 3
+            row0.Cells(4).Value = "World"
+            row0.Cells(4).Style.Font = New PdfTrueTypeFont(New Font("Arial", 10.0F, FontStyle.Bold Or FontStyle.Italic), True)
+            row0.Cells(4).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
+            row0.Cells(4).Style.BackgroundBrush = PdfBrushes.LightGreen
 
-			row0.Cells(4).Value = "World"
-			row0.Cells(4).Style.Font = New PdfTrueTypeFont(New Font("Arial", 10f, FontStyle.Bold Or FontStyle.Italic), True)
-			row0.Cells(4).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
-			row0.Cells(4).Style.BackgroundBrush = PdfBrushes.LightGreen
+            ' Set the cell values and formatting for row1
+            row1.Cells(1).Value = "Diving International Unlimited"
+            row1.Cells(1).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
+            row1.Cells(1).ColumnSpan = 4
 
-			row1.Cells(1).Value = "Diving International Unlimited"
-			row1.Cells(1).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
+            ' Draw the grid with the updated cell values and formatting
+            grid.Draw(page, New PointF(50, 480))
 
-			'Merge four columns
-			row1.Cells(1).ColumnSpan = 4
+            ' Save the modified document to a file
+            doc.SaveToFile("MergeCells.pdf")
 
-			grid.Draw(page, New PointF(50, 480))
+            ' Close the document
+            doc.Close()
 
-			'Save the pdf document
-			doc.SaveToFile("MergeCells.pdf")
+            ' Launch the document
+            PDFDocumentViewer("MergeCells.pdf")
+        End Sub
 
-			'Launch the document
-			PDFDocumentViewer("MergeCells.pdf")
-		End Sub
-
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

@@ -1,55 +1,62 @@
 Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Tables
 
 Namespace FillStrokeText
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document and load file from disk
-			Dim doc As New PdfDocument()
-			doc.LoadFromFile("../../../../../../Data/PDFTemplate_N.pdf")
+            ' Load the PDF document from the specified file path
+            doc.LoadFromFile("../../../../../../Data/PDFTemplate_N.pdf")
 
-			'Get the first page
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Get the first page of the document
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			'Define Pdf pen
-			Dim pen As New PdfPen(Color.Gray)
+            ' Create a new PdfPen object with gray color
+            Dim pen As New PdfPen(Color.Gray)
 
-			'Save graphics state
-			Dim state As PdfGraphicsState = page.Canvas.Save()
+            ' Save the current graphics state of the page's canvas
+            Dim state As PdfGraphicsState = page.Canvas.Save()
 
-			'Rotate page canvas
-			page.Canvas.RotateTransform(-20)
+            ' Rotate the canvas by -20 degrees
+            page.Canvas.RotateTransform(-20)
 
-			Dim format As New PdfStringFormat()
-			format.CharacterSpacing = 5f
+            ' Create a new PdfStringFormat object
+            Dim format As New PdfStringFormat()
 
-			'Draw the string on page
-			page.Canvas.DrawString("E-ICEBLUE", New PdfFont(PdfFontFamily.Helvetica, 45f), pen, 0, 500f,format)
+            ' Set the character spacing to 5
+            format.CharacterSpacing = 5.0F
 
-			'Restore graphics
-			page.Canvas.Restore(state)
+            ' Draw a string "E-ICEBLUE" on the canvas using specified font, pen, position, and format
+            page.Canvas.DrawString("E-ICEBLUE", New PdfFont(PdfFontFamily.Helvetica, 45.0F), pen, 0, 500.0F, format)
 
-			'Save the Pdf file
-			Dim output As String = "FillStrokeText_out.pdf"
-			doc.SaveToFile(output)
-			doc.Close()
+            ' Restore the graphics state of the canvas to its previous state
+            page.Canvas.Restore(state)
 
-			'Launch the Pdf file
-			PDFDocumentViewer(output)
-		End Sub
+            ' Define the output file path
+            Dim output As String = "FillStrokeText_out.pdf"
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
+            ' Save the modified document to the output file
+            doc.SaveToFile(output)
 
-	End Class
+            ' Close the document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(output)
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+
+    End Class
 End Namespace

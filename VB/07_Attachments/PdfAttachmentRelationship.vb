@@ -8,19 +8,34 @@ Namespace PdfAttachmentRelationship
 			InitializeComponent()
 		End Sub
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+			' Specify the input file path for the PDF document
 			Dim input As String = "..\..\..\..\..\..\Data\Attachment.pdf"
+
+			' Specify the attachment file path
 			Dim attachmentPath As String = "..\..\..\..\..\..\Data\E-iceblueLogo.png"
-			Dim output As String = "addAttachments.pdf"
-			'Load document from disk
+
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
+
+			' Load the PDF document from the input file path
 			doc.LoadFromFile(input)
-			'Define PdfAttachment
+
+			' Create a new PdfAttachment object
 			Dim attachment As New PdfAttachment(attachmentPath)
-			'Add addachment
+
+			' Add the attachment to the PDF document
 			doc.Attachments.Add(attachment, doc, Spire.Pdf.General.PdfAttachmentRelationship.Alternative)
-			'Save the document
+
+			' Specify the output file name for the PDF document
+			Dim output As String = "addAttachments.pdf"
+
+			' Save the modified PDF document to the output file
 			doc.SaveToFile(output, FileFormat.PDF)
-			'Launch the file
+
+			' Close the document
+			doc.Close()
+
+			' Launch the file
 			PDFDocumentViewer(output)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)

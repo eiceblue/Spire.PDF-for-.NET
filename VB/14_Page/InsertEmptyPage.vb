@@ -1,11 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
-Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Drawing.Printing
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace InsertEmptyPage
 	Partial Public Class Form1
@@ -15,21 +8,25 @@ Namespace InsertEmptyPage
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
 
-			'Load an existing pdf from disk
+			' Load an existing PDF from disk
 			doc.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
 
-			'insert a blank page as the second page
+			' Insert a blank page as the second page
 			doc.Pages.Insert(1)
 
+			' Specify the output file path for the modified PDF
 			Dim result As String = "InsertEmptyPage_out.pdf"
 
-			'Save the document
+			' Save the modified document
 			doc.SaveToFile(result)
 
-			'Launch the Pdf file
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)

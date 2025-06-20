@@ -1,77 +1,83 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Bookmarks
-Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace GetAllPdfBookmarks
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument instance
+            Dim doc As New PdfDocument()
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new Pdf document.
-			Dim doc As New PdfDocument()
+            ' Load an existing PDF document from the specified file path
+            doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
 
-			'Load the file from disk.
-			doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
+            ' Get the collection of bookmarks from the document
+            Dim bookmarks As PdfBookmarkCollection = doc.Bookmarks
 
-			'Get bookmarks collection of the Pdf file.
-			Dim bookmarks As PdfBookmarkCollection = doc.Bookmarks
+            ' Specify the output file name
+            Dim result As String = "GetPdfBookmarks.txt"
 
-			Dim result As String = "GetPdfBookmarks.txt"
+            ' Retrieve and save the bookmark information recursively
+            GetBookmarks(bookmarks, result)
 
-			'Get Pdf Bookmarks.
-			GetBookmarks(bookmarks, result)
+            ' Close the document
+            doc.Close()
+        End Sub
+        Private Sub GetBookmarks(ByVal bookmarks As PdfBookmarkCollection, ByVal result As String)
+            ' Create a StringBuilder to hold the bookmark content
+            Dim content As New StringBuilder()
 
-			'Launch the file.
-			DocumentViewer(result)
-		End Sub
+            ' Check if there are any bookmarks in the collection
+            If bookmarks.Count > 0 Then
+                content.AppendLine("Pdf bookmarks:")
 
-		Private Sub GetBookmarks(ByVal bookmarks As PdfBookmarkCollection, ByVal result As String)
-			'Declare a new StringBuilder content
-			Dim content As New StringBuilder()
+                ' Iterate through each parent bookmark in the collection
+                For Each parentBookmark As PdfBookmark In bookmarks
 
-			'Get Pdf bookmarks information.
-			If bookmarks.Count > 0 Then
-				content.AppendLine("Pdf bookmarks:")
-				For Each parentBookmark As PdfBookmark In bookmarks
-					'Get the title.
-					content.AppendLine(parentBookmark.Title)
+                    ' Append the title of the parent bookmark
+                    content.AppendLine(parentBookmark.Title)
 
-					'Get the text style.
-					Dim textStyle As String = parentBookmark.DisplayStyle.ToString()
-					content.AppendLine(textStyle)
-					GetChildBookmark(parentBookmark,content)
-				Next parentBookmark
-			End If
+                    ' Get the display style of the parent bookmark and append it
+                    Dim textStyle As String = parentBookmark.DisplayStyle.ToString()
+                    content.AppendLine(textStyle)
 
-			'Save to file.
-			File.WriteAllText(result, content.ToString())
-		End Sub
+                    ' Recursively retrieve child bookmarks within the parent bookmark
+                    GetChildBookmark(parentBookmark, content)
+                Next parentBookmark
+            End If
 
-		Private Sub GetChildBookmark(ByVal parentBookmark As PdfBookmark, ByVal content As StringBuilder)
-			If parentBookmark.Count > 0 Then
-				For Each childBookmark As PdfBookmark In parentBookmark
-					'Get the title.
-					content.AppendLine(childBookmark.Title)
+            ' Write the bookmark content to the specified file
+            File.WriteAllText(result, content.ToString())
+        End Sub
+        Private Sub GetChildBookmark(ByVal parentBookmark As PdfBookmark, ByVal content As StringBuilder)
+            ' Check if the parent bookmark has any child bookmarks
+            If parentBookmark.Count > 0 Then
 
-					'Get the text style.
-					Dim textStyle As String = childBookmark.DisplayStyle.ToString()
-					content.AppendLine(textStyle)
-					GetChildBookmark(childBookmark, content)
-				Next childBookmark
-			End If
+                ' Iterate through each child bookmark
+                For Each childBookmark As PdfBookmark In parentBookmark
 
-		End Sub
-		Private Sub DocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+                    ' Append the title of the child bookmark
+                    content.AppendLine(childBookmark.Title)
+
+                    ' Get the display style of the child bookmark and append it
+                    Dim textStyle As String = childBookmark.DisplayStyle.ToString()
+                    content.AppendLine(textStyle)
+
+                    ' Recursively retrieve child bookmarks within the current child bookmark
+                    GetChildBookmark(childBookmark, content)
+                Next childBookmark
+            End If
+        End Sub
+        Private Sub DocumentViewer(ByVal filename As String)
+            Try
+                Process.Start(filename)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

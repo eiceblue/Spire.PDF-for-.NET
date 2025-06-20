@@ -1,6 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 Imports System.Drawing.Printing
 
 Namespace PrintWithoutPrintDialog
@@ -11,17 +9,20 @@ Namespace PrintWithoutPrintDialog
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a document
+			' Create a new PdfDocument object.
 			Dim doc As New PdfDocument()
 
-			'Load file
+			' Load the PDF file from the specified path.
 			doc.LoadFromFile("..\..\..\..\..\..\Data\PrintWithoutPrintDialog.pdf")
 
-			'Set the print controller without printing process dialog
+			' Set the print controller to use the standard print controller, which bypasses the print dialog.
 			doc.PrintSettings.PrintController = New StandardPrintController()
 
-			'Print all pages with default printer
+			' Print the document.
 			doc.Print()
+
+			' Close the document after printing.
+			doc.Close()
 		End Sub
 	End Class
 End Namespace

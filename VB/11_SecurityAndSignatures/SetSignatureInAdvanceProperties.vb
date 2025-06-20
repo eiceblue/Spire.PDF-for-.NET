@@ -13,48 +13,103 @@ Namespace SetSignatureInAdvanceProperties
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Input and output file paths
+			' Load the input file path
 			Dim input As String = "..\..\..\..\..\..\Data\SampleB_1.pdf"
+
+			' Load the input image file path
 			Dim inputFile_img As String = "..\..\..\..\..\..\Data\logo.png"
+
+			' Set the output file name and path for the result
 			Dim result As String = "SetDetailsOfSignatureInAdvanceProperties_result.pdf"
+
+			' Set the path of the pfx file containing the certificate
 			Dim pfxPath As String = "..\..\..\..\..\..\Data\gary.pfx"
 
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
-			doc.LoadFromFile(input)
-			Dim store As New System.Security.Cryptography.X509Certificates.X509Store(System.Security.Cryptography.X509Certificates.StoreLocation.CurrentUser)
-			store.Open(System.Security.Cryptography.X509Certificates.OpenFlags.ReadOnly)
 
+			' Load the PDF document from the input file path
+			doc.LoadFromFile(input)
+
+			' Open the X509Store in read-only mode
+			Dim store As New X509Store(StoreLocation.CurrentUser)
+			store.Open(OpenFlags.ReadOnly)
+
+			' Load the certificate from the specified pfx file path
 			Dim cert As New X509Certificate2(pfxPath, "e-iceblue")
+
+			' Create a new instance of the custom PKCS7 signature formatter with the certificate
 			Dim customPKCS7SignatureFormatter As New CustomPKCS7SignatureFormatterWithAPI(cert)
 
+			' Create a new PdfSignature object with the document, first page, custom formatter, and signature name
 			Dim signature As New PdfSignature(doc, doc.Pages(0), customPKCS7SignatureFormatter, "signature0")
+
+			' Set the bounds of the signature field on the page
 			signature.Bounds = New RectangleF(New PointF(250, 660), New SizeF(250, 90))
-			'Load sign image source.
+
+			' Load the sign image source
 			signature.SignImageSource = PdfImage.FromFile(inputFile_img)
-			'Set the dispay mode of graphics, if not set any, the default one will be applied
+
+			' Set the graphics mode for display
 			signature.GraphicsMode = GraphicMode.SignImageAndSignDetail
+
+			' Set the label for the signer's name
 			signature.NameLabel = "Signer:"
+
+			' Set the signer's name from the certificate
 			signature.Name = cert.GetNameInfo(X509NameType.SimpleName, True)
+
+			' Set the label for the contact information
 			signature.ContactInfoLabel = "ContactInfo:"
+
+			' Set the contact information from the certificate
 			signature.ContactInfo = cert.GetNameInfo(X509NameType.SimpleName, True)
+
+			' Set the label for the date
 			signature.DateLabel = "Date:"
+
+			' Set the current date as the signing date
 			signature.Date = Date.Now
+
+			' Set the label for the location
 			signature.LocationInfoLabel = "Location:"
+
+			' Set the location information
 			signature.LocationInfo = "Chengdu"
+
+			' Set the label for the reason
 			signature.ReasonLabel = "Reason: "
+
+			' Set the reason for signing
 			signature.Reason = "The certificate of this document"
+
+			' Set the label for the distinguished name
 			signature.DistinguishedNameLabel = "DN: "
+
+			' Get the issuer's name from the certificate and set it as the distinguished name
 			signature.DistinguishedName = cert.IssuerName.Name
+
+			' Set the document permissions for the certification
 			signature.DocumentPermissions = PdfCertificationFlags.AllowFormFill Or PdfCertificationFlags.ForbidChanges
+
+			' Enable certification
 			signature.Certificated = True
-			'Set fonts, if not set, default ones will be applied
-			signature.SignDetailsFont = New PdfFont(PdfFontFamily.TimesRoman, 10f)
+
+			' Set the font for the sign details
+			signature.SignDetailsFont = New PdfFont(PdfFontFamily.TimesRoman, 10.0F)
+
+			' Set the font for the sign name
 			signature.SignNameFont = New PdfFont(PdfFontFamily.Courier, 15)
-			'Set the sign image layout mode
+
+			' Set the sign image layout mode
 			signature.SignImageLayout = SignImageLayout.None
-			'Save pdf file.
+
+			' Save the PDF document with the digital signature
 			doc.SaveToFile(result, FileFormat.PDF)
+
+			' Close the PDF document
 			doc.Close()
+
 			'Show the result file
 			PDFDocumentViewer(result)
 		End Sub
@@ -70,20 +125,20 @@ Namespace SetSignatureInAdvanceProperties
 '''    * 
 	Friend Class CustomPKCS7SignatureFormatterWithAPI
 		Implements IPdfSignatureFormatter
-		<StructLayout(LayoutKind.Sequential, CharSet := CharSet.Ansi)>
-		Private Structure CRYPTOAPI_BLOB
+		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi)>
+		Public Structure CRYPTOAPI_BLOB
 			Public cbData As Integer
 			Public pbData As IntPtr
 		End Structure
 
-		<StructLayout(LayoutKind.Sequential, CharSet := CharSet.Ansi)>
-		Private Structure CRYPT_ALGORITHM_IDENTIFIER
+		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi)>
+		Public Structure CRYPT_ALGORITHM_IDENTIFIER
 			Public pszObjId As String
 			Public Parameters As CRYPTOAPI_BLOB
 		End Structure
 
-		<StructLayout(LayoutKind.Sequential, CharSet := CharSet.Ansi)>
-		Private Structure CRYPT_SIGN_MESSAGE_PARA
+		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi)>
+		Public Structure CRYPT_SIGN_MESSAGE_PARA
 			Public cbSize As UInt32
 			Public dwMsgEncodingType As UInt32
 			Public pSigningCert As IntPtr
@@ -104,7 +159,7 @@ Namespace SetSignatureInAdvanceProperties
 		End Structure
 
 		<Flags>
-		Private Enum FormatMessageFlags
+		Public Enum FormatMessageFlags
 			AllocateBuffer = &H100
 			IgnoreInserts = &H200
 			FromString = &H400
@@ -121,7 +176,7 @@ Namespace SetSignatureInAdvanceProperties
 		Shared Function FormatMessage(ByVal dwFlags As FormatMessageFlags, ByVal lpSource As IntPtr, ByVal messageId As UInteger, ByVal dwLanguageId As UInteger, ByRef lpBuffer As IntPtr, ByVal nSize As UInteger, ByVal Arguments As IntPtr) As UInteger
 		End Function
 
-		<DllImport("Crypt32.dll", EntryPoint := "CryptSignMessage", CharSet := CharSet.Ansi)>
+		<DllImport("Crypt32.dll", EntryPoint:="CryptSignMessage", CharSet:=CharSet.Ansi)>
 		Shared Function CryptSignMessage(ByRef pSignPara As CRYPT_SIGN_MESSAGE_PARA, ByVal fDetachedSignature As Boolean, ByVal cToBeSigned As UInt32, ByVal rgpbToBeSigned() As IntPtr, ByVal rgcbToBeSigned() As Integer, ByVal pbSignedBlob As IntPtr, ByRef pcbSignedBlob As UInt32) As Boolean
 		End Function
 
@@ -149,7 +204,7 @@ Namespace SetSignatureInAdvanceProperties
 		''' 3.Cert,X509Certificate2
 		'''   Required when SubFilter is adbe.x509.rsa_sha1
 		''' </summary>
-		Public ReadOnly Property Parameters() As Dictionary(Of String, Object)
+		Public ReadOnly Property Parameters() As Dictionary(Of String, Object) Implements IPdfSignatureFormatter.Parameters
 			Get
 				Return m_parameters
 			End Get
@@ -176,7 +231,7 @@ Namespace SetSignatureInAdvanceProperties
 		''' </summary>
 		''' <param name="content">The data to be signed.</param>
 		''' <returns>The signature.</returns>
-		Public Function Sign(ByVal content() As Byte) As Byte()
+		Public Function Sign(ByVal content() As Byte) As Byte() Implements IPdfSignatureFormatter.Sign
 			Dim signatureLength As UInteger = GetSignatureLength()
 
 			Dim signParams As CRYPT_SIGN_MESSAGE_PARA = CreateSignParams()

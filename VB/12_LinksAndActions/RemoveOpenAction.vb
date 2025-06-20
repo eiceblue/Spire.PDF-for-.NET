@@ -1,10 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.Annotations
-Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace RemoveOpenAction
 	Partial Public Class Form1
@@ -14,20 +8,25 @@ Namespace RemoveOpenAction
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PdfDocument object
 			Dim document As New PdfDocument()
 
-			'Load an existing pdf from disk
+			' Load a PDF file from a specified path
 			document.LoadFromFile("..\..\..\..\..\..\Data\OpenAction.pdf")
 
-			'Remove action
+			' Set the AfterOpenAction property to null (removes any predefined action)
 			document.AfterOpenAction = Nothing
 
-			Dim result As String = "Output.pdf"
-			'Save the document
+			' Specify the output file name as "result"
+			Dim result As String = "result.pdf"
+
+			' Save the modified document to a PDF file
 			document.SaveToFile(result)
 
-			'Launch the Pdf file
+			' Close the PDF document
+			document.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

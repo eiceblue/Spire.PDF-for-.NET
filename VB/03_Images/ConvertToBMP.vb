@@ -3,30 +3,36 @@ Imports Spire.Pdf
 
 
 Namespace ConvertToBMP
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Pdf file
-			Dim file As String = "..\..\..\..\..\..\Data\ToImage.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Specify the file path of the PDF to be converted to images
+            Dim file As String = "..\..\..\..\..\..\Data\ToImage.pdf"
 
-			'Open pdf document
-			Dim pdf As New PdfDocument()
-			pdf.LoadFromFile(file)
+            ' Create a new PdfDocument object
+            Dim pdf As New PdfDocument()
 
-			'Save to images
-			For i As Integer = 0 To pdf.Pages.Count - 1
-				Dim fileName As String = String.Format("ToBMP-img-{0}.bmp", i)
-				Using image As Image = pdf.SaveAsImage(i, 300, 300)
-					image.Save(fileName, ImageFormat.Bmp)
-				End Using
-			Next i
+            ' Load the PDF document from the specified file
+            pdf.LoadFromFile(file)
 
-			pdf.Close()
-		End Sub
+            ' Iterate through each page of the PDF document
+            For i As Integer = 0 To pdf.Pages.Count - 1
+                ' Generate a unique file name for each image
+                Dim fileName As String = String.Format("ToBMP-img-{0}.bmp", i)
 
-	End Class
+                ' Convert the current page of the PDF to an image with a resolution of 300x300 dpi
+                Using image As Image = pdf.SaveAsImage(i, 300, 300)
+                    ' Save the image in BMP format with the specified file name
+                    image.Save(fileName, ImageFormat.Bmp)
+                End Using
+            Next i
+
+            ' Close the PdfDocument object
+            pdf.Close()
+        End Sub
+    End Class
 End Namespace

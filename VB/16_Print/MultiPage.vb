@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Graphics
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Print
 
 Namespace MultiPage
@@ -12,21 +9,29 @@ Namespace MultiPage
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new instance of PdfDocument object
 			Dim doc As New PdfDocument()
-			'Load a file
+
+			' Load the PDF document from the specified file path
 			doc.LoadFromFile("..\..\..\..\..\..\Data\MultiPage.pdf")
-			'Select muti page to one paper layout
+
+			' Configure the print settings to use a multi-page layout with 2 rows and 2 columns,
+			' without rotating pages, in horizontal order
 			doc.PrintSettings.SelectMultiPageLayout(2, 2, False, PdfMultiPageOrder.Horizontal)
-			'Set print page range
+
+			' Select a page range from page 3 to page 15 for printing
 			doc.PrintSettings.SelectPageRange(3, 15)
-			'Set paper margins,measured in hundredths of an inch
+
+			' Set the paper margins for printing to 10 units on all sides
 			doc.PrintSettings.SetPaperMargins(10, 10, 10, 10)
-			'Indicating whether the page is printed in landscape or portrait orientation.
+
+			' Set the orientation of the printing to portrait (not landscape)
 			doc.PrintSettings.Landscape = False
-			'Print document
+
+			' Print the document using the configured settings
 			doc.Print()
-			'Close the document
+
+			' Close the document after printing
 			doc.Close()
 		End Sub
 	End Class

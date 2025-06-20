@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Graphics
+﻿Imports Spire.Pdf
 
 Namespace SplitPage
 	Partial Public Class Form1
@@ -11,19 +8,25 @@ Namespace SplitPage
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PdfDocument object.
 			Dim doc As New PdfDocument()
-			'Load a file
+
+			' Load the PDF file from the specified path.
 			doc.LoadFromFile("..\..\..\..\..\..\Data\SplitPage.pdf")
-			'Indicating whether the page is printed in landscape or portrait orientation.
+
+			' Set the printing orientation to portrait (not landscape).
 			doc.PrintSettings.Landscape = False
-			'Set print page range
+
+			' Select a page range with only page 1 for printing.
 			doc.PrintSettings.SelectPageRange(1, 1)
-			'Select split page to multiple paper layout
+
+			' Select the split page layout for printing.
 			doc.PrintSettings.SelectSplitPageLayout()
-			'Print document
+
+			' Print the document.
 			doc.Print()
-			'Close the document
+
+			' Close the document after printing.
 			doc.Close()
 		End Sub
 	End Class

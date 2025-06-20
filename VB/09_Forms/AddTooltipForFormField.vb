@@ -1,78 +1,81 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
 Imports Spire.Pdf.Fields
 
 Namespace AddTooltipForFormField
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Pdf file path
-			Dim input As String = "..\..\..\..\..\..\Data\AddTooltipForFormField.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Set the input file path
+            Dim input As String = "..\..\..\..\..\..\Data\AddTooltipForFormField.pdf"
 
-			'Open pdf document
-			Dim doc As New PdfDocument()
-		doc.LoadFromFile(input)
+            ' Create a new PDF document
+            Dim doc As New PdfDocument()
+            doc.LoadFromFile(input)
 
-			'Get the first page
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Get the first page of the document
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			'As for existing pdf, the property needs to be set as true
-			doc.AllowCreateForm = True
+            ' Enable form creation in the document
+            doc.AllowCreateForm = True
 
-			'Create a new pdf font
-			Dim font As New PdfFont(PdfFontFamily.Helvetica, 12f, PdfFontStyle.Bold)
+            ' Set the font and brush for drawing text
+            Dim font As New PdfFont(PdfFontFamily.Helvetica, 12.0F, PdfFontStyle.Bold)
+            Dim brush As PdfBrush = PdfBrushes.Black
 
-			'Create a pdf brush
-			Dim brush As PdfBrush = PdfBrushes.Black
+            ' Set the initial position for drawing text
+            Dim x As Single = 50
+            Dim y As Single = 590
 
-			Dim x As Single = 50
-			Dim y As Single = 590
-			Dim tempX As Single = 0
+            ' Store the temporary X position
+            Dim tempX As Single = 0
 
-			Dim text As String = "E-mail: "
+            ' Set the text to be drawn
+            Dim text As String = "E-mail: "
 
-			'Draw a text into page
-			page.Canvas.DrawString(text, font, brush, x, y)
+            ' Draw the text on the page canvas
+            page.Canvas.DrawString(text, font, brush, x, y)
 
-			tempX = font.MeasureString(text).Width + x + 15
+            ' Calculate the updated X position based on the width of the text
+            tempX = font.MeasureString(text).Width + x + 15
 
-			'Create a pdf textbox field
-			Dim textbox As New PdfTextBoxField(page, "TextBox")
+            ' Create a new textbox field
+            Dim textbox As New PdfTextBoxField(page, "TextBox")
 
-			'Set the bounds of textbox field
-			textbox.Bounds = New RectangleF(tempX, y, 100, 15)
+            ' Set the bounds (position and size) of the textbox
+            textbox.Bounds = New RectangleF(tempX, y, 100, 15)
 
-			'Set the border width of textbox field
-			textbox.BorderWidth = 0.75f
+            ' Set the border properties of the textbox
+            textbox.BorderWidth = 0.75F
+            textbox.BorderStyle = PdfBorderStyle.Solid
 
-			'Set the border style of textbox field
-			textbox.BorderStyle = PdfBorderStyle.Solid
+            ' Add the textbox field to the document's form fields collection
+            doc.Form.Fields.Add(textbox)
 
-			'Add the textbox field into pdf document
-			doc.Form.Fields.Add(textbox)
+            ' Set the tooltip for the textbox field
+            doc.Form.Fields("TextBox").ToolTip = "Please insert a valid email address"
 
-			'Add a tooltip for the textbox field
-			doc.Form.Fields("TextBox").ToolTip = "Please insert a valid email address"
+            ' Set the output file path
+            Dim output As String = "AddTooltipForFormField.pdf"
 
-			Dim output As String = "AddTooltipForFormField.pdf"
+            ' Save the modified document to the output file
+            doc.SaveToFile(output)
 
-			'Save pdf document
-			doc.SaveToFile(output)
+            ' Close the document
+            doc.Close()
 
-			'Launch the Pdf file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Launch the Pdf file
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

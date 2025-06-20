@@ -1,40 +1,53 @@
 Imports Spire.Pdf
-Imports Spire.Pdf.Graphics
+Imports Spire.Pdf.Utilities
 
 Namespace DeleteImageFirstApproach
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Pdf file
-			Dim file As String = "..\..\..\..\..\..\Data\DeleteImage.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Specify the input file path
+            Dim file As String = "..\..\..\..\..\..\Data\DeleteImage.pdf"
 
-			'Open pdf document
-			Dim pdf As New PdfDocument()
-			pdf.LoadFromFile(file)
+            ' Create a new PdfDocument object
+            Dim pdf As New PdfDocument()
 
-			'Get the first page
-			Dim page As PdfPageBase = pdf.Pages(0)
+            ' Load the PDF document from the specified input file
+            pdf.LoadFromFile(file)
 
-			'Delete the first image on the page
-			page.DeleteImage(page.ImagesInfo(0).Image)
+            ' Get the first page of the PDF document
+            Dim page As PdfPageBase = pdf.Pages(0)
 
-			Dim result As String = "DeleteImage_out.pdf"
+            ' Create a PdfImageHelper object to work with images in the PDF document
+            Dim helper As New PdfImageHelper()
 
-			'Save the document
-			pdf.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
+            ' Retrieve information about all the images on the page
+            Dim images() As PdfImageInfo = helper.GetImagesInfo(page)
 
-	End Class
+            ' Delete the first image on the page
+            helper.DeleteImage(images(0))
+
+            ' Specify the output file name
+            Dim result As String = "DeleteImage_out.pdf"
+
+            ' Save the modified PDF document to the specified output file
+            pdf.SaveToFile(result)
+
+            ' Close the PDF document
+            pdf.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal filename As String)
+            Try
+                System.Diagnostics.Process.Start(filename)
+            Catch
+            End Try
+        End Sub
+
+    End Class
 End Namespace

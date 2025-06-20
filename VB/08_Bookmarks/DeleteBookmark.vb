@@ -1,36 +1,42 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 
 Namespace DeleteBookmark
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load a pdf document
-			Dim input As String = "..\..\..\..\..\..\Data\DeleteBookmark.pdf"
-			Dim doc As New PdfDocument()
-		doc.LoadFromFile(input)
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            Dim input As String = "..\..\..\..\..\..\Data\DeleteBookmark.pdf"
 
-			'Delete the first bookmark
-			doc.Bookmarks.RemoveAt(0)
+            ' Create a new PdfDocument instance
+            Dim doc As New PdfDocument()
 
-			'Save the pdf document
-			Dim output As String = "DeleteBookmark.pdf"
-			doc.SaveToFile(output)
+            ' Load an existing PDF document from the specified file path
+            doc.LoadFromFile(input)
 
-			'Launch the file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
+            ' Delete the first bookmark
+            doc.Bookmarks.RemoveAt(0)
 
-	End Class
+            ' Specify the output file name
+            Dim output As String = "DeleteBookmark.pdf"
+
+            ' Save the modified document to the specified file path
+            doc.SaveToFile(output)
+
+            ' Close the document
+            doc.Close()
+
+            ' Launch the file
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+
+    End Class
 End Namespace

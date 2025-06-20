@@ -1,8 +1,5 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace RemoveBlankPages
 	Partial Public Class Form1
@@ -12,32 +9,41 @@ Namespace RemoveBlankPages
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new PDF document.
+			' Create a new PdfDocument object
 			Dim document As New PdfDocument()
 
-			'Load the file from disk.
+			' Load the PDF document from the specified file path
 			document.LoadFromFile("..\..\..\..\..\..\Data\RemoveBlankPages.pdf")
 
-
+			' Iterate through the pages of the document in reverse order
 			For i As Integer = document.Pages.Count - 1 To 0 Step -1
+
+				' Check if the current page is blank
 				If document.Pages(i).IsBlank() Then
-					'Remove blank page
+					' Remove the blank page
 					document.Pages.RemoveAt(i)
 				Else
-					'Convert the page to a picture if it is not a blank page.
+					' Convert the page to an image (bitmap)
 					Dim image As Image = document.SaveAsImage(i, PdfImageType.Bitmap)
 
-					'Determine whether a picture is blank or not.
+					' Determine whether the image is blank or not
 					If IsImageBlank(image) Then
-						'Delete the corresponding PDF page if the picture is blank.
+						' Delete the corresponding PDF page if the image is blank
 						document.Pages.RemoveAt(i)
 					End If
 				End If
+
 			Next i
+
+			' Specify the result file path for saving the modified document
 			Dim result As String = "RemoveBlankPages_out.pdf"
 
-			'Save the document
+			' Save the modified document to the result file
 			document.SaveToFile(result)
+
+			' Close the PDF document
+			document.Close()
+
 			'Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub

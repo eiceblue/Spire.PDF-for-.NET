@@ -1,57 +1,67 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Fields
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Annotations
-Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
-Imports Spire.Pdf.General.Find
+Imports Spire.Pdf.Texts
+
 Namespace SearchTextAndAddHyperlink
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim input As String = "..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Specify the path to the input PDF file
+            Dim input As String = "..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
 
-			' Read a pdf file
-			doc.LoadFromFile(input)
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-			' Get the first page of pdf file
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Load the PDF document from the specified input file
+            doc.LoadFromFile(input)
 
-			' Create PdfTextFindCollection object to find all the matched phrases
-			Dim collection As PdfTextFindCollection = page.FindText("e-iceblue", TextFindParameter.IgnoreCase)
+            ' Get the first page of the document
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			' hyperlink url
-			Dim url As String = "http://www.e-iceblue.com"
+            ' Create a PdfTextFinder object and specify the search options
+            Dim finder As New PdfTextFinder(page)
+            finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase
 
-			For Each find As PdfTextFind In collection.Finds
-				' Create a PdfUriAnnotation object to add hyperlink for the searched text 
-				Dim uri As New PdfUriAnnotation(find.Bounds)
-				uri.Uri = url
-				uri.Border = New PdfAnnotationBorder(1f)
-				uri.Color = Color.Blue
-				page.AnnotationsWidget.Add(uri)
-			Next find
+            ' Find all occurrences of the text "e-iceblue" on the page
+            Dim finds As List(Of PdfTextFragment) = finder.Find("e-iceblue")
 
-			Dim result As String = "SearchTextAndAddHyperlink_out.pdf"
+            ' Specify the URL for the hyperlink
+            Dim url As String = "http://www.e-iceblue.com"
 
-			'Save the document
-			doc.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
+            ' Iterate over each found text fragment
+            For Each find As PdfTextFragment In finds
+                ' Create a PdfUriAnnotation object with the bounds of the found text
+                Dim uri As New PdfUriAnnotation(find.Bounds(0))
+                uri.Uri = url
+                uri.Border = New PdfAnnotationBorder(1.0F)
+                uri.Color = Color.Blue
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+                ' Add the annotation to the page's annotation widget collection
+                page.Annotations.Add(uri)
+            Next find
+
+            ' Specify the output file name
+            Dim result As String = "SearchTextAndAddHyperlink_out.pdf"
+
+            ' Save the modified document to the specified output file
+            doc.SaveToFile(result)
+
+            ' Close the document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

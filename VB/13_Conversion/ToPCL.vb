@@ -1,8 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Linq
-Imports System.Text
-Imports System.Threading.Tasks
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 
 Namespace ToPCL
 	Partial Public Class Form1
@@ -12,17 +8,25 @@ Namespace ToPCL
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+			' Specify the file path of the input PDF file
 			Dim input As String = "..\..\..\..\..\..\Data\ToPCL.pdf"
 
-			'Load a PDF file
+			' Create a new instance of PdfDocument
 			Dim doc As New PdfDocument()
+
+			' Load the PDF file from the specified file path
 			doc.LoadFromFile(input)
 
-			'Save to PCL file
+			' Specify the file path for the resulting PCL file
 			Dim output As String = "ToPCL_result.pcl"
+
+			' Save the PDF document to a PCL file
 			doc.SaveToFile(output, FileFormat.PCL)
 
-			'Launch the PCL file
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the PCL file
 			PDFDocumentViewer(output)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)

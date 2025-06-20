@@ -1,7 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace DeleteAllBookmarks
 	Partial Public Class Form1
@@ -11,20 +8,25 @@ Namespace DeleteAllBookmarks
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new Pdf document.
+			' Create a new PdfDocument instance
 			Dim document As New PdfDocument()
 
-			'Load the file from disk.
+			' Load an existing PDF document from the specified file path
 			document.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
 
-			'Remove all bookmarks.
+			' Clear all bookmarks in the document
 			document.Bookmarks.Clear()
 
+			' Specify the output file name
 			Dim result As String = "DeleteAllBookmarks_out.pdf"
 
-			'Save the document
+			' Save the modified document to the specified file path
 			document.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the document
+			document.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal filename As String)

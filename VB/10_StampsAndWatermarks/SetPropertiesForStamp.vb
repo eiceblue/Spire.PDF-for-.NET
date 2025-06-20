@@ -9,29 +9,42 @@ Namespace SetPropertiesForStamp
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load old PDF from disk.
+			' Create a new instance of PdfDocument
 			Dim pdf As New PdfDocument()
+
+			' Load the PDF file from a specified path
 			pdf.LoadFromFile("..\..\..\..\..\..\Data\TextStamp.pdf")
 
-			'Get the first page
+			' Get the first page of the PDF document
 			Dim page As PdfPageBase = pdf.Pages(0)
 
-			'Traverse annotations widget
+			' Iterate through each annotation in the page's annotation list
 			For Each annotation As PdfAnnotation In page.AnnotationsWidget.List
-				'If it is PdfRubberStampAnnotationWidget
+
+				' Check if the annotation is a rubber stamp annotation
 				If TypeOf annotation Is PdfRubberStampAnnotationWidget Then
+
+					' Convert the annotation to a PdfRubberStampAnnotationWidget object
 					Dim stamp As PdfRubberStampAnnotationWidget = TryCast(annotation, PdfRubberStampAnnotationWidget)
+
+					' Set the author, subject, creation date, and modified date properties of the rubber stamp annotation
 					stamp.Author = "TestUser"
 					stamp.Subject = "E-iceblue"
 					stamp.CreationDate = Date.Now
 					stamp.ModifiedDate = Date.Now
 				End If
 			Next annotation
-			'Save to a pdf file
+
+			' Specify the output file name for the modified PDF document
 			Dim result As String = "SetPropertiesForStamp.pdf"
+
+			' Save the modified PDF document to the specified output file using Spire.Pdf library
 			pdf.SaveToFile(result, Spire.Pdf.FileFormat.PDF)
 
-			'Launch the file
+			' Close the PDF document
+			pdf.Close()
+
+			' Launch the file
 			DocumentViewer(result)
 		End Sub
 		Private Sub DocumentViewer(ByVal filename As String)

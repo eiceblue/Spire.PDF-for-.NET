@@ -1,66 +1,79 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Fields
-Imports Spire.Pdf.Annotations
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
-Imports Spire.Pdf.General.Find
+Imports Spire.Pdf.Texts
+
 Namespace ReplaceFirstSearchedText
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim input As String = "..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Specify the path to the input PDF file
+            Dim input As String = "..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
 
-			' Read a pdf file
-			doc.LoadFromFile(input)
+            ' Create a new PdfDocument instance
+            Dim doc As New PdfDocument()
 
-			' Get the first page of pdf file
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Load the input PDF file
+            doc.LoadFromFile(input)
 
-			' Searches "Spire.PDF for .NET" by ignoring case
-			Dim collection As PdfTextFindCollection = page.FindText("Spire.PDF for .NET",TextFindParameter.IgnoreCase)
+            ' Get the first page of the PDF document
+            Dim page As PdfPageBase = doc.Pages(0)
 
-			Dim newText As String = "Spire.PDF API"
-			' Gets the first found object
-			Dim find As PdfTextFind = collection.Finds(0)
+            ' Create a PdfTextFinder instance to find text on the page
+            Dim finder As New PdfTextFinder(page)
 
-			' Creates a brush
-			Dim brush As PdfBrush = New PdfSolidBrush(Color.DarkBlue)
+            ' Set the find options to ignore case
+            finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase
 
-			' Defines a font
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 15f, FontStyle.Bold))
+            ' Find the specified text on the page
+            Dim finds As List(Of PdfTextFragment) = finder.Find("Spire.PDF for .NET")
 
-			' Gets the bound of the first found text in page
-			Dim rec As RectangleF = find.Bounds
+            ' Define the new replacement text
+            Dim newText As String = "Spire.PDF API"
 
-			page.Canvas.DrawRectangle(PdfBrushes.White, rec)
+            ' Get the first found text fragment
+            Dim find As PdfTextFragment = finds(0)
 
-			' Draws new text as defined font and color
-			page.Canvas.DrawString(newText, font, brush, rec)
+            ' Define a brush for text color
+            Dim brush As PdfBrush = New PdfSolidBrush(Color.DarkBlue)
 
-			' This method can directly replace old text with newText,but it just can set the background color, can not set font/forecolor
-		   ' find.ApplyRecoverString(newText, Color.Gray);
+            ' Define a font for the new text
+            Dim font As New PdfTrueTypeFont(New Font("Arial", 15.0F, FontStyle.Bold))
 
-			Dim result As String = "ReplaceFirstSearchedText_out.pdf"
+            ' Get the bounding rectangle of the first found text
+            Dim rec As RectangleF = find.Bounds(0)
 
-			'Save the document
-			doc.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
+            ' Draw a white rectangle to cover the found text
+            page.Canvas.DrawRectangle(PdfBrushes.White, rec)
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Draw the new text in the rectangle with the defined font and color
+            page.Canvas.DrawString(newText, font, brush, rec)
+
+            ' Alternatively, you can use the ApplyRecoverString method to directly replace the old text with newText,
+            ' but it only sets the background color and cannot set the font or foreground color.
+            ' find.ApplyRecoverString(newText, Color.Gray);
+
+            ' Specify the output file name
+            Dim result As String = "ReplaceFirstSearchedText_out.pdf"
+
+            ' Save the modified document to a file
+            doc.SaveToFile(result)
+
+            ' Close the document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

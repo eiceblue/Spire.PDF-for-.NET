@@ -1,12 +1,8 @@
-﻿Imports System.ComponentModel
-Imports System.Text
+﻿
 Imports Spire.Pdf
-Imports Spire.Pdf.Fields
-Imports Spire.Pdf.Annotations
 Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
-Imports Spire.Pdf.General.Find
+Imports Spire.Pdf.Texts
+
 Namespace SearchWithRegularExpression
 	Partial Public Class Form1
 		Inherits Form
@@ -15,53 +11,69 @@ Namespace SearchWithRegularExpression
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+			' Specify the path to the input PDF file
 			Dim input As String = "..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
+
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
 
-			' Read a pdf file
+			' Load the PDF document from the specified input file
 			doc.LoadFromFile(input)
 
-			' Get the first page of pdf file
+			' Get the first page of the document
 			Dim page As PdfPageBase = doc.Pages(0)
 
-			' Create PdfTextFindCollection object to find all the phrases matching the regular expression
-			Dim collection As PdfTextFindCollection = page.FindText("\d{4}",TextFindParameter.Regex)
+			' Create a PdfTextFinder object and set search options as regular expression
+			Dim finder As New PdfTextFinder(page)
+			finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.Regex
 
+			' Find all occurrences of a four-digit number in the document
+			Dim finds As List(Of PdfTextFragment) = finder.Find("\d{4}")
+
+			' Specify the new text to replace the found text
 			Dim newText As String = "New Year"
 
-			' Creates a brush
+			' Specify the brush for the text color
 			Dim brush As PdfBrush = New PdfSolidBrush(Color.DarkBlue)
 
-			' Defines a font
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 7f, FontStyle.Bold))
+			' Specify the font for the new text
+			Dim font As New PdfTrueTypeFont(New Font("Arial", 7.0F, FontStyle.Bold))
 
-			' Defines text horizontal/vertical center format
-			Dim centerAlign As New PdfStringFormat(PdfTextAlignment.Center,PdfVerticalAlignment.Middle)
+			' Specify the string format for center alignment
+			Dim centerAlign As New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
 
 			Dim rec As RectangleF
-			For Each find As PdfTextFind In collection.Finds
-				' Gets the bound of the found text in page
-				 rec = find.Bounds
+			For Each find As PdfTextFragment In finds
+				' Get the bounds of the found text on the page
+				rec = find.Bounds(0)
 
-				 page.Canvas.DrawRectangle(PdfBrushes.GreenYellow, rec)
-				 ' Draws new text as defined font and color
-				 page.Canvas.DrawString(newText, font, brush, rec,centerAlign)
+				' Draw a rectangle with green-yellow color around the found text
+				page.Canvas.DrawRectangle(PdfBrushes.GreenYellow, rec)
 
-				' This method can directly replace old text with newText,but it just can set the background color, can not set font/forecolor
+				' Draw the new text using the defined font, color, and alignment within the same bounds
+				page.Canvas.DrawString(newText, font, brush, rec, centerAlign)
+
+				' Alternatively, the following line can directly replace the old text with the new text,
+				' but it only sets the background color and cannot set the font or forecolor
 				' find.ApplyRecoverString(newText, Color.Gray);
 			Next find
 
+			' Specify the output file name
 			Dim result As String = "ReplaceTextWithRegularExpression_out.pdf"
 
-			'Save the document
+			' Save the modified document to the specified output file
 			doc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 
 		Private Sub PDFDocumentViewer(ByVal fileName As String)
 			Try
-				Process.Start(fileName)
+				System.Diagnostics.Process.Start(fileName)
 			Catch
 			End Try
 		End Sub

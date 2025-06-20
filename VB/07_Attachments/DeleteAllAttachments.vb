@@ -1,42 +1,46 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Attachments
-Imports System.IO
 
 Namespace DeleteAllAttachments
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim input As String = "..\..\..\..\..\..\Data\DeleteAllAttachments.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Set the input file path for the PDF document
+            Dim input As String = "..\..\..\..\..\..\Data\DeleteAllAttachments.pdf"
 
-			'Open pdf document
-			Dim doc As New PdfDocument()
-		doc.LoadFromFile(input)
+            ' Create a new PdfDocument object 
+            Dim doc As New PdfDocument()
 
-			'Get all attachments
-			Dim attachments As PdfAttachmentCollection = doc.Attachments
+            ' Load the PDF document from the specified input file
+            doc.LoadFromFile(input)
 
-			'Delete all attachments
-			attachments.Clear()
+            ' Get the collection of attachments from the PDF document
+            Dim attachments As PdfAttachmentCollection = doc.Attachments
 
-			Dim output As String = "DeleteAllAttachments.pdf"
+            ' Clear all attachments from the collection
+            attachments.Clear()
 
-			'Save pdf document
-			doc.SaveToFile(output)
+            ' Set the output file path for the modified PDF document
+            Dim output As String = "DeleteAllAttachments.pdf"
 
-			'Launch the Pdf file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Save the modified PDF document to the specified output file
+            doc.SaveToFile(output)
+
+            ' Close the PDF document
+            doc.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

@@ -9,25 +9,37 @@ Namespace ReplaceTextSecond
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Input file path
+			' Specify the path to the input PDF file
 			Dim input As String = "..\..\..\..\..\..\Data\ReplaceTextInPage.pdf"
-			'Create a new PdfDocument
+
+			' Create a new PdfDocument instance
 			Dim doc As New PdfDocument()
-			' Load pdf file from disk
+
+			' Load the input PDF file
 			doc.LoadFromFile(input)
-			' Get the first page of pdf file
+
+			' Get the first page of the PDF document
 			Dim page As PdfPageBase = doc.Pages(0)
-			'Create a PdfTextReplacer using the first page
+
+			' Create a PdfTextReplacer using the first page
 			Dim replacer As New PdfTextReplacer(page)
-			'Replace all texts in this page
-			replacer.ReplaceAllText("Spire.PDF","E-iceblue")
-			'Replace the first found word
+
+			' Replace all occurrences of "Spire.PDF" with "E-iceblue"
+			replacer.ReplaceAllText("Spire.PDF", "E-iceblue")
+
+			' Replace the occurrence of "Adobe Acrobat" with "PDF editors"
 			replacer.ReplaceText("Adobe Acrobat", "PDF editors")
-			'Output file path
+
+			' Specify the output file name
 			Dim result As String = "ReplaceTextInPage_out.pdf"
-			'Save the document
+
+			' Save the modified document to a file
 			doc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

@@ -1,48 +1,51 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Bookmarks
-Imports System.ComponentModel
 Imports System.IO
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace GetPdfBookmarkPageNumber
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new PDF document.
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument instance
+            Dim doc As New PdfDocument()
 
-			'Load the file from disk.
-			doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
+            ' Load an existing PDF document from the specified file path
+            doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
 
-			'Get bookmarks collections of the PDF file.
-			Dim bookmarks As PdfBookmarkCollection = doc.Bookmarks
+            ' Get the collection of bookmarks from the document
+            Dim bookmarks As PdfBookmarkCollection = doc.Bookmarks
 
-			'Get the page number of the first bookmark.
-			Dim bookmark As PdfBookmark = bookmarks(0)
-			Dim pageNumber As Integer = doc.Pages.IndexOf(bookmark.Destination.Page)+1
+            ' Get the first bookmark from the collection
+            Dim bookmark As PdfBookmark = bookmarks(0)
 
-			'Save to file.
-			Dim showPageNumber As String = pageNumber.ToString()
+            ' Get the page number of the destination page associated with the bookmark
+            Dim pageNumber As Integer = doc.Pages.IndexOf(bookmark.Destination.Page) + 1
 
-			Dim result As String = "GetPdfBookmarkPageNumber.txt"
+            ' Convert the page number to a string
+            Dim showPageNumber As String = pageNumber.ToString()
 
-			'Save to file.
-			File.WriteAllText(result, "The page number of the first bookmark is: " & showPageNumber)
+            ' Specify the output file name
+            Dim result As String = "GetPdfBookmarkPageNumber.txt"
 
-			'Launch the file.
-			DocumentViewer(result)
-		End Sub
+            ' Write the bookmark page number information to the specified file
+            File.WriteAllText(result, "The page number of the first bookmark is: " & showPageNumber)
 
-		Private Sub DocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+            ' Close the document
+            doc.Close()
+
+            ' Launch the file
+            DocumentViewer(result)
+        End Sub
+
+        Private Sub DocumentViewer(ByVal filename As String)
+            Try
+                Process.Start(filename)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

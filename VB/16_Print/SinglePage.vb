@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Graphics
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Print
 
 Namespace SinglePage
@@ -12,21 +9,28 @@ Namespace SinglePage
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PdfDocument object.
 			Dim doc As New PdfDocument()
-			'Load a file
+
+			' Load the PDF file from the specified path.
 			doc.LoadFromFile("..\..\..\..\..\..\Data\SinglePage.pdf")
-			'Indicate whether the page is printed in landscape or portrait orientation
+
+			' Set the printing orientation to portrait (not landscape).
 			doc.PrintSettings.Landscape = False
-			'Set print page range
+
+			' Select a page range from page 9 to page 15 for printing.
 			doc.PrintSettings.SelectPageRange(9, 15)
-			'Select one page to one paper layout
+
+			' Set the single page layout with custom scaling mode and maintain aspect ratio.
 			doc.PrintSettings.SelectSinglePageLayout(PdfSinglePageScalingMode.CustomScale, True, 100)
-			'Set paper margins,measured in hundredths of an inch
+
+			' Set the paper margins for printing to 10 units on all sides.
 			doc.PrintSettings.SetPaperMargins(10, 10, 10, 10)
-			'Print document
+
+			' Print the document.
 			doc.Print()
-			'Close the document
+
+			' Close the document after printing.
 			doc.Close()
 		End Sub
 	End Class

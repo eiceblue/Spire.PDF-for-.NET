@@ -1,9 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
-Imports Spire.Pdf.Graphics
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace SVGToPDF
 	Partial Public Class Form1
@@ -13,17 +8,22 @@ Namespace SVGToPDF
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new PDF document.
+			' Create a new instance of PdfDocument class
 			Dim doc As New PdfDocument()
 
-			'Load the file from disk.
+			' Load the SVG file from the specified path
 			doc.LoadFromSvg("..\..\..\..\..\..\Data\template.svg")
 
-			'Save the document
+			' Specify the output file name for the resulting PDF
 			Dim result As String = "SVgToPDF_out.pdf"
+
+			' Save the document as a PDF file
 			doc.SaveToFile(result)
 
-			'Launch the Pdf file
+			' Close the PdfDocument object
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

@@ -2,49 +2,60 @@
 Imports Spire.Pdf.Actions
 Imports Spire.Pdf.Fields
 Imports Spire.Pdf.Widget
-Imports System.ComponentModel
 Imports System.IO
-Imports System.Text
 
 Namespace ExtractJavaScript
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
-			Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object
+            Dim pdf As New PdfDocument()
 
-			'Load a pdf document
-			pdf.LoadFromFile("..\..\..\..\..\..\Data\ExtractJavaScript.pdf")
+            ' Load the PDF document from the specified file path
+            pdf.LoadFromFile("..\..\..\..\..\..\Data\ExtractJavaScript.pdf")
 
-			Dim js As String = Nothing
+            ' Initialize a variable to store the JavaScript code
+            Dim js As String = Nothing
 
-			Dim form As PdfFormWidget = TryCast(pdf.Form, PdfFormWidget)
-			For i As Integer = 0 To form.FieldsWidget.List.Count - 1
-				Dim field As PdfField = TryCast(form.FieldsWidget.List(i), PdfField)
-				If TypeOf field Is PdfTextBoxFieldWidget Then
-					Dim textbox As PdfTextBoxFieldWidget = TryCast(field, PdfTextBoxFieldWidget)
+            ' Get the form widget from the loaded PDF document
+            Dim form As PdfFormWidget = TryCast(pdf.Form, PdfFormWidget)
 
-					'Find the textbox named total
-					If textbox.Name = "total" Then
-						'Get the action
-						Dim jsa As PdfJavaScriptAction = textbox.Actions.Calculate
+            ' Iterate through each field in the form
+            For i As Integer = 0 To form.FieldsWidget.List.Count - 1
+                ' Get the current field
+                Dim field As PdfField = TryCast(form.FieldsWidget.List(i), PdfField)
 
-						If jsa IsNot Nothing Then
-							'Get JavaScript
-							js = jsa.Script
-						End If
-					End If
-				End If
-			Next i
+                ' Check if the field is a TextBox field
+                If TypeOf field Is PdfTextBoxFieldWidget Then
+                    ' Cast the field as a TextBox field
+                    Dim textbox As PdfTextBoxFieldWidget = TryCast(field, PdfTextBoxFieldWidget)
 
-			'Save and launch the result file
-			File.WriteAllText("ExtractJavaScript.txt", js)
-			Process.Start("ExtractJavaScript.txt")
-		End Sub
+                    ' Find the textbox named "total"
+                    If textbox.Name = "total" Then
+                        ' Get the Calculate action of the textbox
+                        Dim jsa As PdfJavaScriptAction = textbox.Actions.Calculate
 
-	End Class
+                        ' Check if a JavaScript action is associated with the textbox
+                        If jsa IsNot Nothing Then
+                            ' Get the JavaScript code from the action
+                            js = jsa.Script
+                        End If
+                    End If
+                End If
+            Next i
+
+            ' Write the JavaScript code to a text file
+            File.WriteAllText("ExtractJavaScript.txt", js)
+
+            ' Close the document
+            pdf.Close()
+
+            Process.Start("ExtractJavaScript.txt")
+        End Sub
+
+    End Class
 End Namespace

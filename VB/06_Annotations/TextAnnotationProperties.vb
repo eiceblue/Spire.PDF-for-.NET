@@ -1,65 +1,75 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Annotations
-Imports System.ComponentModel
-Imports System.IO
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace TextAnnotationProperties
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load old PDF from disk.
-			Dim pdf As New PdfDocument()
-			pdf.LoadFromFile("..\..\..\..\..\..\Data\FreeTextAnnotation.pdf")
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object 
+            Dim pdf As New PdfDocument()
 
-			'Get the first page.
-			Dim firstPage As PdfPageBase = pdf.Pages(0)
+            ' Load an existing PDF document
+            pdf.LoadFromFile("..\..\..\..\..\..\Data\FreeTextAnnotation.pdf")
 
-			'Create a new PDF document.
-			Dim newPdf As New PdfDocument()
+            ' Get the first page of the PDF
+            Dim firstPage As PdfPageBase = pdf.Pages(0)
 
-			'Traverse the annotations of the first page of old PDF
-			For Each annotation As PdfAnnotation In firstPage.AnnotationsWidget.List
-				'If it is FreeTextAnnotation
-				If TypeOf annotation Is PdfFreeTextAnnotationWidget Then
-					Dim textAnnotation As PdfFreeTextAnnotationWidget = TryCast(annotation, PdfFreeTextAnnotationWidget)
+            ' Create a new PdfDocument object to store the copied annotations
+            Dim newPdf As New PdfDocument()
 
-					'Get its bounds and text
-					Dim rect = textAnnotation.Bounds
-					Dim text = textAnnotation.Text
+            ' Iterate through each annotation in the first page
+            For Each annotation As PdfAnnotation In firstPage.Annotations.List
 
-					'Add new page for newPdf
-					Dim newPage As PdfPageBase = newPdf.Pages.Add(firstPage.Size)
+                ' Check if the annotation is a free text annotation
+                If TypeOf annotation Is PdfFreeTextAnnotationWidget Then
 
-					'Add annotation with the same settings as the annotation of old PDF
-					Dim newAnnotation As New PdfFreeTextAnnotation(rect)
-					newAnnotation.Text = text
-					newAnnotation.CalloutLines = textAnnotation.CalloutLines
-					newAnnotation.LineEndingStyle = textAnnotation.LineEndingStyle
-					newAnnotation.AnnotationIntent=PdfAnnotationIntent.FreeTextCallout
-					newAnnotation.RectangleDifferences = textAnnotation.RectangularDifferenceArray
-					newAnnotation.Color = textAnnotation.Color
-					newPage.AnnotationsWidget.Add(newAnnotation)
-				End If
-			Next annotation
-			'Save the file
-			Dim result As String = "CopyTextAnnotationProperties.pdf"
-			newPdf.SaveToFile(result)
+                    ' Convert the annotation to a PdfFreeTextAnnotationWidget
+                    Dim textAnnotation As PdfFreeTextAnnotationWidget = TryCast(annotation, PdfFreeTextAnnotationWidget)
 
-			'Launch the file.
-			DocumentViewer(result)
-		End Sub
+                    ' Extract the bounds and text of the annotation
+                    Dim rect = textAnnotation.Bounds
+                    Dim text = textAnnotation.Text
 
-		Private Sub DocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+                    ' Create a new page in the new PDF document with the same size as the original page
+                    Dim newPage As PdfPageBase = newPdf.Pages.Add(firstPage.Size)
+
+                    ' Create a new free text annotation in the new page
+                    Dim newAnnotation As New PdfFreeTextAnnotation(rect)
+                    newAnnotation.Text = text
+                    newAnnotation.CalloutLines = textAnnotation.CalloutLines
+                    newAnnotation.LineEndingStyle = textAnnotation.LineEndingStyle
+                    newAnnotation.AnnotationIntent = PdfAnnotationIntent.FreeTextCallout
+                    newAnnotation.RectangleDifferences = textAnnotation.RectangularDifferenceArray
+                    newAnnotation.Color = textAnnotation.Color
+
+                    ' Add the new annotation to the new page
+                    newPage.Annotations.Add(newAnnotation)
+                End If
+            Next annotation
+
+            ' Specify the output file path for the modified PDF
+            Dim result As String = "CopyTextAnnotationProperties.pdf"
+
+            ' Save the modified PDF document to the output file
+            newPdf.SaveToFile(result)
+
+            ' Close the PDF documents
+            newPdf.Close()
+            pdf.Close()
+
+            ' Launch the file
+            DocumentViewer(result)
+        End Sub
+
+        Private Sub DocumentViewer(ByVal filename As String)
+            Try
+                Process.Start(filename)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

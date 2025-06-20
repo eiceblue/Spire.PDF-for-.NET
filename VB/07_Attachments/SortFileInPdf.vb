@@ -1,46 +1,67 @@
 Imports Spire.Pdf
 Imports Spire.Pdf.Attachments
+Imports Spire.Pdf.Collections
 
 Namespace SortFileInPdf
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-			doc.Collection.AddCustomField("No", "number", Spire.Pdf.Collections.CustomFieldType.NumberField)
-			doc.Collection.AddFileRelatedField("Desc", "desc", Spire.Pdf.Collections.FileRelatedFieldType.Desc)
-			doc.Collection.Sort(New String() { "No", "Desc" }, New Boolean() { True, True })
+            ' Add a custom field with the name "No", label "number", and type NumberField to the collection
+            doc.Collection.AddCustomField("No", "number", CustomFieldType.NumberField)
 
-			Dim pdfAttachment As New PdfAttachment("..\..\..\..\..\..\Data\SampleB_1.pdf")
-			doc.Collection.AddAttachment(pdfAttachment)
-			pdfAttachment = New PdfAttachment("..\..\..\..\..\..\Data\SampleB_2.pdf")
-			doc.Collection.AddAttachment(pdfAttachment)
-			pdfAttachment = New PdfAttachment("..\..\..\..\..\..\Data\SampleB_3.pdf")
-			doc.Collection.AddAttachment(pdfAttachment)
+            ' Add a file-related field with the name "Desc", label "desc", and type Desc to the collection
+            doc.Collection.AddFileRelatedField("Desc", "desc", FileRelatedFieldType.Desc)
 
-			Dim i As Integer = 1
-			For Each attachment As PdfAttachment In doc.Collection.AssociatedFiles
-				attachment.SetFieldValue("No", i)
-				attachment.SetFieldValue("Desc", attachment.FileName)
-				i += 1
-			Next attachment
+            ' Sort the collection based on the fields "No" (ascending) and "Desc" (ascending)
+            doc.Collection.Sort(New String() {"No", "Desc"}, New Boolean() {True, True})
 
-			Dim output As String = "SortFileInPdf.pdf"
-			doc.SaveToFile(output, FileFormat.PDF)
-			PDFDocumentViewer(output)
+            ' Create a new PdfAttachment object
+            Dim pdfAttachment As New PdfAttachment("..\..\..\..\..\..\Data\SampleB_1.pdf")
 
-		End Sub
+            ' Add the attachment to the collection
+            doc.Collection.AddAttachment(pdfAttachment)
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
+            ' Create and add more PdfAttachment objects to the collection
+            pdfAttachment = New PdfAttachment("..\..\..\..\..\..\Data\SampleB_2.pdf")
+            doc.Collection.AddAttachment(pdfAttachment)
+            pdfAttachment = New PdfAttachment("..\..\..\..\..\..\Data\SampleB_3.pdf")
+            doc.Collection.AddAttachment(pdfAttachment)
 
-	End Class
+            ' Set field values for each attached file in the collection
+            Dim i As Integer = 1
+            For Each attachment As PdfAttachment In doc.Collection.AssociatedFiles
+                attachment.SetFieldValue("No", i)
+                attachment.SetFieldValue("Desc", attachment.FileName)
+                i += 1
+            Next attachment
+
+            ' Specify the output file name for the sorted PDF document
+            Dim output As String = "SortFileInPdf.pdf"
+
+            ' Save the modified PDF document to the output file
+            doc.SaveToFile(output, FileFormat.PDF)
+
+            ' Close the PdfDocument object
+            doc.Close()
+
+            ' Launch the file
+            PDFDocumentViewer(output)
+
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+
+    End Class
 End Namespace

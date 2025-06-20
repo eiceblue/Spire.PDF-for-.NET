@@ -1,9 +1,7 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Bookmarks
-Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace GetPdfChildBookmarks
 	Partial Public Class Form1
@@ -13,52 +11,58 @@ Namespace GetPdfChildBookmarks
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a new Pdf document.
+			' Create a new PdfDocument instance
 			Dim doc As New PdfDocument()
 
-			'Load the file from disk.
+			' Load an existing PDF document from the specified file path
 			doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_1.pdf")
 
-			'Get bookmarks collections of the PDF file.
+			' Get the collection of bookmarks from the document
 			Dim bookmarks As PdfBookmarkCollection = doc.Bookmarks
 
+			' Specify the output file name
 			Dim result As String = "GetPdfChildBookmarks_out.txt"
 
-			'Get Pdf child Bookmarks.
+			' Retrieve and save the child bookmark information recursively
 			GetChildBookmarks(bookmarks, result)
 
-			'Launch the file.
+			' Close the document
+			doc.Close()
+
+			' Launch the file
 			DocumentViewer(result)
 		End Sub
-
 		Private Sub GetChildBookmarks(ByVal bookmarks As PdfBookmarkCollection, ByVal result As String)
-			'Declare a new StringBuilder content
+			' Create a StringBuilder to hold the bookmark content
 			Dim content As New StringBuilder()
 
-			'Get Pdf child Bookmarks information.
+			' Iterate through each parent bookmark in the collection
 			For Each parentBookmark As PdfBookmark In bookmarks
+
+				' Check if the parent bookmark has any child bookmarks
 				If parentBookmark.Count > 0 Then
 					content.AppendLine("Child Bookmarks:")
 
+					' Iterate through each child bookmark within the parent bookmark
 					For Each childBookmark As PdfBookmark In parentBookmark
-						'Get the title
+
+						' Append the title of the child bookmark
 						content.AppendLine(childBookmark.Title)
 
-						'Get the color.
+						' Get the color of the child bookmark and append it
 						Dim color As String = childBookmark.Color.ToString()
 						content.AppendLine(color)
 
-						'Get the text style.
+						' Get the display style of the child bookmark and append it
 						Dim textStyle As String = childBookmark.DisplayStyle.ToString()
 						content.AppendLine(textStyle)
 					Next childBookmark
 				End If
 
-				'Save to file.
+				' Write the bookmark content to the specified file
 				File.WriteAllText(result, content.ToString())
 			Next parentBookmark
 		End Sub
-
 		Private Sub DocumentViewer(ByVal filename As String)
 			Try
 				Process.Start(filename)

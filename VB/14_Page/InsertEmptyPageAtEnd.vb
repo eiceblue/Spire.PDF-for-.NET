@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
 
 Namespace InsertEmptyPageAtEnd
@@ -12,18 +9,25 @@ Namespace InsertEmptyPageAtEnd
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load Pdf document from disk
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
+
+			' Load an existing PDF from disk
 			doc.LoadFromFile("../../../../../../Data/MultipagePDF.pdf")
 
-			'Add an empty page at the end 
+			' Add an empty page at the end
 			doc.Pages.Add(PdfPageSize.A4, New PdfMargins(0, 0))
 
-			'Save the Pdf document
+			' Specify the output file path for the modified PDF
 			Dim output As String = "InsertEmptyPageAtEnd_result.pdf"
+
+			' Save the modified Pdf document
 			doc.SaveToFile(output, FileFormat.PDF)
 
-			'Launch the Pdf file
+			' Close the Pdf document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(output)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)

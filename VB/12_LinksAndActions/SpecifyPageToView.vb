@@ -1,9 +1,6 @@
 ﻿Imports Spire.Pdf
 Imports Spire.Pdf.Actions
 Imports Spire.Pdf.General
-Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
 
 Namespace SpecifyPageToView
 	Partial Public Class Form1
@@ -13,26 +10,34 @@ Namespace SpecifyPageToView
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new instance of PdfDocument class
 			Dim doc As New PdfDocument()
 
-			'Load file from disk.
+			' Load a PDF file from a specified path
 			doc.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
 
-			'Create a PdfDestination with specific page, location and 50% zoom factor
-			Dim dest As New PdfDestination(2, New PointF(0, 100), 0.5f)
+			' Get the first page of the loaded document
+			Dim page As PdfPageBase = doc.Pages(1)
 
-			'Create GoToAction with dest
+			' Create a new destination for the PDF page, specifying its location
+			Dim dest As New PdfDestination(page, New PointF(0, 100))
+
+			' Create a new GoTo action with the specified destination
 			Dim action As New PdfGoToAction(dest)
 
-			'Set open action
+			' Set the action to be performed after the document is opened
 			doc.AfterOpenAction = action
 
+			' Specify the resulting PDF file name
 			Dim result As String = "SpecifyPageToView_out.pdf"
 
-			'Save the document
+			' Save the modified document to the specified file
 			doc.SaveToFile(result)
-			'Launch the Pdf file
+
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(result)
 		End Sub
 

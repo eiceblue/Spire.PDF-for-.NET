@@ -10,35 +10,45 @@ Namespace Extract3DViedoFile
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load old PDF from disk.
-			Dim pdf As New PdfDocument()
-			pdf.LoadFromFile("..\..\..\..\..\..\Data\3D.pdf")
+            ' Create a new PdfDocument object
+            Dim pdf As New PdfDocument()
+            pdf.LoadFromFile("..\..\..\..\..\..\Data\3D.pdf")
 
-			'Get the first page.
-			Dim firstPage As PdfPageBase = pdf.Pages(0)
+            ' Get the first page of the PDF document
+            Dim firstPage As PdfPageBase = pdf.Pages(0)
 
-			'Get the annotation collection of the first page
-			Dim annot As PdfAnnotationCollection = firstPage.AnnotationsWidget
+            ' Get the collection of annotations on the first page
+            Dim annot As PdfAnnotationCollection = firstPage.Annotations
 
-			'Define an int variable
-			Dim count As Integer = 0
+            ' Initialize a counter to keep track of the number of 3D annotations found
+            Dim count As Integer = 0
 
-			'Traverse the annotations
-			For i As Integer = 0 To annot.Count - 1
-				'If it is Pdf3DAnnotation
-				If TypeOf annot(i) Is Pdf3DAnnotation Then
-					Dim annot3D As Pdf3DAnnotation = TryCast(annot(i), Pdf3DAnnotation)
+            ' Iterate through each annotation in the collection
+            For i As Integer = 0 To annot.Count - 1
 
-					'Get the 3D video data
-					Dim bytes() As Byte = annot3D._3DData
+                ' Check if the current annotation is a 3D annotation
+                If TypeOf annot(i) Is Pdf3DAnnotation Then
 
-					'Write the data into .u3d format file
-					If bytes IsNot Nothing Then
-						File.WriteAllBytes(String.Format("3d-{0}.u3d", count), bytes)
-						count += 1
-					End If
-				End If
-			Next i
-		End Sub
+                    ' Cast the annotation to Pdf3DAnnotation type
+                    Dim annot3D As Pdf3DAnnotation = TryCast(annot(i), Pdf3DAnnotation)
+
+                    ' Get the 3D data bytes from the annotation
+                    Dim bytes() As Byte = annot3D._3DData
+
+                    ' Check if the 3D data bytes exist
+                    If bytes IsNot Nothing Then
+
+                        ' Write the 3D data bytes to a file with a unique name based on the counter
+                        File.WriteAllBytes(String.Format("3d-{0}.u3d", count), bytes)
+
+                        ' Increment the counter
+                        count += 1
+                    End If
+                End If
+            Next i
+
+            ' Close the document
+            pdf.Close()
+        End Sub
 	End Class
 End Namespace

@@ -4,59 +4,75 @@ Imports Spire.Pdf.Fields
 Imports Spire.Pdf.Graphics
 
 Namespace AddRadioButtonCaption
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load a pdf document
-			Dim input As String = "..\..\..\..\..\..\Data\RadioButton.pdf"
-			Dim pdf As New PdfDocument()
-			pdf.LoadFromFile(input)
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Specify the input file path
+            Dim input As String = "..\..\..\..\..\..\Data\RadioButton.pdf"
 
-			'Get pdf forms
-			Dim formWidget As PdfFormWidget = TryCast(pdf.Form, PdfFormWidget)
+            ' Create a new PDF document
+            Dim pdf As New PdfDocument()
 
-			'Find the radio button field and add capture
-			For i As Integer = 0 To formWidget.FieldsWidget.List.Count - 1
-				Dim field As PdfField = TryCast(formWidget.FieldsWidget.List(i), PdfField)
+            ' Load the PDF document from the input file
+            pdf.LoadFromFile(input)
 
-				If TypeOf field Is PdfRadioButtonListFieldWidget Then
-					Dim radioButton As PdfRadioButtonListFieldWidget = TryCast(field, PdfRadioButtonListFieldWidget)
-					If radioButton.Name = "RadioButton" Then
-						'Get the page
-						Dim page As PdfPageBase = radioButton.Page
+            ' Get the form widget from the PDF document
+            Dim formWidget As PdfFormWidget = TryCast(pdf.Form, PdfFormWidget)
 
-						'Set capture name
-						Dim text As String = "Radio button caption"
-						'Set font, pen and brush
-						Dim font As New PdfFont(PdfFontFamily.Helvetica, 12f)
-						Dim pen As New PdfPen(Color.Red, 0.02f)
-						Dim brush As New PdfSolidBrush(Color.Red)
-						'Set the capture location
-						Dim x As Single = radioButton.Location.X
-						Dim y As Single = radioButton.Location.Y - font.MeasureString(text).Height - 10
+            ' Iterate through each field in the form
+            For i As Integer = 0 To formWidget.FieldsWidget.List.Count - 1
+                ' Get the current form field
+                Dim field As PdfField = TryCast(formWidget.FieldsWidget.List(i), PdfField)
 
-						'Draw capture
-						page.Canvas.DrawString(text, font, pen, brush, x, y)
-					End If
-				End If
-			Next i
+                ' Check if the form field is a radio button list field
+                If TypeOf field Is PdfRadioButtonListFieldWidget Then
+                    ' Cast the field to a radio button list field widget
+                    Dim radioButton As PdfRadioButtonListFieldWidget = TryCast(field, PdfRadioButtonListFieldWidget)
 
-			Dim result As String = "AddRadioButtonCaption_out.pdf"
+                    ' Check if the radio button list field has the specified name
+                    If radioButton.Name = "RadioButton" Then
+                        ' Get the page where the radio button list field is located
+                        Dim page As PdfPageBase = radioButton.Page
 
-			'Save the document
-			pdf.SaveToFile(result)
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+                        ' Set the caption text for the radio button list field
+                        Dim text As String = "Radio button caption"
+
+                        ' Set the font, pen, and brush for drawing the caption
+                        Dim font As New PdfFont(PdfFontFamily.Helvetica, 12.0F)
+                        Dim pen As New PdfPen(Color.Red, 0.02F)
+                        Dim brush As New PdfSolidBrush(Color.Red)
+
+                        ' Set the coordinates for drawing the caption
+                        Dim x As Single = radioButton.Location.X
+                        Dim y As Single = radioButton.Location.Y - font.MeasureString(text).Height - 10
+
+                        ' Draw the caption onto the page
+                        page.Canvas.DrawString(text, font, pen, brush, x, y)
+                    End If
+                End If
+            Next i
+
+            ' Specify the output file path
+            Dim result As String = "AddRadioButtonCaption_out.pdf"
+
+            ' Save the modified PDF document to the output file
+            pdf.SaveToFile(result)
+
+            ' Close the document
+            pdf.Close()
+
+            ' Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal filename As String)
+            Try
+                Process.Start(filename)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

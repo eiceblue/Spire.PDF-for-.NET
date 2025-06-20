@@ -8,32 +8,42 @@ Namespace MergeDocuments
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Pdf document list
-			Dim files() As String = { "..\..\..\..\..\..\Data\MergePdfsTemplate_1.pdf", "..\..\..\..\..\..\Data\MergePdfsTemplate_2.pdf", "..\..\..\..\..\..\Data\MergePdfsTemplate_3.pdf" }
-			'Open pdf documents            
+			' Array of file paths for the documents to merge
+			Dim files() As String = {"..\..\..\..\..\..\Data\MergePdfsTemplate_1.pdf", "..\..\..\..\..\..\Data\MergePdfsTemplate_2.pdf", "..\..\..\..\..\..\Data\MergePdfsTemplate_3.pdf"}
+
+			' Array to store PdfDocument objects
 			Dim docs(files.Length - 1) As PdfDocument
+
+			' Load each document from the file paths into PdfDocument objects
 			For i As Integer = 0 To files.Length - 1
-				docs(i) = New PdfDocument()
-				docs(i).LoadFromFile(files(i))
+				' Load a specific document
+				docs(i) = New PdfDocument(files(i))
 			Next i
 
-			'Append document
-			docs(0).AppendPage(docs(1))
+			' Create a new PdfDocument object to merge the documents
+			Dim doc As New PdfDocument()
 
-			'Import page
-			For i As Integer = 0 To docs(2).Pages.Count - 1 Step 2
-				docs(0).InsertPage(docs(2), i)
-			Next i
+			' Insert the first document at the beginning of the merged document
+			doc.InsertPage(docs(0), 0)
 
-			'Save pdf file
-			docs(0).SaveToFile("MergeDocuments.pdf")
+			' Insert pages from the second document at the beginning of the merged document
+			doc.InsertPageRange(docs(1), 0, 2)
 
-			'Close
-			For Each doc As PdfDocument In docs
-				doc.Close()
-			Next doc
+			' Insert the third document at the beginning of the merged document
+			doc.InsertPage(docs(2), 0)
 
-			'Launching the Pdf file
+			' Save the merged document to a file
+			doc.SaveToFile("MergeDocuments.pdf")
+
+			' Close the merged document
+			doc.Close()
+
+			' Close each individual document in the array
+			For Each docf As PdfDocument In docs
+				docf.Close()
+			Next docf
+
+			' Launch the Pdf file
 			PDFDocumentViewer("MergeDocuments.pdf")
 		End Sub
 

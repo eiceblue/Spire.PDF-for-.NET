@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports System.Threading.Tasks
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Security
 Imports System.Security.Cryptography.X509Certificates
 Imports Spire.Pdf.Graphics
@@ -14,25 +11,30 @@ Namespace SignedByLTV
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+			' Load the input file path
 			Dim inputFile As String = "..\..\..\..\..\..\Data\DigitalSignature.pdf"
 
-			'Load a PDF document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
+
+			' Load the PDF document from the input file path
 			doc.LoadFromFile(inputFile)
 
-			'Get the first page
+			' Get the first page of the document
 			Dim page As PdfPageBase = doc.Pages(0)
 
-			'Load a certificate .pfx file
-			Dim pfxPath As String = "..\..\..\..\..\..\Data\ComodoSSL.pfx"
-			Dim cer As New PdfCertificate(pfxPath, "08100601",X509KeyStorageFlags.Exportable)
+			' Set the path of the certificate .pfx file
+			Dim pfxPath As String = "..\..\..\..\..\..\Data\gary.pfx"
 
-			'Add a signature to the specified position
+			' Load the certificate from the pfx file with the specified password and exportable flag
+			Dim cer As New PdfCertificate(pfxPath, "e-iceblue", X509KeyStorageFlags.Exportable)
+
+			' Add a signature to the specified position on the page
 			Dim signature As New PdfSignature(doc, page, cer, "signature")
 			signature.Bounds = New RectangleF(New PointF(90, 550), New SizeF(180, 90))
 
-			'set the signature content
-			signature.NameLabel = "Digitally signed by:Gary"
+			' Set the content of the signature
+			signature.NameLabel = "Digitally signed by: Gary"
 			signature.LocationInfoLabel = "Location:"
 			signature.LocationInfo = "CN"
 			signature.ReasonLabel = "Reason: "
@@ -43,12 +45,15 @@ Namespace SignedByLTV
 			signature.GraphicsMode = GraphicMode.SignImageAndSignDetail
 			signature.SignImageSource = PdfImage.FromFile("..\..\..\..\..\..\Data\logo.png")
 
-			'Configure OCSP which must conform to RFC 2560
+			' Configure OCSP (Online Certificate Status Protocol) for the signature
 			signature.ConfigureHttpOCSP(Nothing, Nothing)
 
-			'Save the PDF file
+			' Save the PDF document with the signature to the output file path
 			Dim outputFile As String = "result.pdf"
 			doc.SaveToFile(outputFile, FileFormat.PDF)
+
+			' Close the PDF document
+			doc.Close()
 
 			'Launch the file
 			PDFDocumentViewer(outputFile)

@@ -1,139 +1,171 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
+﻿Imports Spire.Pdf
 Imports Spire.Pdf.Fields
 Imports Spire.Pdf.Widget
 
 Namespace FillFormField
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load a pdf document
-			Dim input As String = "..\..\..\..\..\..\Data\FillFormField.pdf"
-			Dim doc As New PdfDocument()
-		doc.LoadFromFile(input)
-			'Get pdf forms
-			Dim formWidget As PdfFormWidget = TryCast(doc.Form, PdfFormWidget)
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Define the input file path
+            Dim input As String = "..\..\..\..\..\..\Data\FillFormField.pdf"
 
-			'Fill pdf form fields
-			For i As Integer = 0 To formWidget.FieldsWidget.List.Count - 1
-				Dim field As PdfField = TryCast(formWidget.FieldsWidget.List(i), PdfField)
-				If TypeOf field Is PdfTextBoxFieldWidget Then
-					Dim textBoxField As PdfTextBoxFieldWidget = TryCast(field, PdfTextBoxFieldWidget)
-					Select Case textBoxField.Name
-						Case "email"
-							textBoxField.Text = "support@e-iceblue.com"
+            ' Create a new PdfDocument object
+            Dim doc As New PdfDocument()
 
-						Case "username"
-							textBoxField.Text = "E-iceblue"
+            ' Load the PDF document from the specified input file
+            doc.LoadFromFile(input)
 
-						Case "password"
-							textBoxField.Password = True
-							textBoxField.Text = "e-iceblue"
+            ' Get the form widget from the loaded PDF document
+            Dim formWidget As PdfFormWidget = TryCast(doc.Form, PdfFormWidget)
 
-						Case "password2"
-							textBoxField.Password = True
-							textBoxField.Text = "e-iceblue"
+            ' Iterate through each field in the form
+            For i As Integer = 0 To formWidget.FieldsWidget.List.Count - 1
+                ' Get the current field
+                Dim field As PdfField = TryCast(formWidget.FieldsWidget.List(i), PdfField)
 
-						Case "company_name "
-							textBoxField.Text = "E-iceblue"
+                ' Check if the field is a TextBox field
+                If TypeOf field Is PdfTextBoxFieldWidget Then
+                    ' Cast the field as a TextBox field
+                    Dim textBoxField As PdfTextBoxFieldWidget = TryCast(field, PdfTextBoxFieldWidget)
 
-						Case "first_name"
-							textBoxField.Text = "James"
+                    ' Fill the TextBox fields based on their names
+                    Select Case textBoxField.Name
+                        Case "email"
+                            textBoxField.Text = "support@e-iceblue.com"
 
-						Case "last_name"
-							textBoxField.Text = "Chen"
+                        Case "username"
+                            textBoxField.Text = "E-iceblue"
 
-						Case "middle_name"
-							textBoxField.Text = "J"
+                        Case "password"
+                            textBoxField.Password = True
+                            textBoxField.Text = "e-iceblue"
 
-						Case "address1"
-							textBoxField.Text = "Chengdu"
+                        Case "password2"
+                            textBoxField.Password = True
+                            textBoxField.Text = "e-iceblue"
 
-						Case "address2"
-							textBoxField.Text = "Beijing"
+                        Case "company_name"
+                            textBoxField.Text = "E-iceblue"
 
-						Case "city"
-							textBoxField.Text = "Shanghai"
+                        Case "first_name"
+                            textBoxField.Text = "James"
 
-						Case "postal_code"
-							textBoxField.Text = "11111"
+                        Case "last_name"
+                            textBoxField.Text = "Chen"
 
-						Case "state"
-							textBoxField.Text = "Shanghai"
+                        Case "middle_name"
+                            textBoxField.Text = "J"
 
-						Case "phone"
-							textBoxField.Text = "1234567901"
+                        Case "address1"
+                            textBoxField.Text = "Chengdu"
 
-						Case "mobile_phone"
-							textBoxField.Text = "123456789"
+                        Case "address2"
+                            textBoxField.Text = "Beijing"
 
-						Case "fax"
-							textBoxField.Text = "12121212"
-					End Select
-				End If
+                        Case "city"
+                            textBoxField.Text = "Shanghai"
 
-				If TypeOf field Is PdfListBoxWidgetFieldWidget Then
-					Dim listBoxField As PdfListBoxWidgetFieldWidget = TryCast(field, PdfListBoxWidgetFieldWidget)
-					Select Case listBoxField.Name
-						Case "email_format"
-							Dim index() As Integer = { 1 }
-							listBoxField.SelectedIndex = index
-					End Select
-				End If
+                        Case "postal_code"
+                            textBoxField.Text = "11111"
 
-				If TypeOf field Is PdfComboBoxWidgetFieldWidget Then
-					Dim comBoxField As PdfComboBoxWidgetFieldWidget = TryCast(field, PdfComboBoxWidgetFieldWidget)
-					Select Case comBoxField.Name
-						Case "title"
-							Dim items() As Integer = { 0 }
-							comBoxField.SelectedIndex = items
-					End Select
-				End If
+                        Case "state"
+                            textBoxField.Text = "Shanghai"
 
-				If TypeOf field Is PdfRadioButtonListFieldWidget Then
-					Dim radioBtnField As PdfRadioButtonListFieldWidget = TryCast(field, PdfRadioButtonListFieldWidget)
-					Select Case radioBtnField.Name
-						Case "country"
-							radioBtnField.SelectedIndex = 1
-					End Select
-				End If
+                        Case "phone"
+                            textBoxField.Text = "1234567901"
 
-				If TypeOf field Is PdfCheckBoxWidgetFieldWidget Then
-					Dim checkBoxField As PdfCheckBoxWidgetFieldWidget = TryCast(field, PdfCheckBoxWidgetFieldWidget)
-					Select Case checkBoxField.Name
-						Case "agreement_of_terms"
-							checkBoxField.Checked = True
-					End Select
-				End If
+                        Case "mobile_phone"
+                            textBoxField.Text = "123456789"
 
-				If TypeOf field Is PdfButtonWidgetFieldWidget Then
-					Dim btnField As PdfButtonWidgetFieldWidget = TryCast(field, PdfButtonWidgetFieldWidget)
-					Select Case btnField.Name
+                        Case "fax"
+                            textBoxField.Text = "12121212"
+                    End Select
+                End If
 
-						Case "submit"
-							btnField.Text = "Submit"
-					End Select
-				End If
-			Next i
+                ' Check if the field is a ListBox field
+                If TypeOf field Is PdfListBoxWidgetFieldWidget Then
+                    ' Cast the field as a ListBox field
+                    Dim listBoxField As PdfListBoxWidgetFieldWidget = TryCast(field, PdfListBoxWidgetFieldWidget)
 
-			Dim output As String = "FillFormField.pdf"
+                    ' Fill the ListBox fields based on their names
+                    Select Case listBoxField.Name
+                        Case "email_format"
+                            Dim index() As Integer = {1}
+                            listBoxField.SelectedIndex = index
+                    End Select
+                End If
 
-			'Save pdf document
-			doc.SaveToFile(output)
+                ' Check if the field is a ComboBox field
+                If TypeOf field Is PdfComboBoxWidgetFieldWidget Then
+                    ' Cast the field as a ComboBox field
+                    Dim comBoxField As PdfComboBoxWidgetFieldWidget = TryCast(field, PdfComboBoxWidgetFieldWidget)
 
-			'Launch the file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+                    ' Fill the ComboBox fields based on their names
+                    Select Case comBoxField.Name
+                        Case "title"
+                            Dim items() As Integer = {0}
+                            comBoxField.SelectedIndex = items
+                    End Select
+                End If
+
+                ' Check if the field is a RadioButtonList field
+                If TypeOf field Is PdfRadioButtonListFieldWidget Then
+                    ' Cast the field as a RadioButtonList field
+                    Dim radioBtnField As PdfRadioButtonListFieldWidget = TryCast(field, PdfRadioButtonListFieldWidget)
+
+                    ' Fill the RadioButtonList fields based on their names
+                    Select Case radioBtnField.Name
+                        Case "country"
+                            radioBtnField.SelectedIndex = 1
+                    End Select
+                End If
+
+                ' Check if the field is a CheckBox field
+                If TypeOf field Is PdfCheckBoxWidgetFieldWidget Then
+                    ' Cast the field as a CheckBox field
+                    Dim checkBoxField As PdfCheckBoxWidgetFieldWidget = TryCast(field, PdfCheckBoxWidgetFieldWidget)
+
+                    ' Fill the CheckBox fields based on their names
+                    Select Case checkBoxField.Name
+                        Case "agreement_of_terms"
+                            checkBoxField.Checked = True
+                    End Select
+                End If
+
+                ' Check if the field is a Button field
+                If TypeOf field Is PdfButtonWidgetFieldWidget Then
+                    ' Cast the field as a Button field
+                    Dim btnField As PdfButtonWidgetFieldWidget = TryCast(field, PdfButtonWidgetFieldWidget)
+
+                    ' Fill the Button fields based on their names
+                    Select Case btnField.Name
+                        Case "submit"
+                            btnField.Text = "Submit"
+                    End Select
+                End If
+            Next i
+
+            ' Define the output file path
+            Dim output As String = "FillFormField.pdf"
+
+            'Save the document to the file path
+            doc.SaveToFile(output)
+
+            ' Close the document
+            doc.Close()
+
+            ' Launch the file
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

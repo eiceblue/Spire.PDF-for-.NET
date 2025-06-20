@@ -1,42 +1,56 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.General.Find
+﻿Imports Spire.Pdf
+Imports Spire.Pdf.Texts
 
 Namespace FindAndHighlightText
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Load the document from disk
-			Dim pdf As New PdfDocument()
-			pdf.LoadFromFile("..\..\..\..\..\..\Data\FindAndHighlightText.pdf")
-			Dim result() As PdfTextFind = Nothing
-			For Each page As PdfPageBase In pdf.Pages
-				'Find text
-				result = page.FindText("science",TextFindParameter.None).Finds
-				For Each find As PdfTextFind In result
-					'Highlight searched text
-					find.ApplyHighLight()
-				Next find
-			Next page
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new instance of PdfDocument
+            Dim pdf As New PdfDocument()
 
-			Dim output As String = "FindAndHighlightText_out.pdf"
-			'Save the document
-			pdf.SaveToFile(output, FileFormat.PDF)
+            ' Load the PDF file from the specified path
+            pdf.LoadFromFile("..\..\..\..\..\..\Data\FindAndHighlightText.pdf")
 
-			'Launch the result file
-			PDFDocumentViewer(output)
-		End Sub
+            ' Iterate through each page in the document
+            For Each page As PdfPageBase In pdf.Pages
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+                ' Create a new instance of PdfTextFinder for the current page
+                Dim finder As New PdfTextFinder(page)
+
+                ' Set the search parameter to match whole word occurrences
+                finder.Options.Parameter = TextFindParameter.WholeWord
+
+                ' Find all occurrences of "science" in the current page
+                Dim finds As List(Of PdfTextFragment) = finder.Find("science")
+
+                ' Highlight each found occurrence
+                For Each find As PdfTextFragment In finds
+                    find.HighLight()
+                Next find
+            Next page
+
+            ' Specify the output file path
+            Dim output As String = "FindAndHighlightText_out.pdf"
+
+            ' Save the file
+            pdf.SaveToFile(output, FileFormat.PDF)
+
+            ' Close the document
+            pdf.Close()
+
+            ' Launch the result file
+            PDFDocumentViewer(output)
+        End Sub
+
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                Process.Start(fileName)
+            Catch
+            End Try
+        End Sub
+    End Class
 End Namespace

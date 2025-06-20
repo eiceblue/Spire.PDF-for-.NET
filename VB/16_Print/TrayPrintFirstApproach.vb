@@ -1,68 +1,72 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Fields
-Imports Spire.Pdf.Annotations
-Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Actions
-Imports Spire.Pdf.General
-Imports Spire.Pdf.General.Find
+﻿Imports Spire.Pdf
+Imports Spire.Pdf.Print
 Imports System.Drawing.Printing
+
 Namespace TrayPrintFirstApproach
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			Dim doc As New PrintDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new PrintDocument object.
+            Dim doc As New PrintDocument()
 
-			' Gets paper sources
-			For Each printer As String In PrinterSettings.InstalledPrinters
-				If printer.Contains("HP ColorLaserJet MFP") Then
-					doc.PrinterSettings.PrinterName = printer
-					Exit For
-				End If
+            ' Iterate through the list of installed printers.
+            For Each printer As String In PrinterSettings.InstalledPrinters
 
-				Dim myDictPaperTray = New Dictionary(Of String, PaperSource)()
-				For i As Integer = 0 To doc.PrinterSettings.PaperSources.Count - 1
-					myDictPaperTray.Add(doc.PrinterSettings.PaperSources(i).SourceName, doc.PrinterSettings.PaperSources(i))
-				Next i
+                ' Check if the printer name contains "HP ColorLaserJet MFP".
+                If printer.Contains("HP ColorLaserJet MFP") Then
 
-				' Uses tray1 to print the first page on one side
-				pPrintPages(1, 1, myDictPaperTray("Tray 1"), False,True,False)
-				' Uses tray4 to print the second page to fifth page on both sides
-				pPrintPages(2, 5, myDictPaperTray("Tray 4"), True,False,True)
-			Next printer
-		End Sub
+                    ' Set the printer name to the matched printer.
+                    doc.PrinterSettings.PrinterName = printer
 
-		Private Shared Sub pPrintPages(ByVal pStart As Integer, ByVal pEnd As Integer, ByVal pSource As PaperSource, ByVal pDuplex As Boolean, ByVal IsColour As Boolean, ByVal IsLandscape As Boolean)
-			Dim doc As PdfDocument = New Spire.Pdf.PdfDocument("..\..\..\..\..\..\Data\PrintPdfDocument.pdf")
-			doc.PrintSettings.SelectPageRange(pStart, pEnd)
+                    ' Exit the loop after finding a match.
+                    Exit For
+                End If
 
+                ' Create a dictionary to store the available paper trays for the current printer.
+                Dim myDictPaperTray = New Dictionary(Of String, PaperSource)()
 
-			If pDuplex Then
-				doc.PrintSettings.Duplex = Duplex.Vertical
-			Else
-				doc.PrintSettings.Duplex = Duplex.Simplex
-			End If
+                ' Iterate through the paper sources of the printer.
+                For i As Integer = 0 To doc.PrinterSettings.PaperSources.Count - 1
+                    myDictPaperTray.Add(doc.PrinterSettings.PaperSources(i).SourceName, doc.PrinterSettings.PaperSources(i))
+                Next i
 
-			If IsColour Then
-				doc.PrintSettings.Color = True
-			Else
-				doc.PrintSettings.Color = False
-			End If
+                ' Print pages 1 to 1 using Tray 1, without duplex printing, in color, and in portrait.
+                pPrintPages(1, 1, myDictPaperTray("Tray 1"), False, True, False)
 
-			If IsLandscape Then
-				doc.PrintSettings.Landscape = True
-			Else
-				doc.PrintSettings.Landscape = False
-			End If
+                ' Print pages 2 to 5 using Tray 4, with duplex printing, not in color, and in landscape.
+                pPrintPages(2, 5, myDictPaperTray("Tray 4"), True, False, True)
 
-			AddHandler doc.PrintSettings.PaperSettings, Sub(sender As Object, e As Spire.Pdf.Print.PdfPaperSettingsEventArgs) e.CurrentPaperSource = pSource
+            Next printer
+        End Sub
 
-			doc.Print()
-		End Sub
-	End Class
+        Private Shared Sub pPrintPages(ByVal pStart As Integer, ByVal pEnd As Integer, ByVal pSource As PaperSource, ByVal pDuplex As Boolean, ByVal IsColour As Boolean, ByVal IsLandscape As Boolean)
+            Dim doc As PdfDocument = New Spire.Pdf.PdfDocument("..\..\..\..\..\..\Data\PrintPdfDocument.pdf")
+
+            ' Select the page range to print.
+            doc.PrintSettings.SelectPageRange(pStart, pEnd)
+
+            ' Configure duplex printing based on the provided parameter.
+            If pDuplex Then
+                doc.PrintSettings.Duplex = Duplex.Vertical
+            Else
+                doc.PrintSettings.Duplex = Duplex.Simplex
+            End If
+
+            ' Configure color printing based on the provided parameter.
+            doc.PrintSettings.Color = IsColour
+
+            ' Configure printing orientation based on the provided parameter.
+            doc.PrintSettings.Landscape = IsLandscape
+
+            ' Set the paper source for printing.
+            AddHandler doc.PrintSettings.PaperSettings, Sub(sender As Object, e As PdfPaperSettingsEventArgs) e.CurrentPaperSource = pSource
+
+            ' Print the document.
+            doc.Print()
+        End Sub
+    End Class
 End Namespace

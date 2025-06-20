@@ -8,18 +8,22 @@ Namespace ToXPS
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Pdf file
+			' Specify the file path of the PDF file to be loaded
 			Dim file As String = "..\..\..\..\..\..\Data\ToXPS.pdf"
 
-			'Open pdf document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
+
+			' Load the PDF document from the specified file path
 			doc.LoadFromFile(file)
 
-			'Convert to xps file.
+			' Convert the PDF document to XPS file format
 			doc.SaveToFile("ToXPS-result.xps", FileFormat.XPS)
+
+			' Close the PDF document
 			doc.Close()
 
-			'Launch the xps file.
+			' Launch the xps file
 			Process.Start("ToXPS-result.xps")
 		End Sub
 	End Class

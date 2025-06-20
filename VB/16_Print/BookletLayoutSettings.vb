@@ -2,30 +2,32 @@
 Imports Spire.Pdf.Print
 
 Namespace BookletLayoutSettings
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a PDF file
-			Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
+            ' Create a new instance of PdfDocument.
+            Dim pdf As New PdfDocument()
 
-			'Load a PDF file from disk
-			pdf.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
+            ' Load the PDF file from the specified path.
+            pdf.LoadFromFile("..\..\..\..\..\..\Data\Sample.pdf")
 
-			'If the printer can print with Duplex
-			Dim isDuplex As Boolean = pdf.PrintSettings.CanDuplex
-			If isDuplex Then
-				'Set PdfBookletSubsetMode as "BothSides" and PdfBookletBindingMode as "Left"
-				pdf.PrintSettings.SelectBookletLayout(PdfBookletSubsetMode.BothSides, PdfBookletBindingMode.Left)
+            ' Check if duplex printing is supported.
+            Dim isDuplex As Boolean = pdf.PrintSettings.CanDuplex
 
-				'Print the PDF
-				pdf.Print()
-			End If
-			'Close 
-			Me.Close()
-		End Sub
-	End Class
+            ' If duplex printing is supported, set the booklet layout and binding mode.
+            If (isDuplex) Then
+                pdf.PrintSettings.SelectBookletLayout(PdfBookletSubsetMode.BothSides, PdfBookletBindingMode.Left)
+
+                ' Print the document.
+                pdf.Print()
+            End If
+
+            ' Close the PDF document.
+            pdf.Close()
+        End Sub
+    End Class
 End Namespace

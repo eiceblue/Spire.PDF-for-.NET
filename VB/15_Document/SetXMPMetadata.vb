@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.Text
-Imports Spire.Pdf
-Imports Spire.Pdf.Xmp
+﻿Imports Spire.Pdf
 
 Namespace SetXMPMetadata
 	Partial Public Class Form1
@@ -11,33 +8,48 @@ Namespace SetXMPMetadata
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Pdf file 
+			' Load the input PDF file
 			Dim input As String = "..\..\..\..\..\..\Data\SetXMPMetadata.pdf"
 
-			'Open a pdf document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
-		 doc.LoadFromFile(input)
 
-			'Set XMP Metadata  
-      doc.DocumentInformation.Author = "E-iceblue"
-      doc.DocumentInformation.Creator = "Spire.PDF"
-      doc.DocumentInformation.SetCustomProperty("Field1", "NewValue")
-      doc.DocumentInformation.Keywords = "XMP"
-      doc.DocumentInformation.Producer = "E-icenlue Co,.Ltd"
-      doc.DocumentInformation.Subject = "XMP Metadata"
-      doc.DocumentInformation.Title = "Set XMP Metadata in PDF"
+			' Load the PDF document from the input file
+			doc.LoadFromFile(input)
 
+			' Set the author information in the document properties
+			doc.DocumentInformation.Author = "E-iceblue"
+
+			' Set the creator information in the document properties
+			doc.DocumentInformation.Creator = "Spire.PDF"
+
+			' Set the keywords information in the document properties
+			doc.DocumentInformation.Keywords = "XMP"
+
+			' Set the producer information in the document properties
+			doc.DocumentInformation.Producer = "E-icenlue Co,.Ltd"
+
+			' Set the subject information in the document properties
+			doc.DocumentInformation.Subject = "XMP Metadata"
+
+			' Set the title information in the document properties
+			doc.DocumentInformation.Title = "Set XMP Metadata in PDF"
+
+			' Specify the output file name
 			Dim output As String = "SetXMPMetadata.pdf"
 
-			'Save pdf document
+			' Save the modified document to the output file
 			doc.SaveToFile(output)
 
-			'Launch the Pdf file
+			' Close the PDF document
+			doc.Close()
+
+			' Launch the Pdf file
 			PDFDocumentViewer(output)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)
 			Try
-				Process.Start(fileName)
+				System.Diagnostics.Process.Start(fileName)
 			Catch
 			End Try
 		End Sub

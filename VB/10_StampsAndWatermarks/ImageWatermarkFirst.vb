@@ -1,6 +1,4 @@
 Imports Spire.Pdf
-Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Tables
 
 Namespace ImageWatermarkFirst
     Partial Public Class Form1
@@ -10,24 +8,28 @@ Namespace ImageWatermarkFirst
         End Sub
 
         Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            'Create a pdf document and load file from disk
+            ' Create a new PdfDocument object
             Dim doc As New PdfDocument()
+
+            ' Load an existing PDF file from the specified path
             doc.LoadFromFile("..\..\..\..\..\..\Data\ImageWaterMark.pdf")
 
-            'Get the first page
+            ' Get the first page of the loaded document
             Dim page As PdfPageBase = doc.Pages(0)
 
-            'Load image
+            ' Create a new Image object from the specified image file path
             Dim img As Image = Image.FromFile("..\..\..\..\..\..\Data\Background.png")
 
-            'Set background image
+            ' Set the background image of the page to the loaded image
             page.BackgroundImage = img
 
-            'Save pdf file
+            ' Save the modified document to a new file named "ImageWaterMark.pdf"
             doc.SaveToFile("ImageWaterMark.pdf")
+
+            ' Close the document
             doc.Close()
 
-            'Launch the Pdf file
+            ' Launch the Pdf file
             PDFDocumentViewer("ImageWaterMark.pdf")
         End Sub
 

@@ -1,6 +1,4 @@
 ﻿Imports Spire.Pdf
-Imports System.ComponentModel
-Imports System.Text
 
 Namespace RearrangePageOrder
 	Partial Public Class Form1
@@ -10,22 +8,26 @@ Namespace RearrangePageOrder
 		End Sub
 
 		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			'Create a pdf document
+			' Create a new PdfDocument object
 			Dim doc As New PdfDocument()
 
-			'Load from file
+			' Load the PDF document from the specified file path
 			doc.LoadFromFile("..\..\..\..\..\..\Data\SampleB_3.pdf")
 
-			'Rearrange the page order
-			doc.Pages.ReArrange(New Integer() { 1, 0})
+			' Re-arrange the order of pages in the document by specifying the new page order
+			doc.Pages.ReArrange(New Integer() {1, 0})
 
-			Dim result As String="RearrangePageOrder-result.pdf"
-			'Save to file
+			' Specify the result file path for saving the modified document
+			Dim result As String = "RearrangePageOrder-result.pdf"
+
+			' Save the modified document to the result file in PDF format
 			doc.SaveToFile(result, FileFormat.PDF)
 
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
+			' Close the PDF document
+			doc.Close()
 
+			' Launch the Pdf file
+			PDFDocumentViewer(result)
 		End Sub
 		Private Sub PDFDocumentViewer(ByVal fileName As String)
 			Try
