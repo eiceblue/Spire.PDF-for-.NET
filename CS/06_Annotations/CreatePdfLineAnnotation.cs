@@ -56,12 +56,13 @@ namespace CreatePdfLineAnnotation
             lineAnnotation.LeaderLine = 0;
 
             //Add the line annotation to the page.
-            page.AnnotationsWidget.Add(lineAnnotation);
+            page.Annotations.Add(lineAnnotation);
 
+            //Create another line annotation.
             linePoints = new int[] { 100, 550, 280, 550 };
             lineAnnotation = new PdfLineAnnotation(linePoints, "This is the second line annotation");
             lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Underline;
-            lineAnnotation.lineBorder.BorderWidth =2;
+            lineAnnotation.lineBorder.BorderWidth = 2;
             lineAnnotation.LineIntent = PdfLineIntent.LineArrow;
             lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Circle;
             lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond;
@@ -70,8 +71,9 @@ namespace CreatePdfLineAnnotation
             lineAnnotation.BackColor = new PdfRGBColor(Color.Pink);
             lineAnnotation.LeaderLineExt = 0;
             lineAnnotation.LeaderLine = 0;
-            page.AnnotationsWidget.Add(lineAnnotation);
+            page.Annotations.Add(lineAnnotation);
 
+            //Create yet another line annotation.
             linePoints = new int[] { 100, 450, 280, 450 };
             lineAnnotation = new PdfLineAnnotation(linePoints, "This is the third line annotation");
             lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Beveled;
@@ -84,12 +86,13 @@ namespace CreatePdfLineAnnotation
             lineAnnotation.BackColor = new PdfRGBColor(Color.Blue);
             lineAnnotation.LeaderLineExt = 1;
             lineAnnotation.LeaderLine = 1;
-            page.AnnotationsWidget.Add(lineAnnotation);
+            page.Annotations.Add(lineAnnotation);
 
             String result = "CreatePdfLineAnnotation_out.pdf";
 
-            //Save the document
+            //Save the document.
             document.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

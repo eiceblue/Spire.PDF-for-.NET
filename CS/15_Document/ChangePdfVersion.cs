@@ -18,13 +18,14 @@ namespace ChangePdfVersion
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open pdf document
+            // Open a PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\ChangePdfVersion.pdf");
 
-            //Change the pdf version
+            // Change the PDF version to Version 1.6
             doc.FileInfo.Version = PdfVersion.Version1_6;
 
+            // Save the modified PDF document to a new file
             doc.SaveToFile("ChangePdfVersion_result.pdf");
 
             //Launch the Pdf file.

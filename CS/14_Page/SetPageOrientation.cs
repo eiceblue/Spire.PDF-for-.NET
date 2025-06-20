@@ -48,8 +48,7 @@ namespace SetPageOrientation
             string output = "SetPageOrientation-result.pdf";
             //Save to file
             doc.SaveToFile(output);    
-
-              
+   
             //Launch the reuslt file
             PDFDocumentViewer(output);
         }

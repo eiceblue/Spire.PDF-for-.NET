@@ -13,15 +13,19 @@ namespace XPSToPDF
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Xps file
+            // Specify the file path of the XPS document.
             String file = @"..\..\..\..\..\..\Data\XPStoPDF.xps";
 
-            //Open xps document
+            // Create a new PdfDocument object.
             PdfDocument doc = new PdfDocument();
+
+            // Load the XPS document into the PdfDocument object from the specified file path.
             doc.LoadFromXPS(file);
 
-            //Convert to pdf file
+            // Convert the XPS document to a PDF file and save it with the output file name "XPStoPDF-result.pdf".
             doc.SaveToFile("XPStoPDF-result.pdf");
+
+            // Close the PdfDocument object.
             doc.Close();
 
             //Launch the Pdf file

@@ -24,18 +24,19 @@ namespace InsertEmptyPage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            // Create a new PdfDocument object.
             PdfDocument doc = new PdfDocument();
 
-            //Load an existing pdf from disk
+            // Load an existing PDF document from the specified file path.
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.pdf");
 
-            //insert a blank page as the second page
+            // Insert a blank page as the second page in the document.
             doc.Pages.Insert(1);
 
+            // Specify the output file name for saving the modified document.
             String result = "InsertEmptyPage_out.pdf";
 
-            //Save the document
+            // Save the modified document to the specified file name.
             doc.SaveToFile(result);
 
             //Launch the Pdf file

@@ -20,29 +20,46 @@ namespace AddLayers
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Create a new PdfDocument object
             PdfDocument doc = new PdfDocument();
+
+            // Load an existing PDF document from the specified file path
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\AddLayers.pdf");
 
+            // Get the first page of the loaded document
             PdfPageBase page = doc.Pages[0];
 
-            //create a layer named "red line"
-            PdfLayer layer = doc.Layers.AddLayer("red line",PdfVisibility.On);
+            // Create a new layer named "red line" with visibility set to "On"
+            PdfLayer layer = doc.Layers.AddLayer("red line", PdfVisibility.On);
+
+            // Create a graphics context for drawing on the specified page's canvas using the created layer
             PdfCanvas pcA = layer.CreateGraphics(page.Canvas);
+
+            // Draw a red line on the graphics context using a pen with thickness 2, starting from (100, 350) to (300, 350)
             pcA.DrawLine(new PdfPen(PdfBrushes.Red, 2), new PointF(100, 350), new PointF(300, 350));
 
-            //create a layer named "blue line"
+            // Create a new layer named "blue line" without specifying visibility (default is "Off")
             layer = doc.Layers.AddLayer("blue line");
+
+            // Create a graphics context for drawing on the first page's canvas using the newly created layer
             PdfCanvas pcB = layer.CreateGraphics(doc.Pages[0].Canvas);
+
+            // Draw a blue line on the graphics context using a pen with thickness 2, starting from (100, 400) to (300, 400)
             pcB.DrawLine(new PdfPen(PdfBrushes.Blue, 2), new PointF(100, 400), new PointF(300, 400));
 
-            //create a layer named "green line"
+            // Create a new layer named "green line" without specifying visibility (default is "Off")
             layer = doc.Layers.AddLayer("green line");
+
+            // Create a graphics context for drawing on the first page's canvas using the newly created layer
             PdfCanvas pcC = layer.CreateGraphics(doc.Pages[0].Canvas);
+
+            // Draw a green line on the graphics context using a pen with thickness 2, starting from (100, 450) to (300, 450)
             pcC.DrawLine(new PdfPen(PdfBrushes.Green, 2), new PointF(100, 450), new PointF(300, 450));
 
+            // Specify the output file name for the modified PDF
             string output = "AddLayers.pdf";
 
-            //save the pdf document
+            // Save the modified PDF document to the specified output file
             doc.SaveToFile(output);
 
             //view the document

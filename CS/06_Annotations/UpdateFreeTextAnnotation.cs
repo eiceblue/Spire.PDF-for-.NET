@@ -22,26 +22,27 @@ namespace UpdateFreeTextAnnotation
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a new PDF document.
+            // Create a new PDF document.
             PdfDocument pdf = new PdfDocument();
 
-            //Load the file from disk.
+            // Load an existing PDF document from a file.
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\UpdateFreeTextAnnotation.pdf");
 
-            //Get the annotation Collection from the document.
-            PdfAnnotationCollection annotations = pdf.Pages[0].AnnotationsWidget;
+            // Get the collection of annotations from the first page of the PDF document.
+            PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
 
-            //Update free text annotation.
-            foreach(PdfFreeTextAnnotationWidget annotaion in annotations)
+            // Iterate through each free text annotation in the collection.
+            foreach (PdfFreeTextAnnotationWidget annotation in annotations)
             {
-                annotaion.Color = Color.YellowGreen;     
-             
+                // Change the color of the annotation to YellowGreen.
+                annotation.Color = Color.YellowGreen;
             }
 
             String result = "UpdateFreeTextAnnotation_out.pdf";
 
-            //Save the document
+            // Save the modified PDF document to a file with the specified filename.
             pdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

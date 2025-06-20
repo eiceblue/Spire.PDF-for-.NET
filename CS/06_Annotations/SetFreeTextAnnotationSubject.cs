@@ -41,20 +41,35 @@ namespace SetFreeTextAnnotationSubject
             //Set subject.
             textAnnotation.Subject = "SubjectTest";
 
-            //Set free text annotation formatting and add it to page.
+            // Create a new PdfFont object using the Times Roman font family and a font size of 20
             PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
+
+            // Create a new PdfAnnotationBorder object with a specified width
             PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
+
+            // Assign the created font to the font property of the free text annotation
             textAnnotation.Font = font;
+
+            // Assign the created border to the border property of the free text annotation
             textAnnotation.Border = border;
+
+            // Set the border color of the free text annotation to gray
             textAnnotation.BorderColor = Color.Purple;
+
+            // Set the line ending style of the free text annotation to slash
             textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
+
+            // Set the background color of the free text annotation to light blue
             textAnnotation.Color = Color.Green;
+
+            // Set the opacity of the free text annotation to 0.8
             textAnnotation.Opacity = 0.8f;
-            page.AnnotationsWidget.Add(textAnnotation);
+            page.Annotations.Add(textAnnotation);
 
             //Save the document
             String result = "SetFreeTextAnnotationSubject_out.pdf";
             doc.SaveToFile(result);
+
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

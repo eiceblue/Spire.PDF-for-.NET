@@ -24,11 +24,14 @@ namespace ConvertImageStreamToPDF
 
             // Create a FileStream object to read the imag file
             FileStream fs = File.OpenRead(@"..\..\..\..\..\..\Data\bg.png");
+
             // Read the image into Byte array
             byte[] data = new byte[fs.Length];
             fs.Read(data, 0, data.Length);
+
             // Create a MemoryStream object from image Byte array
             MemoryStream ms = new MemoryStream(data);
+
             // Specify the image source as MemoryStream
             PdfImage image = PdfImage.FromStream(ms);
 
@@ -37,15 +40,18 @@ namespace ConvertImageStreamToPDF
             float widthFitRate = image.PhysicalDimension.Width / page.Canvas.ClientSize.Width;
             float heightFitRate = image.PhysicalDimension.Height / page.Canvas.ClientSize.Height;
             float fitRate = Math.Max(widthFitRate, heightFitRate);
+
             //Calculate the size of image 
             float fitWidth = image.PhysicalDimension.Width / fitRate;
             float fitHeight = image.PhysicalDimension.Height / fitRate;
+
             //Draw image
             page.Canvas.DrawImage(image, 0, 30, fitWidth, fitHeight);
 
             //save and launch the file
             string output = "ConvertImageStreamToPDF.pdf";
             pdf.SaveToFile(output);
+
             System.Diagnostics.Process.Start(output);
         }
     }

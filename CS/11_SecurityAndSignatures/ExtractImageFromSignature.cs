@@ -11,7 +11,6 @@ using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
 using Spire.Pdf.General;
-using Spire.Pdf.General.Find;
 using System.Drawing.Imaging;
 using Spire.Pdf.Widget;
 namespace ExtractImageFromSignature
@@ -28,19 +27,23 @@ namespace ExtractImageFromSignature
             String input = "..\\..\\..\\..\\..\\..\\Data\\ExtractImageFromSignature.pdf";
             PdfDocument doc = new PdfDocument();
 
-            // Read a pdf file
+            // Specify the path of the input PDF file
+            // The file is located using a relative path
             doc.LoadFromFile(input);
 
-            //Get the existing form of the document
+            // Get the existing form from the document
             PdfFormWidget form = doc.Form as PdfFormWidget;
 
-            //Extract images from signatures in the existing form
+            // Extract images from the signatures in the existing form
+            // The extracted images will be stored in an array
             Image[] images = form.ExtractSignatureAsImages();
 
-            //Save the images to disk
+            // Save the extracted images to disk
             int i = 0;
             for (int j = 0; j < images.Length; j++)
             {
+                // Save each image with a unique name using the index value
+                // The images are saved in PNG format
                 images[j].Save(String.Format(@"Image-{0}.png", i), ImageFormat.Png);
                 i++;
             }

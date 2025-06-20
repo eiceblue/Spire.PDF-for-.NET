@@ -23,6 +23,7 @@ namespace ToSVG
             //Convert to svg file
             doc.SaveToFile("ToSVG-result.svg", FileFormat.SVG);
             doc.Close();
+
             PDFDocumentViewer("ToSVG-result.svg");
         }
         private void PDFDocumentViewer(string fileName)

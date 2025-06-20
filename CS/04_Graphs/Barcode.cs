@@ -27,6 +27,7 @@ namespace Barcode
             margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
             margin.Right = margin.Left;
 
+            //Add PdfSection and set layout for it
             PdfSection section = doc.Sections.Add();
             section.PageSettings.Margins = margin;
             section.PageSettings.Size = PdfPageSize.A4;
@@ -35,13 +36,9 @@ namespace Barcode
             PdfPageBase page = section.Pages.Add();
             float y = 10;
 
-            PdfBrush brush1 = PdfBrushes.Black;
+            //Create a font and set style for it 
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Bold), true);
-            RectangleF rctg = new RectangleF(new PointF(0, 0), page.Canvas.ClientSize);
-            PdfLinearGradientBrush brush2
-                = new PdfLinearGradientBrush(rctg, Color.Navy, Color.OrangeRed, PdfLinearGradientMode.Vertical);
 
-            //Draw Codabar
             PdfTextWidget text = new PdfTextWidget();
             text.Font = font1;
             text.Text = "Codabar:";
@@ -49,10 +46,9 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Draw Codabar
             PdfCodabarBarcode barcode1 = new PdfCodabarBarcode("00:12-3456/7890");
             barcode1.BarcodeToTextGapHeight = 1f;
-            barcode1.EnableCheckDigit = true;
-            barcode1.ShowCheckDigit = true;
             barcode1.TextDisplayLocation = TextLocation.Bottom;
             barcode1.TextColor = Color.Blue;
             barcode1.Draw(page, new PointF(0, y));
@@ -77,6 +73,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode128ABarcode object and set style for it
             PdfCode128ABarcode barcode3 = new PdfCode128ABarcode("HELLO 00-123");
             barcode3.BarcodeToTextGapHeight = 1f;
             barcode3.TextDisplayLocation = TextLocation.Bottom;
@@ -90,6 +87,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode128BBarcode object and set style for it
             PdfCode128BBarcode barcode4 = new PdfCode128BBarcode("Hello 00-123");
             barcode4.BarcodeToTextGapHeight = 1f;
             barcode4.TextDisplayLocation = TextLocation.Bottom;
@@ -103,6 +101,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode32Barcode object and set style for it
             PdfCode32Barcode barcode5 = new PdfCode32Barcode("16273849");
             barcode5.BarcodeToTextGapHeight = 1f;
             barcode5.TextDisplayLocation = TextLocation.Bottom;
@@ -119,6 +118,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode39Barcode object and set style for it
             PdfCode39Barcode barcode6 = new PdfCode39Barcode("16-273849");
             barcode6.BarcodeToTextGapHeight = 1f;
             barcode6.TextDisplayLocation = TextLocation.Bottom;
@@ -132,6 +132,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode39ExtendedBarcode object and set style for it
             PdfCode39ExtendedBarcode barcode7 = new PdfCode39ExtendedBarcode("16-273849");
             barcode7.BarcodeToTextGapHeight = 1f;
             barcode7.TextDisplayLocation = TextLocation.Bottom;
@@ -145,6 +146,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode93Barcode object and set style for it
             PdfCode93Barcode barcode8 = new PdfCode93Barcode("16-273849");
             barcode8.BarcodeToTextGapHeight = 1f;
             barcode8.TextDisplayLocation = TextLocation.Bottom;
@@ -159,6 +161,7 @@ namespace Barcode
             page = result.Page;
             y = result.Bounds.Bottom + 2;
 
+            //Create PdfCode93ExtendedBarcode object and set style for it
             PdfCode93ExtendedBarcode barcode9 = new PdfCode93ExtendedBarcode("16-273849");
             barcode9.BarcodeToTextGapHeight = 1f;
             barcode9.TextDisplayLocation = TextLocation.Bottom;

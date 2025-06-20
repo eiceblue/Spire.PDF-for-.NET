@@ -30,7 +30,7 @@ namespace BookletLayoutSettings
                 //Print the PDF
                 pdf.Print();
             }
-            //Close 
+            //Close  
             this.Close();
         }
     }

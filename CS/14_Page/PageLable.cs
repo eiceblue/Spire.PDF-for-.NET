@@ -20,8 +20,14 @@ namespace PageLable
 
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(input);
+
+            // Initialize a new instance of PdfPageLabels to manage page labels
             doc.PageLabels = new PdfPageLabels();
+
+            // Add a new label starting from page 0 with Decimal_Arabic_Numerals_Style style and text "label test"
             doc.PageLabels.AddRange(0, PdfPageLabels.Decimal_Arabic_Numerals_Style, "label test ");
+
+            // Save the modified document to the specified output file format (PDF)
             doc.SaveToFile(output, FileFormat.PDF);
 
             PDFDocumentViewer(output);
@@ -33,8 +39,14 @@ namespace PageLable
 
             PdfDocument newdoc = new PdfDocument();
             newdoc.LoadFromFile(input);
+
+            // Get the PageLabels of the provided document
             PdfPageLabels pageLabels = newdoc.PageLabels;
+
+            // Add a new label starting from page 0 with Decimal_Arabic_Numerals_Style style and text "new lable"
             pageLabels.AddRange(0, PdfPageLabels.Decimal_Arabic_Numerals_Style, "new lable");
+
+            // Save the modified document to the specified output file format (PDF)
             newdoc.SaveToFile(output, FileFormat.PDF);
 
             PDFDocumentViewer(output);

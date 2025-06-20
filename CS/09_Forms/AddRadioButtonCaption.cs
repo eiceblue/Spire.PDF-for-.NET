@@ -57,6 +57,7 @@ namespace AddRadioButtonCaption
 
             //Save the document
             pdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

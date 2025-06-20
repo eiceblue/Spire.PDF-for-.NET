@@ -18,13 +18,15 @@ namespace ToDocx
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load a pdf document
+            // Load a PDF document from the specified file path.
             String file = @"..\..\..\..\..\..\Data\ToDocx.pdf";
             PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(file);;
+            doc.LoadFromFile(file);
 
-            //Convert to docx file.
+            // Convert the loaded PDF document to a DOCX file.
             doc.SaveToFile("ToDocx.docx", FileFormat.DOCX);
+
+            // Close the PDF document.
             doc.Close();
 
             //Launch the file.

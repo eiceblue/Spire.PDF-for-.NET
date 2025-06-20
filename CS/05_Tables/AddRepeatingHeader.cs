@@ -29,16 +29,18 @@ namespace AddRepeatingHeader
             margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
             margin.Right = margin.Left;
 
-            //Add a page
+            //Add a page and set margin for it
             PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, margin);
 
             float y = 10;
 
-            //Title
+            // Draw Title text
             PdfBrush brush = PdfBrushes.Black;
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center);
             page.Canvas.DrawString("Country List", font, brush, page.Canvas.ClientSize.Width / 2, y, format);
+
+
             y = y + font.MeasureString("Country List", format).Height;
             y = y + 5;
 
@@ -53,20 +55,26 @@ namespace AddRepeatingHeader
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
             table.Style.HeaderStyle.Font = new PdfTrueTypeFont(new Font("Arial", 14f, FontStyle.Bold));
             table.Style.HeaderStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+
             //Repeat header
             table.Style.RepeatHeader = true;
 
-            //Body style
+            //Set default style for cell
             table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue;
             table.Style.DefaultStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
+
+            //Set the odd row cell style
             table.Style.AlternateStyle = new PdfCellStyle();
             table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow;
             table.Style.AlternateStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
 
+            // Set data source for table
             table.DataSource = GetData();
 
+            //Iterate each column for table
             foreach (PdfColumn column in table.Columns)
             {
+                // Set string format for the text in column
                 column.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             }
 
@@ -78,8 +86,7 @@ namespace AddRepeatingHeader
             y = y + result.Bounds.Height + 5;
             PdfBrush brush2 = PdfBrushes.Gray;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 9f));
-            page.Canvas.DrawString(String.Format("* {0} countries in the list.", table.Rows.Count),
-                font2, brush2, 5, y);
+            page.Canvas.DrawString(String.Format("* {0} countries in the list.", table.Rows.Count), font2, brush2, 5, y);
 
             //Save the document
             doc.SaveToFile("AddRepeatingColumn_out.pdf");
@@ -90,6 +97,7 @@ namespace AddRepeatingHeader
         }
         void table_BeginRowLayout(object sender, BeginRowLayoutEventArgs args)
         {
+            //Set the minimal height of the row
             args.MinimalHeight = 50f;
         }
         private String[][] GetData()
@@ -116,8 +124,9 @@ namespace AddRepeatingHeader
                     "Venezuela;Caracas;South America;912047;19700000"
                 };
 
-            String[][] dataSource
-                = new String[data.Length][];
+            String[][] dataSource = new String[data.Length][];
+
+            // Create a 2d array and insert data to it
             for (int i = 0; i < data.Length; i++)
             {
                 dataSource[i] = data[i].Split(';');

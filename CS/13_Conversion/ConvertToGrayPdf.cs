@@ -16,10 +16,13 @@ namespace ConvertToGrayPdf
         {
             //Output file path
             string output = "ConvertToGrayPdf-result.pdf";
+
             //Create a PdfGrayConverter with an pdf file
             PdfGrayConverter converter = new PdfGrayConverter(@"..\..\..\..\..\..\Data\ConvertToGrayPdf.pdf");
+
             //Convert the file to gray pdf
             converter.ToGrayPdf(output);
+
             //Launch the Pdf file
             PDFDocumentViewer(output);
         }

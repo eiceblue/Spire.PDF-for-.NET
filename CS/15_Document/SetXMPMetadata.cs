@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Xmp;
 
 namespace SetXMPMetadata
 {
@@ -19,25 +18,25 @@ namespace SetXMPMetadata
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Pdf file 
+            // Specify the path to the PDF file.
             string input = "..\\..\\..\\..\\..\\..\\Data\\SetXMPMetadata.pdf";
 
-            //Open a pdf document
+            // Open a PDF document.
             PdfDocument doc = new PdfDocument();
- 	    doc.LoadFromFile(input);
+            doc.LoadFromFile(input);
 
-           //Set  XMP Metadata 
+            // Set XMP metadata for the document.
             doc.DocumentInformation.Author = "E-iceblue";
             doc.DocumentInformation.Creator = "Spire.PDF";
-            doc.DocumentInformation.SetCustomProperty("Field1", "NewValue");
             doc.DocumentInformation.Keywords = "XMP";
             doc.DocumentInformation.Producer = "E-icenlue Co,.Ltd";
             doc.DocumentInformation.Subject = "XMP Metadata";
-            doc.DocumentInformation.Title = "Set XMP Metadata in PDF"; 
+            doc.DocumentInformation.Title = "Set XMP Metadata in PDF";
 
+            // Specify the output file name for the modified PDF.
             string output = "SetXMPMetadata.pdf";
 
-            //Save pdf document
+            // Save the PDF document with the updated XMP metadata.
             doc.SaveToFile(output);
 
             //Launch the Pdf file

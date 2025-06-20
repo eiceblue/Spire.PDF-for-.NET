@@ -31,7 +31,7 @@ namespace ExtractAndUpdateLink
             PdfPageBase page = doc.Pages[0];
 
             //Get the annotation collection
-            PdfAnnotationCollection annotations = page.AnnotationsWidget;
+            PdfAnnotationCollection annotations = page.Annotations;
 
             //Verify whether widgetCollection is not null or not
             if (annotations.Count > 0)
@@ -56,6 +56,7 @@ namespace ExtractAndUpdateLink
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

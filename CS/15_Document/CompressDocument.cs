@@ -1,6 +1,6 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Exporting;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,7 +22,8 @@ namespace CompressDocument
         {
             //Load the pdf document
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(@"..\..\..\..\..\..\Data\CompressDocument.pdf");
+	        doc.LoadFromFile(@"..\..\..\..\..\..\Data\CompressDocument.pdf");
+
             //Compress the content in document
             CompressContent(doc);
 
@@ -38,28 +39,35 @@ namespace CompressDocument
 
         private void CompressContent(PdfDocument doc)
         {
-            //Disable the incremental update
+            // Disable the incremental update
             doc.FileInfo.IncrementalUpdate = false;
 
-            //Set the compression level to best
+            // Set the compression level to best
             doc.CompressionLevel = PdfCompressionLevel.Best;
         }
 
         private void CompressImage(PdfDocument doc)
         {
-            //Disable the incremental update
+            // Disable the incremental update
             doc.FileInfo.IncrementalUpdate = false;
 
-            //Traverse all pages
+            // Traverse all pages
             foreach (PdfPageBase page in doc.Pages)
             {
                 if (page != null)
                 {
-                    if (page.ImagesInfo != null)
+                    // Create a helper for image processing
+                    PdfImageHelper helper = new PdfImageHelper();
+
+                    // Get the image information for the current page
+                    Spire.Pdf.Utilities.PdfImageInfo[] pdfImageInfos = helper.GetImagesInfo(page);
+                    if (pdfImageInfos != null)
                     {
-                        foreach (PdfImageInfo info in page.ImagesInfo)
+                        // Process each image on the page
+                        for (int i = 0; i < pdfImageInfos.Length; i++)
                         {
-                            page.TryCompressImage(info.Index);
+                            // Try to compress the image
+                            pdfImageInfos[i].TryCompressImage();
                         }
                     }
                 }

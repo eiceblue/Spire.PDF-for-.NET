@@ -16,27 +16,29 @@ namespace DrawDashedLine
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //Load a PDF file
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\DrawingTemplate.pdf");
-            //Create one page
+
+            //Get the first page
             PdfPageBase page = pdf.Pages[0];
 
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
 
-            //Draw line
-            //Set location and size
+            //Set location and size for line
             float x = 150;
             float y = 200;
             float width = 300;
 
-            //Create pens
+            //Create pens and set syle for it
             PdfPen pen = new PdfPen(Color.Red, 3f);
+
             //Set dash style and pattern
             pen.DashStyle = PdfDashStyle.Dash;
             pen.DashPattern = new float[] { 1, 4, 1 };
-            //Draw a rectangle
-            //Draw two crossed lines
+
+            //Draw dashed lines
             page.Canvas.DrawLine(pen, x, y, x + width, y);
 
             //Restore graphics
@@ -46,6 +48,7 @@ namespace DrawDashedLine
 
             //Save the document
             pdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

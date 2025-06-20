@@ -7,6 +7,7 @@ using Spire.Pdf.Actions;
 using Spire.Pdf.Annotations;
 using System.Text;
 using System.IO;
+using Spire.Pdf.Texts;
 
 namespace ExtractHighlightedText
 {
@@ -19,7 +20,7 @@ namespace ExtractHighlightedText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            //Create a pdf instance
             PdfDocument doc = new PdfDocument();
 
             //Load a pdf file
@@ -29,14 +30,17 @@ namespace ExtractHighlightedText
             PdfTextMarkupAnnotationWidget textMarkupAnnotation;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("Extracted hightlighted text:");
+            PdfTextExtractor pdfTextExtractor = new PdfTextExtractor(page);
             //Get PdfTextMarkupAnnotationWidget objects
-            for (int i = 0; i < page.AnnotationsWidget.Count; i++)
+            for (int i = 0; i < page.Annotations.Count; i++)
             {
-                if (page.AnnotationsWidget[i] is PdfTextMarkupAnnotationWidget)
+                if (page.Annotations[i] is PdfTextMarkupAnnotationWidget)
                 {
-                    textMarkupAnnotation = page.AnnotationsWidget[i] as PdfTextMarkupAnnotationWidget;
+                    textMarkupAnnotation = page.Annotations[i] as PdfTextMarkupAnnotationWidget;
                     //Get the highlighted text
-                    stringBuilder.AppendLine(page.ExtractText(textMarkupAnnotation.Bounds));
+                    PdfTextExtractOptions pdfTextExtractOptions = new PdfTextExtractOptions();
+                    pdfTextExtractOptions.ExtractArea = textMarkupAnnotation.Bounds;
+                    stringBuilder.AppendLine(pdfTextExtractor.ExtractText(pdfTextExtractOptions));
 
                     //Get the highlighted color
                     Color color = textMarkupAnnotation.TextMarkupColor;

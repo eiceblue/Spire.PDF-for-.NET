@@ -1,8 +1,9 @@
 ﻿using Spire.Pdf;
+using Spire.Pdf.Texts;
 using Spire.Pdf.Actions;
 using Spire.Pdf.Annotations;
-using Spire.Pdf.General.Find;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -18,38 +19,48 @@ namespace LaunchFileInNewWindow
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load old PDF from disk.
+            // Load an existing PDF document from disk.
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\DocumentsLinks.pdf");
 
-            //Define the variables
-            PdfTextFind[] finds = null;
+            List<PdfTextFragment> collection = null;
             string[] test = { "Spire.PDF" };
 
-            //Traverse the pages
+            // Iterate through each page of the PDF document.
             foreach (PdfPageBase page in pdf.Pages)
             {
+                // Iterate through each keyword in the 'test' array.
                 for (int i = 0; i < test.Length; i++)
                 {
-                    //Find the defined string
-                    finds = page.FindText(test[i], TextFindParameter.WholeWord).Finds;
+                    // Create a PdfTextFinder to search for the keyword in the current page.
+                    PdfTextFinder finder = new PdfTextFinder(page);
+                    finder.Options.Parameter = TextFindParameter.WholeWord;
 
-                    //Traverse the finds
-                    foreach (PdfTextFind find in finds)
+                    // Find all occurrences of the keyword on the current page.
+                    collection = finder.Find(test[i]);
+
+                    // Iterate through each found text fragment.
+                    foreach (PdfTextFragment find in collection)
                     {
+                        // Create a PdfLaunchAction to launch a file when the annotation is clicked.
                         PdfLaunchAction launchAction = new PdfLaunchAction(@"..\..\..\..\..\..\Data\Sample.pdf", PdfFilePathType.Relative);
-                        
-                        //Set open document in a new window
+
+                        // Set the launch action to open the file in a new window.
                         launchAction.IsNewWindow = true;
 
-                        //Add annotation
-                        RectangleF rect = new RectangleF(find.Position.X, find.Position.Y, find.Size.Width, find.Size.Height);
+                        // Get the position and size of the found text fragment.
+                        RectangleF rect = new RectangleF(find.Positions[0].X, find.Positions[0].Y, find.Sizes[0].Width, find.Sizes[0].Height);
+
+                        // Create a PdfActionAnnotation with the launch action and the annotation rectangle.
                         PdfActionAnnotation annotation = new PdfActionAnnotation(rect, launchAction);
-                        (page as PdfPageWidget).AnnotationsWidget.Add(annotation);
+
+                        // Add the annotation to the current page.
+                        (page as PdfPageWidget).Annotations.Add(annotation);
                     }
                 }
             }
-            //Save the file
+
+            // Save the modified PDF document to a new file.
             String result = "LaunchFileInNewWindow.pdf";
             pdf.SaveToFile(result);
 

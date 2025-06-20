@@ -27,6 +27,7 @@ namespace InvisibleAllPdfLayers
             //Load the file from disk.
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_5.pdf");
 
+            // Iterate each layer of Pdf file
             for (int i = 0; i < doc.Layers.Count; i++)
             {
                 //Show all the Pdf layers.
@@ -40,6 +41,7 @@ namespace InvisibleAllPdfLayers
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

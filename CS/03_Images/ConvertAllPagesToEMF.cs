@@ -23,7 +23,7 @@ namespace ConvertAllPagesToEMF
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(file);
 
-            //Save to images
+            // Iterate through each page
             for (int i = 0; i < pdf.Pages.Count; i++)
             {
                 String fileName = String.Format("ToEMF-img-{0}.emf", i);

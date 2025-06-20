@@ -32,7 +32,7 @@ namespace GetLinkAnnotation
             PdfPageBase page = doc.Pages[0];
 
             //Get the annotation collection
-            PdfAnnotationCollection annotations = page.AnnotationsWidget;
+            PdfAnnotationCollection annotations = page.Annotations;
 
             //Create StringBuilder to save 
             StringBuilder content = new StringBuilder();

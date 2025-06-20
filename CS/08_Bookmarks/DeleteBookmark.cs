@@ -21,7 +21,7 @@ namespace DeleteBookmark
             //Load a pdf document
             string input = @"..\..\..\..\..\..\Data\DeleteBookmark.pdf";
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(input);
+	        doc.LoadFromFile(input);
 
             //Delete the first bookmark
             doc.Bookmarks.RemoveAt(0);

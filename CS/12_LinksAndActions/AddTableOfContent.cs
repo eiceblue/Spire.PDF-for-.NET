@@ -22,48 +22,55 @@ namespace AddTableOfContent
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {  
-            //pdf file 
+        {
+            // Specify the path to the input PDF file.
             string input = "..\\..\\..\\..\\..\\..\\Data\\AddTableOfContent.pdf";
-           
-            //open a pdf document
+
+            // Open a PDF document.
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(input);
-            //get the page count
+            doc.LoadFromFile(input);
+
+            // Get the total number of pages in the document.
             int pageCount = doc.Pages.Count;
 
-            //insert a blank page into the pdf document
+            // Insert a blank page at the beginning of the PDF document.
             PdfPageBase tocPage = doc.Pages.Insert(0);
 
-            //set title
+            // Set the title for the table of contents.
             string title = "Table Of Contents";
             PdfTrueTypeFont titleFont = new PdfTrueTypeFont(new Font("Arial", 20, FontStyle.Bold));
             PdfStringFormat centerAlignment = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             PointF location = new PointF(tocPage.Canvas.ClientSize.Width / 2, titleFont.MeasureString(title).Height);
             tocPage.Canvas.DrawString(title, titleFont, PdfBrushes.CornflowerBlue, location, centerAlignment);
-           
-            //draw TOC text
+
+            // Draw the table of contents entries.
             PdfTrueTypeFont titlesFont = new PdfTrueTypeFont(new Font("Arial", 14));
             String[] titles = new String[pageCount];
             for (int i = 0; i < titles.Length; i++)
             {
-                titles[i] = string.Format("This is page{0}", i+1);
+                titles[i] = string.Format("This is page {0}", i + 1);
             }
             float y = titleFont.MeasureString(title).Height + 10;
             float x = 0;
 
             for (int i = 1; i <= pageCount; i++)
             {
-                string text = titles[i-1];
+                string text = titles[i - 1];
                 SizeF titleSize = titlesFont.MeasureString(text);
 
+                // Get the page that the table of contents entry will navigate to.
                 PdfPageBase navigatedPage = doc.Pages[i];
-              
-                string pageNumText = (i+1).ToString();
+
+                string pageNumText = (i + 1).ToString();
                 SizeF pageNumTextSize = titlesFont.MeasureString(pageNumText);
+
+                // Draw the entry text.
                 tocPage.Canvas.DrawString(text, titlesFont, PdfBrushes.CadetBlue, 0, y);
+
                 float dotLocation = titleSize.Width + 2 + x;
                 float pageNumlocation = tocPage.Canvas.ClientSize.Width - pageNumTextSize.Width;
+
+                // Draw dots between the entry text and page number.
                 for (float j = dotLocation; j < pageNumlocation; j++)
                 {
                     if (dotLocation >= pageNumlocation)
@@ -73,9 +80,11 @@ namespace AddTableOfContent
                     tocPage.Canvas.DrawString(".", titlesFont, PdfBrushes.Gray, dotLocation, y);
                     dotLocation += 3;
                 }
+
+                // Draw the page number.
                 tocPage.Canvas.DrawString(pageNumText, titlesFont, PdfBrushes.CadetBlue, pageNumlocation, y);
 
-                //add TOC action
+                // Add the table of contents action.
                 location = new PointF(0, y);
                 RectangleF titleBounds = new RectangleF(location, new SizeF(tocPage.Canvas.ClientSize.Width, titleSize.Height));
                 PdfDestination Dest = new PdfDestination(navigatedPage, new PointF(-doc.PageSettings.Margins.Top, -doc.PageSettings.Margins.Left));
@@ -87,7 +96,7 @@ namespace AddTableOfContent
 
             string output = "AddTableOfContent.pdf";
 
-            //save pdf document
+            // Save the PDF document.
             doc.SaveToFile(output);
 
             //Launching the Pdf file

@@ -15,21 +15,36 @@ namespace Encryption
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
-            //Load a pdf document.
-            PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(@"..\..\..\..\..\..\Data\Encryption.pdf");
-            //Encrypt
-            PdfEncryptionKeySize keySize = PdfEncryptionKeySize.Key128Bit;
-            string openPassword = "e-iceblue";
-            string permissionPassword = "test";
-            PdfPermissionsFlags flags = PdfPermissionsFlags.Print | PdfPermissionsFlags.FillFields;
-            doc.Security.Encrypt(openPassword, permissionPassword, flags, keySize);
+        {        
+            // Create and load a pdf document
+            PdfDocument pdf = new PdfDocument();
+            pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Encryption.pdf");
 
-            //Save pdf file.
-            doc.SaveToFile("Encryption-result.pdf");
-            doc.Close();
+            // Define user and owner passwords
+            string userPassword = "user";
+            string ownerPassword = "owner";
 
+            // Create a security policy with the specified passwords
+            PdfSecurityPolicy securityPolicy = new PdfPasswordSecurityPolicy(userPassword, ownerPassword);
+
+            // Set the encryption algorithm to AES 128-bit
+            securityPolicy.EncryptionAlgorithm = PdfEncryptionAlgorithm.AES_128;
+
+            // Allow printing of the document
+            securityPolicy.DocumentPrivilege.AllowPrint = true;
+
+            // Allow filling form fields in the document
+            securityPolicy.DocumentPrivilege.AllowFillFormFields = true;
+
+            // Allow copying content from the document
+            securityPolicy.DocumentPrivilege.AllowContentCopying = true;
+
+            // Encrypt the PDF document using the specified security policy
+            pdf.Encrypt(securityPolicy);
+
+            // Save the encrypted PDF document to a file named "SecurityPermission.pdf"
+            pdf.SaveToFile("Encryption-result.pdf");
+          
             //Launch the file.
             PDFDocumentViewer("Encryption-result.pdf");
         }

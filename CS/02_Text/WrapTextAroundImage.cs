@@ -66,6 +66,7 @@ namespace WrapTextAroundImage
 
             PdfStringLayouter textLayouter = new PdfStringLayouter();
             float imageLeftBlockHeight = imageBottom - y;
+
             // Splits the text around into multiple lines based on the draw area
             PdfStringLayoutResult result
                 = textLayouter.Layout(text, font2, format2, new SizeF(imageLeftSpace, imageLeftBlockHeight));
@@ -94,6 +95,7 @@ namespace WrapTextAroundImage
 
             //Save the document
             doc.SaveToFile(output);
+
             //Launch the Pdf file
             PDFDocumentViewer(output);
         }

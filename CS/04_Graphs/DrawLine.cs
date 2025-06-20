@@ -16,15 +16,17 @@ namespace DrawLine
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            //Load a PDF file
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\DrawingTemplate.pdf");
-            //Create one page
+
+            //Get the first page
             PdfPageBase page = pdf.Pages[0];
 
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
 
-            //Draw line
             //Set location and size
             float x = 95;
             float y = 95;
@@ -34,8 +36,10 @@ namespace DrawLine
             //Create pens
             PdfPen pen = new PdfPen(Color.Black, 0.1f);
             PdfPen pen1 = new PdfPen(Color.Red, 0.1f);
+
             //Draw a rectangle
             page.Canvas.DrawRectangle(pen, x, y, width, height);
+
             //Draw two crossed lines
             page.Canvas.DrawLine(pen1, x, y, x + width, y + height);
             page.Canvas.DrawLine(pen1, x + width, y, x, y + height);
@@ -47,6 +51,7 @@ namespace DrawLine
 
             //Save the document
             pdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

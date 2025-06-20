@@ -21,32 +21,46 @@ namespace AddImageStamp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load a pdf document
-            string input = "..\\..\\..\\..\\..\\..\\Data\\AddImageStamp.pdf";
+            // Specify the file path for the input PDF document
+            string input = @"../../../../../../Data/AddImageStamp.pdf";
+
+            // Create a new instance of PdfDocument
             PdfDocument document = new PdfDocument();
-	    document.LoadFromFile(input);
-            //Get the first page
+
+            // Load the PDF document from the specified file path
+            document.LoadFromFile(input);
+
+            // Get the first page of the document
             PdfPageBase page = document.Pages[0];
 
-            //Create a rubber stamp annotation
+            // Create a rubber stamp annotation with a specified rectangle for its size and position
             PdfRubberStampAnnotation loStamp = new PdfRubberStampAnnotation(new RectangleF(new PointF(0, 0), new SizeF(60, 60)));
 
-            //Create an instance of PdfAppearance 
+            // Create an instance of PdfAppearance for the rubber stamp annotation
             PdfAppearance loApprearance = new PdfAppearance(loStamp);
-            PdfImage image = PdfImage.FromFile("..\\..\\..\\..\\..\\..\\Data\\image stamp.jpg");
+
+            // Load an image file to be used as the stamp
+            PdfImage image = PdfImage.FromFile(@"../../../../../../Data/image stamp.jpg");
+
+            // Create a template with specific dimensions
             PdfTemplate template = new PdfTemplate(210, 210);
 
-            //Draw a pdf image into pdf template
+            // Draw the loaded image onto the template
             template.Graphics.DrawImage(image, 60, 60);
+
+            // Set the normal appearance of the stamp to use the created template
             loApprearance.Normal = template;
+
+            // Assign the custom appearance to the rubber stamp annotation
             loStamp.Appearance = loApprearance;
 
-            //Add the rubber stamp annotation into pdf
-            page.AnnotationsWidget.Add(loStamp);
+            // Add the rubber stamp annotation to the page's annotations widget
+            page.Annotations.Add(loStamp);
 
+            // Specify the file name for the modified PDF document
             string output = "AddImageStamp.pdf";
 
-            //Save pdf document
+            // Save the modified PDF document
             document.SaveToFile(output);
 
             //Launch the file

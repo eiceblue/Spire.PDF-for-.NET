@@ -16,6 +16,7 @@ namespace CheckPasswordProtection
         {
             //Check whether the input pdf document is password protected.
             bool isProtected =PdfDocument.IsPasswordProtected(@"..\..\..\..\..\..\Data\CheckPasswordProtection.pdf");
+           
             //Show the result by message box
             MessageBox.Show("The pdf is " + (isProtected ? "password " : "not password ") +"protected!");
         }  

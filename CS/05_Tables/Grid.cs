@@ -31,7 +31,7 @@ namespace Grid
             margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
             margin.Right = margin.Left;
 
-            //Create one page
+            //Create one page and set margin for it
             PdfPageBase page = doc.Pages.Add(PdfPageSize.A4);
             float y = 10;
             float x1 = page.Canvas.ClientSize.Width;
@@ -74,27 +74,34 @@ namespace Grid
 
             //Create a grid
             PdfGrid grid = new PdfGrid();
+
             //Set the cell padding
             grid.Style.CellPadding = new PdfPaddings(1, 1, 1, 1);
 
             String[] header = data[0].Split(';');
             grid.Columns.Add(header.Length);
-            float width
-                = page.Canvas.ClientSize.Width - (grid.Columns.Count + 1);
+            float width = page.Canvas.ClientSize.Width - (grid.Columns.Count + 1);
+
+            //Set column width for grid
             grid.Columns[0].Width = width * 0.25f;
             grid.Columns[1].Width = width * 0.25f;
             grid.Columns[2].Width = width * 0.25f;
             grid.Columns[3].Width = width * 0.15f;
             grid.Columns[4].Width = width * 0.10f;
+
+            //Set header style for grid
             PdfGridRow headerRow = grid.Headers.Add(1)[0];
             headerRow.Style.Font = new PdfTrueTypeFont(new Font("Arial", 11f, FontStyle.Bold), true);
-            headerRow.Style.BackgroundBrush
-                = new PdfLinearGradientBrush(new PointF(0, 0), new PointF(x1, 0), Color.Red, Color.Blue);
+            headerRow.Style.BackgroundBrush = new PdfLinearGradientBrush(new PointF(0, 0), new PointF(x1, 0), Color.Red, Color.Blue);
+
+            //Iterate each header cell
             for (int i = 0; i < header.Length; i++)
             {
+                //Set value for header cell
                 headerRow.Cells[i].Value = header[i];
-                headerRow.Cells[i].StringFormat
-                    = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+
+                //Set string format for header cell
+                headerRow.Cells[i].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
                 if (i == 0)
                 {
                     headerRow.Cells[i].Style.BackgroundBrush = PdfBrushes.Gray;
@@ -111,22 +118,25 @@ namespace Grid
                 random.NextBytes(buffer);
                 PdfRGBColor color1 = new PdfRGBColor(buffer[0], buffer[1], buffer[2]);
                 PdfRGBColor color2 = new PdfRGBColor(buffer[3], buffer[4], buffer[5]);
-                row.Style.BackgroundBrush
-                    = new PdfLinearGradientBrush(new PointF(0, 0), new PointF(x1, 0), color1, color2);
+                row.Style.BackgroundBrush = new PdfLinearGradientBrush(new PointF(0, 0), new PointF(x1, 0), color1, color2);
                 String[] rowData = data[r].Split(';');
+
                 for (int c = 0; c < rowData.Length; c++)
                 {
                     row.Cells[c].Value = rowData[c];
                     if (c == 0)
                     {
+                        //Set back color for cell
                         row.Cells[c].Style.BackgroundBrush = PdfBrushes.Gray;
                     }
-                    if(c < 3)
+                    if (c < 3)
                     {
+                        //Set string format for cell
                         row.Cells[c].StringFormat = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Middle);
                     }
                     else
                     {
+                        //Set string format for cell
                         row.Cells[c].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
                     }
                     if (c == 4)
@@ -186,7 +196,7 @@ namespace Grid
             productList.Headers[0].Cells[0].Value = "Cacor Corporation";
             productList.Headers[0].Cells[0].Style.Font = new PdfTrueTypeFont(new Font("Arial", 8f, FontStyle.Bold), true);
             productList.Headers[0].Cells[0].Style.Borders.All = new PdfPen(new PdfTilingBrush(new SizeF(1, 1)), 0);
-            
+
             //Embed the gride productList into the cell of grid
             grid.Rows[0].Cells[0].Value = productList;
             grid.Rows[0].Cells[0].StringFormat.Alignment = PdfTextAlignment.Left;
@@ -196,8 +206,7 @@ namespace Grid
 
             PdfBrush brush2 = PdfBrushes.Gray;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 9f));
-            result.Page.Canvas.DrawString(String.Format("* All {0} vendors in the list", grid.Rows.Count - 1),
-                font2, brush2, 5, y);
+            result.Page.Canvas.DrawString(String.Format("* All {0} vendors in the list", grid.Rows.Count - 1), font2, brush2, 5, y);
 
             //Save pdf file
             doc.SaveToFile("Grid.pdf");

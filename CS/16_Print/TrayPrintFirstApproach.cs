@@ -11,7 +11,6 @@ using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
 using Spire.Pdf.General;
-using Spire.Pdf.General.Find;
 using System.Drawing.Printing;
 namespace TrayPrintFirstApproach
 {
@@ -26,11 +25,12 @@ namespace TrayPrintFirstApproach
         {
             PrintDocument doc = new PrintDocument();
 
-            // Gets paper sources
+            // Get available printer sources
             foreach (string printer in PrinterSettings.InstalledPrinters)
             {
                 if (printer.Contains("HP ColorLaserJet MFP"))
                 {
+                    // Set the printer name to the desired printer
                     doc.PrinterSettings.PrinterName = printer;
                     break;
                 }
@@ -38,13 +38,14 @@ namespace TrayPrintFirstApproach
                 var myDictPaperTray = new Dictionary<string, PaperSource>();
                 for (int i = 0; i < doc.PrinterSettings.PaperSources.Count; i++)
                 {
+                    // Create a dictionary of paper tray names and corresponding PaperSource objects
                     myDictPaperTray.Add(doc.PrinterSettings.PaperSources[i].SourceName, doc.PrinterSettings.PaperSources[i]);
                 }
 
-                // Uses tray1 to print the first page on one side
-                pPrintPages(1, 1, myDictPaperTray["Tray 1"], false,true,false);
-                // Uses tray4 to print the second page to fifth page on both sides
-                pPrintPages(2, 5, myDictPaperTray["Tray 4"], true,false,true);
+                // Use Tray 1 to print the first page on one side
+                pPrintPages(1, 1, myDictPaperTray["Tray 1"], false, true, false);
+                // Use Tray 4 to print the second to fifth pages on both sides
+                pPrintPages(2, 5, myDictPaperTray["Tray 4"], true, false, true);
             }
         }
 
@@ -53,27 +54,31 @@ namespace TrayPrintFirstApproach
             PdfDocument doc = new Spire.Pdf.PdfDocument(@"..\..\..\..\..\..\Data\PrintPdfDocument.pdf");
             doc.PrintSettings.SelectPageRange(pStart, pEnd);
 
-            
+            // Configure duplex printing (vertical or simplex)
             if (pDuplex)
                 doc.PrintSettings.Duplex = Duplex.Vertical;
             else
                 doc.PrintSettings.Duplex = Duplex.Simplex;
 
+            // Configure color printing
             if (IsColour)
                 doc.PrintSettings.Color = true;
             else
                 doc.PrintSettings.Color = false;
 
+            // Configure landscape or portrait orientation
             if (IsLandscape)
                 doc.PrintSettings.Landscape = true;
             else
                 doc.PrintSettings.Landscape = false;
 
-            doc.PrintSettings.PaperSettings += delegate(object sender, Spire.Pdf.Print.PdfPaperSettingsEventArgs e)
+            // Set the paper source for printing
+            doc.PrintSettings.PaperSettings += delegate (object sender, Spire.Pdf.Print.PdfPaperSettingsEventArgs e)
             {
                 e.CurrentPaperSource = pSource;
             };
 
+            // Print the document with the specified settings
             doc.Print();
         }
     }

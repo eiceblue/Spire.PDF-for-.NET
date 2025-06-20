@@ -22,13 +22,15 @@ namespace DrawShapeWithGradientFill
             //Create one page
             PdfPageBase page = doc.Pages.Add();
 
-            //Create a PdfLinearGradientBrush
+            //Create a PdfLinearGradientBrush and set style for it
             PdfLinearGradientBrush brush1 = new PdfLinearGradientBrush(new Rectangle(new Point(100, 100), new Size(200, 120)), Color.BlueViolet, Color.DarkBlue, PdfLinearGradientMode.Horizontal);
+
             //Draw a rectangle
             page.Canvas.DrawRectangle(brush1, new Rectangle(new Point(100, 100), new Size(200, 120)));
 
-            //Create a PdfRadialGradientBrush
+            //Create a PdfRadialGradientBrush and set style for it
             PdfRadialGradientBrush brush2 = new PdfRadialGradientBrush(new PointF(200f, 400f), 100f, new PointF(300f, 500f), 100f, Color.SkyBlue, Color.DarkBlue);
+
             //Draw a ellipse
             page.Canvas.DrawEllipse(brush2, new Rectangle(new Point(100, 300), new Size(200, 200)));
 

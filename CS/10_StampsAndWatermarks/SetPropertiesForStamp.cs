@@ -14,28 +14,32 @@ namespace SetPropertiesForStamp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load old PDF from disk.
+            // Load an existing PDF document from the disk.
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\TextStamp.pdf");
 
-            //Get the first page
+            // Get the first page from the document.
             PdfPageBase page = pdf.Pages[0];
 
-            //Traverse annotations widget
-            foreach (PdfAnnotation annotation in page.AnnotationsWidget.List)
+            // Traverse through each annotation widget on the page.
+            foreach (PdfAnnotation annotation in page.Annotations.List)
             {
-                //If it is PdfRubberStampAnnotationWidget
+                // Check if the current annotation is a rubber stamp annotation.
                 if (annotation is PdfRubberStampAnnotationWidget)
                 {
+                    // Cast the annotation to a PdfRubberStampAnnotationWidget.
                     PdfRubberStampAnnotationWidget stamp = annotation as PdfRubberStampAnnotationWidget;
+
+                    // Set properties for the rubber stamp annotation.
                     stamp.Author = "TestUser";
                     stamp.Subject = "E-iceblue";
                     stamp.CreationDate = DateTime.Now;
                     stamp.ModifiedDate = DateTime.Now;
                 }
-            } 
-            //Save to a pdf file
-            String result = "SetPropertiesForStamp.pdf";
+            }
+
+            // Save the modified PDF document to a file.
+            string result = "SetPropertiesForStamp.pdf";
             pdf.SaveToFile(result, Spire.Pdf.FileFormat.PDF);
 
             //Launch the file

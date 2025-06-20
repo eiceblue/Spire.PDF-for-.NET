@@ -23,7 +23,7 @@ namespace Extract3DViedoFile
             PdfPageBase firstPage = pdf.Pages[0];
 
             //Get the annotation collection of the first page
-            PdfAnnotationCollection annot = firstPage.AnnotationsWidget;
+            PdfAnnotationCollection annot = firstPage.Annotations;
 
             //Define an int variable
             int count = 0;

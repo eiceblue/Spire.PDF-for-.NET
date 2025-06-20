@@ -33,6 +33,7 @@ namespace DeleteAllBookmarks
 
             //Save the document
             document.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

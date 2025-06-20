@@ -11,7 +11,6 @@ using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
 using Spire.Pdf.General;
-using Spire.Pdf.General.Find;
 using System.Drawing.Printing;
 using Spire.Pdf.Print;
 namespace TrayPrintSecondApproach
@@ -27,6 +26,7 @@ namespace TrayPrintSecondApproach
         {
             //Initialize an object of PdfDocument class
             PdfDocument doc = new PdfDocument();
+
             //Load the PDF document
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\PrintPdfDocument.pdf");
 
@@ -48,6 +48,7 @@ namespace TrayPrintSecondApproach
                 {
                     e1.CurrentPaperSource = e1.PaperSources[0];
                 }
+
                 //Set the paper source of the rest of pages as tray 2
                 else
                 {

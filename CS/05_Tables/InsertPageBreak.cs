@@ -23,7 +23,7 @@ namespace InsertPageBreak
             //Add a page
             PdfPageBase page = doc.Pages.Add();
 
-            float y=10;
+            float y = 10;
 
             //Title
             PdfBrush brush1 = PdfBrushes.Black;
@@ -37,32 +37,36 @@ namespace InsertPageBreak
             PdfTable table = new PdfTable();
             table.Style.BorderPen = new PdfPen(brush1, 0.5f);
 
-            //Header style
+            //Set the cell style for header row 
             table.Style.HeaderSource = PdfHeaderSource.Rows;
             table.Style.HeaderRowCount = 1;
             table.Style.ShowHeader = true;
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
             table.Style.HeaderStyle.Font = new PdfTrueTypeFont(new Font("Arial", 14f, FontStyle.Bold));
             table.Style.HeaderStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+
             //Repeat header
             table.Style.RepeatHeader = true;
 
-            //Body style
+            //Set default style for cell
             table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue;
             table.Style.DefaultStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
             table.Style.DefaultStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+
+            //Set the cell style for odd row
             table.Style.AlternateStyle = new PdfCellStyle();
             table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow;
             table.Style.AlternateStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
             table.Style.AlternateStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
+            //Set data source for table
             table.DataSource = GetData();
 
             //Set the Pdf table layout and specify the paginate bounds
             PdfTableLayoutFormat tableLayout = new PdfTableLayoutFormat();
             tableLayout.Break = PdfLayoutBreakType.FitElement;
             tableLayout.Layout = PdfLayoutType.Paginate;
-            tableLayout.PaginateBounds = new RectangleF(0, y, page.ActualSize.Width-100, page.ActualSize.Height / 3);
+            tableLayout.PaginateBounds = new RectangleF(0, y, page.ActualSize.Width - 100, page.ActualSize.Height / 3);
 
             //Set the row height
             table.BeginRowLayout += new BeginRowLayoutEventHandler(table_BeginRowLayout);
@@ -103,8 +107,8 @@ namespace InsertPageBreak
                     "Venezuela;Caracas;South America;912047;19700000"
                 };
 
-            String[][] dataSource
-                = new String[data.Length][];
+            //Create 2d array to store data source for table
+            String[][] dataSource = new String[data.Length][];
             for (int i = 0; i < data.Length; i++)
             {
                 dataSource[i] = data[i].Split(';');
@@ -115,6 +119,7 @@ namespace InsertPageBreak
         {
             args.MinimalHeight = 50f;
         }
+
         private void PDFDocumentViewer(string fileName)
         {
             try

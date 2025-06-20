@@ -39,12 +39,13 @@ namespace CreatePdfPolygonAnnotation
             polygon.ModifiedDate = DateTime.Now;
 
             //Add the annotation to Pdf page and save the document.
-            page.AnnotationsWidget.Add(polygon);
+            page.Annotations.Add(polygon);
 
             String result = "CreatePdfPolygonAnnotation_out.pdf";
 
             //Save the document
             pdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

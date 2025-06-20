@@ -19,19 +19,19 @@ namespace SetLineBreak
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            // Create a pdf document
             PdfDocument doc = new PdfDocument();
 
-            //Create one A4 page
+            // Create one A4 page
             PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, new PdfMargins(40));
 
-            //Create brush from color channel
+            // Create brush from color channel
             PdfSolidBrush brush = new PdfSolidBrush(Color.Black);
 
-            //Create text
+            // Create text
             String text = "Spire.PDF for .NET" +
                 "\n" +
-                 "A professional PDF library applied to" +
+                "A professional PDF library applied to" +
                 " creating, writing, editing, handling and reading PDF files" +
                 " without any external dependencies within .NET" +
                 "( C#, VB.NET, ASP.NET, .NET Core) application.";
@@ -44,19 +44,20 @@ namespace SetLineBreak
             text += "\n\r";
             text += "Welcome to evaluate Spire.PDF!";
 
-            //Create rectangle with specified dimensions      
+            // Create rectangle with specified dimensions  
             RectangleF rect = new RectangleF(50, 50, page.Size.Width - 150, page.Size.Height);
 
-            //Draw the text
+            // Draw the text
             page.Canvas.DrawString(text,
                                    new PdfFont(PdfFontFamily.Helvetica, 13f),
-                                     brush,
+                                   brush,
                                    rect);
 
             String result = "SetLineBreak_out.pdf";
 
-            //Save the document
+            // Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

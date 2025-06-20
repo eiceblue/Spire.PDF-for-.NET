@@ -56,21 +56,33 @@ namespace AddContinuousTables
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center);
             string title1 = title;
+
+            //Draw text
             page.Canvas.DrawString(title1, font, brush, page.Canvas.ClientSize.Width / 2, y, format);
+
+            //Measure the size of text to recalculate the y value
             y = y + font.MeasureString(title1, format).Height;
             y = y + 10;
 
             //Create PDF table and define table style
             PdfTable table = new PdfTable();
+
+            //Set the cell padding
             table.Style.CellPadding = 3;
             table.Style.BorderPen = new PdfPen(brush, 0.75f);
+
+            //Set default style for cell
             table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue;
             table.Style.DefaultStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
             table.Style.DefaultStyle.StringFormat = format;
+
+            //Set the odd row cell style
             table.Style.AlternateStyle = new PdfCellStyle();
             table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow;
             table.Style.AlternateStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
             table.Style.AlternateStyle.StringFormat = format;
+
+            //Set the header row cell style
             table.Style.HeaderSource = PdfHeaderSource.ColumnCaptions;
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
             table.Style.HeaderStyle.Font = new PdfTrueTypeFont(new Font("Arial", 14f, FontStyle.Bold));

@@ -22,46 +22,70 @@ namespace TextAnnotationProperties
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load old PDF from disk.
+            
+            // Create a new PDF document object.
             PdfDocument pdf = new PdfDocument();
+
+            // Load an existing PDF document from a file.
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\FreeTextAnnotation.pdf");
 
-            //Get the first page.
+            // Get the first page of the loaded document.
             PdfPageBase firstPage = pdf.Pages[0];
 
-            //Create a new PDF document.
+            // Create a new PDF document object to store the copied annotations.
             PdfDocument newPdf = new PdfDocument();
 
-            //Traverse the annotations of the first page of old PDF
-            foreach (PdfAnnotation annotation in firstPage.AnnotationsWidget.List)
+            // Iterate through each annotation in the first page's annotation list.
+            foreach (PdfAnnotation annotation in firstPage.Annotations.List)
             {
-                //If it is FreeTextAnnotation
+
+                // Check if the annotation is a free text annotation.
                 if (annotation is PdfFreeTextAnnotationWidget)
                 {
+
+                    // Convert the annotation to a free text annotation object.
                     PdfFreeTextAnnotationWidget textAnnotation = annotation as PdfFreeTextAnnotationWidget;
 
-                    //Get its bounds and text
+                    // Retrieve the rectangle bounds of the annotation.
                     var rect = textAnnotation.Bounds;
+
+                    // Retrieve the text content of the annotation.
                     var text = textAnnotation.Text;
 
-                    //Add new page for newPdf
+                    // Create a new page in the new PDF document with the same size as the first page.
                     PdfPageBase newPage = newPdf.Pages.Add(firstPage.Size);
 
-                    //Add annotation with the same settings as the annotation of old PDF
+                    // Create a new free text annotation with the same rectangle bounds.
                     PdfFreeTextAnnotation newAnnotation = new PdfFreeTextAnnotation(rect);
+
+                    // Set the text content of the new annotation.
                     newAnnotation.Text = text;
+
+                    // Copy the callout lines information from the original annotation.
                     newAnnotation.CalloutLines = textAnnotation.CalloutLines;
+
+                    // Copy the line ending style from the original annotation.
                     newAnnotation.LineEndingStyle = textAnnotation.LineEndingStyle;
-                    newAnnotation.AnnotationIntent=PdfAnnotationIntent.FreeTextCallout;
+
+                    // Set the annotation intent to indicate it's a free text callout.
+                    newAnnotation.AnnotationIntent = PdfAnnotationIntent.FreeTextCallout;
+
+                    // Copy the rectangular differences information from the original annotation.
                     newAnnotation.RectangleDifferences = textAnnotation.RectangularDifferenceArray;
+
+                    // Set the color of the new annotation to match the original annotation.
                     newAnnotation.Color = textAnnotation.Color;
-                    newPage.AnnotationsWidget.Add(newAnnotation);
+
+                    // Add the new annotation to the annotations widget of the new page.
+                    newPage.Annotations.Add(newAnnotation);
+
                 }
             }
-            //Save the file
+            // Save the new PDF document with copied annotation properties to a file.
             String result = "CopyTextAnnotationProperties.pdf";
             newPdf.SaveToFile(result);
-            
+
+
             //Launch the file.
             DocumentViewer(result);
         }

@@ -13,15 +13,19 @@ namespace ToHTML
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Pdf file
+            // Specify the path of the PDF file to be processed.
             String file = @"..\..\..\..\..\..\Data\ToHTML.pdf";
 
-            //Open pdf document
+            // Create a new PdfDocument object.
             PdfDocument doc = new PdfDocument();
+
+            // Load the PDF document from the specified file.
             doc.LoadFromFile(file);
 
-            //Convert to html file
+            // Convert the loaded PDF document to an HTML file.
             doc.SaveToFile("ToHTML.html", FileFormat.HTML);
+
+            // Close the PDF document.
             doc.Close();
 
             //Launching the html file

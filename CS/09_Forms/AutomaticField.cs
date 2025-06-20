@@ -18,11 +18,13 @@ namespace AutomaticField
         private void button1_Click(object sender, EventArgs e)
         {
 
-            //Create a pdf document
+            // Create a new PdfDocument object
             PdfDocument doc = new PdfDocument();
+
+            // Set the author for the document
             doc.DocumentInformation.Author = "Spire.Pdf";
 
-            //Set the margin
+            // Set the margin for the pages
             PdfUnitConvertor unitCvtr = new PdfUnitConvertor();
             PdfMargins margin = new PdfMargins();
             margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
@@ -30,18 +32,18 @@ namespace AutomaticField
             margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
             margin.Right = margin.Left;
 
-            //Create section
+            // Create a section in the document
             PdfSection section = doc.Sections.Add();
             section.PageSettings.Size = PdfPageSize.A4;
             section.PageSettings.Margins = margin;
-            
-            //Create one page
+
+            // Create a page in the section
             PdfPageBase page = section.Pages.Add();
 
-            //Draw automatic fields
+            // Draw automatic fields on the page
             DrawAutomaticField(page);
 
-            //Save the document
+            // Save the document to a file named "AutomaticField.pdf"
             doc.SaveToFile("AutomaticField.pdf");
             doc.Close();
 
@@ -49,11 +51,12 @@ namespace AutomaticField
             PDFDocumentViewer("AutomaticField.pdf");
         }
 
+        // Method to draw automatic fields on a PDF page
         private void DrawAutomaticField(PdfPageBase page)
         {
             float y = 20;
 
-            //Title
+            // Draw the title for the field list
             PdfBrush brush1 = PdfBrushes.CadetBlue;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
@@ -62,25 +65,29 @@ namespace AutomaticField
             y = y + font1.MeasureString("Automatic Field List", format1).Height;
             y = y + 15;
 
+            // Define an array of field names
             String[] fieldList = new String[]
             {
-                "DateTimeField",
-                "CreationDateField",
-                "DocumentAuthorField",
-                "SectionNumberField",
-                "SectionPageNumberField",
-                "SectionPageCountField",
-                "PageNumberField",
-                "PageCountField",
-                "DestinationPageNumberField",
-                "CompositeField"
+        "DateTimeField",
+        "CreationDateField",
+        "DocumentAuthorField",
+        "SectionNumberField",
+        "SectionPageNumberField",
+        "SectionPageCountField",
+        "PageNumberField",
+        "PageCountField",
+        "DestinationPageNumberField",
+        "CompositeField"
             };
+
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
             PdfStringFormat fieldNameFormat = new PdfStringFormat();
             fieldNameFormat.MeasureTrailingSpaces = true;
+
+            // Iterate through each field name in the list
             foreach (String fieldName in fieldList)
             {
-                //Draw field name
+                // Draw the field name
                 String text = String.Format("{0}: ", fieldName);
                 page.Canvas.DrawString(text, font, PdfBrushes.DodgerBlue, 0, y);
                 float x = font.MeasureString(text, fieldNameFormat).Width;
@@ -90,15 +97,16 @@ namespace AutomaticField
             }
         }
 
+        // Method to draw a specific automatic field on a PDF page
         void DrawAutomaticField(String fieldName, PdfPageBase page, RectangleF bounds)
         {
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Italic));
             PdfBrush brush = PdfBrushes.OrangeRed;
-            PdfStringFormat format
-                = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Middle);
+            PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Middle);
 
             if ("DateTimeField" == fieldName)
             {
+                // Create and draw a DateTime field
                 PdfDateTimeField field = new PdfDateTimeField();
                 field.Font = font;
                 field.Brush = brush;
@@ -108,6 +116,7 @@ namespace AutomaticField
                 field.Draw(page.Canvas);
             }
 
+            // Repeat the above code block for other field names
             if ("CreationDateField" == fieldName)
             {
                 PdfCreationDateField field = new PdfCreationDateField();
@@ -206,7 +215,6 @@ namespace AutomaticField
                 fields.Draw(page.Canvas);
             }
         }
-
         private void PDFDocumentViewer(string fileName)
         {
             try

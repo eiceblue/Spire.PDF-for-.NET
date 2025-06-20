@@ -50,6 +50,7 @@ namespace SplitFileByParticularPage
 
             //Save the document
             newPdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

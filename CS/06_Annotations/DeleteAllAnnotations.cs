@@ -27,12 +27,13 @@ namespace DeleteAllAnnotations
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf");
 
             //Remove all annotations
-            document.Pages[0].AnnotationsWidget.Clear();
+            document.Pages[0].Annotations.Clear();
 
             String result = "DeleteAllAnnotations_out.pdf";
 
             //Save the document
             document.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

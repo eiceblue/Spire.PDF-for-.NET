@@ -22,7 +22,8 @@ namespace EmbedGridInCell
         {
             //Create a pdf document and load file from disk
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(@"..\..\..\..\..\..\Data\EmbedGridInCell.pdf");
+            doc.LoadFromFile(@"..\..\..\..\..\..\Data\EmbedGridInCell.pdf");
+
             //Get the first page
             PdfPageBase page = doc.Pages[0];
 
@@ -40,14 +41,16 @@ namespace EmbedGridInCell
             grid.Columns[1].Width = 300;
 
             SizeF imageSize = new SizeF(70, 70);
-             float LR = (grid.Columns[0].Width-imageSize.Width)/2;
+            float LR = (grid.Columns[0].Width - imageSize.Width) / 2;
+
             //Set the cell padding
-             grid.Style.CellPadding = new PdfPaddings(LR, LR, 1, 1);
+            grid.Style.CellPadding = new PdfPaddings(LR, LR, 1, 1);
+
             //Add an image
             PdfGridCellContentList list = new PdfGridCellContentList();
             PdfGridCellContent textAndStyle = new PdfGridCellContent();
             textAndStyle.Image = PdfImage.FromFile(@"..\..\..\..\..\..\Data\E-iceblueLogo.png");
-            
+
 
             //Set the size of image
             textAndStyle.ImageSize = imageSize;
@@ -62,13 +65,15 @@ namespace EmbedGridInCell
             PdfGridRow newrow = grid2.Rows.Add();
             grid2.Columns[0].Width = 120;
             grid2.Columns[1].Width = 120;
+
+            //Set value for newrow and set string format for it
             newrow.Cells[0].Value = "Embeded grid";
             newrow.Cells[0].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             newrow.Cells[1].Value = "Embeded grid";
             newrow.Cells[1].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
             //Assign grid2 to the cell
-            row.Cells[1].Value = grid2;            
+            row.Cells[1].Value = grid2;
             row.Cells[1].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
             String[] data
@@ -100,7 +105,9 @@ namespace EmbedGridInCell
                 for (int c = 0; c < rowData.Length; c++)
                 {
                     row1.Cells[c].Value = rowData[c];
-                    row1.Cells[c].StringFormat = new PdfStringFormat(PdfTextAlignment.Center,PdfVerticalAlignment.Middle);
+
+                    //Set string format for row
+                    row1.Cells[c].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
                 }
             }
 

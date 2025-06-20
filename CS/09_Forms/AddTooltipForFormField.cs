@@ -25,7 +25,7 @@ namespace AddTooltipForFormField
 
             //Open pdf document
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(input);
+	        doc.LoadFromFile(input);
 
             //Get the first page
             PdfPageBase page = doc.Pages[0];

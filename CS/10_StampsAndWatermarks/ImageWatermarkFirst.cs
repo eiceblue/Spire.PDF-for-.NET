@@ -16,20 +16,20 @@ namespace ImageWatermarkFirst
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document and load file from disk
+            // Create a PDF document and load a file from the disk.
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(@"..\..\..\..\..\..\Data\ImageWaterMark.pdf");
+            doc.LoadFromFile(@"..\..\..\..\..\..\Data\ImageWaterMark.pdf");
 
-            //Get the first page
+            // Get the first page from the document.
             PdfPageBase page = doc.Pages[0];
 
-            //Load image
+            // Load the image from a file.
             Image img = Image.FromFile(@"..\..\..\..\..\..\Data\Background.png");
 
-            //Set background image
+            // Set the loaded image as the background image of the page.
             page.BackgroundImage = img;
 
-            //Save pdf file
+            // Save the modified PDF file.
             doc.SaveToFile("ImageWaterMark.pdf");
             doc.Close();
 

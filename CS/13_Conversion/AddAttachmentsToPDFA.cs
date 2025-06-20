@@ -1,5 +1,6 @@
 ﻿using Spire.Pdf;
 using Spire.Pdf.Attachments;
+using Spire.Pdf.Conversion;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,33 +22,45 @@ namespace AddAttachmentsToPDFA
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Pdf file
-            String input = @"..\..\..\..\..\..\Data\SampleB_2.pdf";
+            // Path to the input PDF file
+            string input = @"..\..\..\..\..\..\Data\SampleB_2.pdf";
 
-            //Open pdf document
-            PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(input);
-            PdfNewDocument newDoc = new PdfNewDocument();
-            //Set Pdf_A1B
-            newDoc.Conformance = PdfConformanceLevel.Pdf_A1B;
-            foreach (PdfPageBase page in doc.Pages)
-            {
-                SizeF size = page.Size;
-                PdfPageBase p = newDoc.Pages.Add(size, new Spire.Pdf.Graphics.PdfMargins(0));
-                page.CreateTemplate().Draw(p, 0, 0);
-            }
+            // Create a new memory stream
+            MemoryStream ms = new MemoryStream();
 
-            //Load files and add in attachments
+            // Convert the input PDF file to PDF/A-1b standard and save it to the memory stream
+            PdfStandardsConverter converter = new PdfStandardsConverter(input);
+            converter.ToPdfA1B(ms);
+
+            // Create a new PDF document
+            PdfDocument newDoc = new PdfDocument();
+
+            // Load the converted PDF document from the memory stream
+            newDoc.LoadFromStream(ms);
+
+            // Read the data of the first attachment file ("SampleB_1.png") into a byte array
             byte[] data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\SampleB_1.png");
+
+            // Create a PdfAttachment object with the attachment file name and data
             PdfAttachment attach1 = new PdfAttachment("attachment1.png", data);
+
+            // Read the data of the second attachment file ("SampleB_1.pdf") into a byte array
             byte[] data2 = File.ReadAllBytes(@"..\..\..\..\..\..\Data\SampleB_1.pdf");
+
+            // Create a PdfAttachment object with the attachment file name and data
             PdfAttachment attach2 = new PdfAttachment("attachment2.pdf", data2);
+
+            // Add the attachments to the new PDF document
             newDoc.Attachments.Add(attach1);
             newDoc.Attachments.Add(attach2);
 
+            // Specify the output file path for saving the modified document
             string output = "ToPDFAWithAttachments-result.pdf";
 
-            newDoc.Save(output);
+            // Save the modified document to the specified file
+            newDoc.SaveToFile(output);
+
+            // Close the PDF document
             newDoc.Close();
 
             //Launch the reuslt file

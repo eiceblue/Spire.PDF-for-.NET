@@ -31,8 +31,12 @@ namespace GetNumberOfPages
                     //Open a pdf document and get its page count
                     using (PdfDocument pdf = new PdfDocument())
                     {
-						pdf.LoadFromFile(pdfFile);
+                        // Load the PDF document from the specified file path.
+                        pdf.LoadFromFile(pdfFile);
+
+                        // Get the number of pages in the PDF document.
                         int count = pdf.Pages.Count;
+
                         MessageBox.Show("The page count of the pdf document is " + count);
                     }
                 }

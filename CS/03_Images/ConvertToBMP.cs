@@ -16,16 +16,16 @@ namespace ConvertToBMP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Pdf file
             String file = @"..\..\..\..\..\..\Data\ToImage.pdf";
 
             //Open pdf document
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(file);
 
-            //Save to images
+            //Iterate through each page
             for (int i = 0; i < pdf.Pages.Count; i++)
             {
+                //Save page to images in Bmp type
                 String fileName = String.Format("ToBMP-img-{0}.bmp", i);
                 using (Image image = pdf.SaveAsImage(i, 300, 300))
                 {

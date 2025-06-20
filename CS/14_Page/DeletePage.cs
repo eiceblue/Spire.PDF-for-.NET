@@ -17,18 +17,21 @@ namespace DeletePage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk
+            // Load the PDF document from the specified file path.
             string input = "..\\..\\..\\..\\..\\..\\Data\\DeletePage.pdf";
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(input);
 
-            //Delete the fifth page
+            // Delete the fifth page from the document.
             doc.Pages.RemoveAt(4);
 
+            // Specify the output file name for saving the modified document.
             string output = "DeletePage.pdf";
 
-            //Save the document
+            // Save the modified document to a file with the specified output file name.
             doc.SaveToFile(output);
+
+            // Close the PDF document.
             doc.Close();
 
             //Launch the Pdf file

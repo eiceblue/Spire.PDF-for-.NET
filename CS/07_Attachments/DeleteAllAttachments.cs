@@ -24,7 +24,7 @@ namespace DeleteAllAttachments
 
             //Open pdf document
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(input);
+	        doc.LoadFromFile(input);
 
             //Get all attachments
             PdfAttachmentCollection attachments = doc.Attachments;

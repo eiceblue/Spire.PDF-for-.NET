@@ -15,15 +15,22 @@ namespace DrawText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
-            PdfDocument doc = new PdfDocument();            
+            //Create a pdf instance
+            PdfDocument doc = new PdfDocument();
 
             //Create one page
             PdfPageBase page = doc.Pages.Add();
 
+            //Draw the text - brush
             DrawText(page);
+
+            // Draw the text - alignment
             AlignText(page);
+
+            //Draw the text - align in rectangle
             AlignTextInRectangle(page);
+
+            // Draw the text - transform
             TransformText(page);
             RotateText(page);
 
@@ -31,48 +38,55 @@ namespace DrawText
             doc.SaveToFile("DrawText.pdf");
             doc.Close();
 
-            //Launch the Pdf file
-            PDFDocumentViewer("DrawText.pdf");
-
         }
 
+        //Draw the text - alignment
         private void AlignText(PdfPageBase page)
         {
-            //Draw the text - alignment
             PdfFont font = new PdfFont(PdfFontFamily.Helvetica, 20f);
             PdfSolidBrush brush = new PdfSolidBrush(Color.Blue);
 
+            //Draws left-aligned text
             PdfStringFormat leftAlignment = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Middle);
             page.Canvas.DrawString("Left!", font, brush, 0, 20, leftAlignment);
             page.Canvas.DrawString("Left!", font, brush, 0, 50, leftAlignment);
 
+            //Draws right-aligned text
             PdfStringFormat rightAlignment = new PdfStringFormat(PdfTextAlignment.Right, PdfVerticalAlignment.Middle);
             page.Canvas.DrawString("Right!", font, brush, page.Canvas.ClientSize.Width, 20, rightAlignment);
             page.Canvas.DrawString("Right!", font, brush, page.Canvas.ClientSize.Width, 50, rightAlignment);
 
+            //Draws center-aligned text
             PdfStringFormat centerAlignment = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             page.Canvas.DrawString("Go! Turn Around! Go! Go! Go!", font, brush, page.Canvas.ClientSize.Width / 2, 40, centerAlignment);
 
         }
-
+        //Draw the text - align in rectangle
         private void AlignTextInRectangle(PdfPageBase page)
         {
-            //Draw the text - align in rectangle
+            //Create the font to use and set the font style 
             PdfFont font = new PdfFont(PdfFontFamily.Helvetica, 10f);
             PdfSolidBrush brush = new PdfSolidBrush(Color.Blue);
+
+
             RectangleF rctg1 = new RectangleF(0, 70, page.Canvas.ClientSize.Width / 2, 100);
             RectangleF rctg2 = new RectangleF(page.Canvas.ClientSize.Width / 2, 70, page.Canvas.ClientSize.Width / 2, 100);
+
+            //Draw rectangle and specifies its fill color and position
             page.Canvas.DrawRectangle(new PdfSolidBrush(Color.LightBlue), rctg1);
             page.Canvas.DrawRectangle(new PdfSolidBrush(Color.LightSkyBlue), rctg2);
 
+            //Draws left-aligned text
             PdfStringFormat leftAlignment = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Top);
             page.Canvas.DrawString("Left! Left!", font, brush, rctg1, leftAlignment);
             page.Canvas.DrawString("Left! Left!", font, brush, rctg2, leftAlignment);
 
+            //Draws right-aligned text
             PdfStringFormat rightAlignment = new PdfStringFormat(PdfTextAlignment.Right, PdfVerticalAlignment.Middle);
             page.Canvas.DrawString("Right! Right!", font, brush, rctg1, rightAlignment);
             page.Canvas.DrawString("Right! Right!", font, brush, rctg2, rightAlignment);
 
+            //Draws center-aligned text
             PdfStringFormat centerAlignment = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Bottom);
             page.Canvas.DrawString("Go! Turn Around! Go! Go! Go!", font, brush, rctg1, centerAlignment);
             page.Canvas.DrawString("Go! Turn Around! Go! Go! Go!", font, brush, rctg2, centerAlignment);
@@ -94,7 +108,9 @@ namespace DrawText
             page.Canvas.TranslateTransform(x, y);
             for (int i = 0; i < 12; i++)
             {
+                //Rotate Canvas
                 page.Canvas.RotateTransform(30);
+                //Draw text 
                 page.Canvas.DrawString("Go! Turn Around! Go! Go! Go!", font, brush, 20, 0, centerAlignment);
             }
 

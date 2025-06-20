@@ -21,58 +21,71 @@ namespace RemoveBlankPages
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a new PDF document.
+            // Create a new PDF document.
             PdfDocument document = new PdfDocument();
 
-            //Load the file from disk.
+            // Load the file from disk.
             document.LoadFromFile(@"..\..\..\..\..\..\Data\RemoveBlankPages.pdf");
 
-
+            // Iterate through all pages in reverse order.
             for (int i = document.Pages.Count - 1; i >= 0; i--)
             {
+                // Check if the current page is blank.
                 if (document.Pages[i].IsBlank())
                 {
-                    //Remove blank page
+                    // Remove the blank page from the document.
                     document.Pages.RemoveAt(i);
                 }
                 else
                 {
-                    //Convert the page to a picture if it is not a blank page.
+                    // Convert the non-blank page to an image.
                     Image image = document.SaveAsImage(i, PdfImageType.Bitmap);
 
-                    //Determine whether a picture is blank or not.
+                    // Check if the image is blank.
                     if (IsImageBlank(image))
                     {
-                        //Delete the corresponding PDF page if the picture is blank.
+                        // If the image is blank, remove the corresponding PDF page.
                         document.Pages.RemoveAt(i);
                     }
                 }
             }
+
+            // Define the output file name.
             String result = "RemoveBlankPages_out.pdf";
 
-            //Save the document
+            // Save the modified document to the specified output file.
             document.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }
 
         public static bool IsImageBlank(Image image)
         {
+            // Convert the Image object to a Bitmap object for pixel manipulation.
             Bitmap bitmap = new Bitmap(image);
+
+            // Iterate through each pixel in the image.
             for (int i = 0; i < bitmap.Width; i++)
             {
                 for (int j = 0; j < bitmap.Height; j++)
                 {
+                    // Get the color of the current pixel.
                     Color pixel = bitmap.GetPixel(i, j);
+
+                    // Check if any of the RGB values of the pixel are less than 240.
+                    // If any of the RGB values are less than 240, it means the pixel is not blank.
                     if (pixel.R < 240 || pixel.G < 240 || pixel.B < 240)
                     {
+                        // Return false since a non-blank pixel is found.
                         return false;
                     }
                 }
             }
+
+            // If all pixels are blank (i.e., all RGB values are greater than or equal to 240), return true.
             return true;
         }
-
         private void PDFDocumentViewer(string filename)
         {
             try

@@ -17,10 +17,13 @@ namespace RemoveFormField
             //Input and output file paths
             string input = @"..\..\..\..\..\..\Data\RemoveFormField.pdf";
             string output = "RemoveFormField_result.pdf";
+
             //Create a PdfDocument
             PdfDocument pdf = new PdfDocument();
+
             //Load the input file from disk
             pdf.LoadFromFile(input);
+
             //Get form from the document
             PdfFormWidget formWidget = pdf.Form as PdfFormWidget;
             if (formWidget != null)

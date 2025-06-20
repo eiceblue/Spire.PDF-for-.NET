@@ -16,17 +16,14 @@ namespace SplitDocument
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Open pdf document
+            // Open PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\SplitDocument.pdf");
 
+            // Split the document based on the specified pattern
             String pattern = "SplitDocument-{0}.pdf";
-            //Split document
             doc.Split(pattern);
-
-            String lastPageFileName
-                = String.Format(pattern, doc.Pages.Count - 1);
-
+            String lastPageFileName = String.Format(pattern, doc.Pages.Count - 1);
             doc.Close();
 
             //Launch the Pdf file

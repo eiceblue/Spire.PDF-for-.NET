@@ -21,7 +21,8 @@ namespace ChangeBorderColor
         {
             //Create a pdf document and load file from disk
             PdfDocument document = new PdfDocument();
-	    document.LoadFromFile(@"..\..\..\..\..\..\Data\ChangeBorderColor.pdf");
+            document.LoadFromFile(@"..\..\..\..\..\..\Data\ChangeBorderColor.pdf");
+
             //Get the first page
             PdfPageBase page = document.Pages[0];
 
@@ -65,7 +66,7 @@ namespace ChangeBorderColor
             //Add columns
             grid.Columns.Add(5);
 
-
+            //Set the width for column
             grid.Columns[0].Width = 120;
             grid.Columns[1].Width = 120;
             grid.Columns[2].Width = 120;
@@ -96,6 +97,7 @@ namespace ChangeBorderColor
             PdfBorders border = new PdfBorders();
             border.All = new PdfPen(Color.LightBlue);
 
+            //Iterate each row of grid
             foreach (PdfGridRow pgr in grid.Rows)
             {
                 foreach (PdfGridCell pgc in pgr.Cells)
@@ -105,7 +107,7 @@ namespace ChangeBorderColor
             }
 
             //Draw the grid
-            grid.Draw(page, new PointF(50,330));
+            grid.Draw(page, new PointF(50, 330));
 
             //Save the pdf document
             document.SaveToFile("BorderColor.pdf");

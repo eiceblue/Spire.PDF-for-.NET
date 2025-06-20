@@ -25,23 +25,23 @@ namespace SignedByLTV
         {
             string inputFile = @"..\..\..\..\..\..\Data\DigitalSignature.pdf";
 
-            //Load a PDF document
+            // Load a PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(inputFile);
 
-            //Get the first page
+            // Get the first page
             PdfPageBase page = doc.Pages[0];
 
-            //Load a certificate .pfx file
-            String pfxPath = @"..\..\..\..\..\..\Data\ComodoSSL.pfx";
-            PdfCertificate cer = new PdfCertificate(pfxPath, "08100601",X509KeyStorageFlags.Exportable);
+            // Load a certificate .pfx file
+            String pfxPath = @"..\..\..\..\..\..\Data\gary.pfx";
+            PdfCertificate cer = new PdfCertificate(pfxPath, "e-iceblue", X509KeyStorageFlags.Exportable);
 
-            //Add a signature to the specified position
+            // Add a signature to the specified position
             PdfSignature signature = new PdfSignature(doc, page, cer, "signature");
             signature.Bounds = new RectangleF(new PointF(90, 550), new SizeF(180, 90));
 
-            //set the signature content
-            signature.NameLabel = "Digitally signed by:Gary";
+            // Set the signature content
+            signature.NameLabel = "Digitally signed by: Gary";
             signature.LocationInfoLabel = "Location:";
             signature.LocationInfo = "CN";
             signature.ReasonLabel = "Reason: ";
@@ -52,10 +52,10 @@ namespace SignedByLTV
             signature.GraphicsMode = GraphicMode.SignImageAndSignDetail;
             signature.SignImageSource = PdfImage.FromFile(@"..\..\..\..\..\..\Data\logo.png");
 
-            //Configure OCSP which must conform to RFC 2560
+            // Configure OCSP (Online Certificate Status Protocol)
             signature.ConfigureHttpOCSP(null, null);
 
-            //Save the PDF file
+            // Save the PDF file
             string outputFile = "result.pdf";
             doc.SaveToFile(outputFile, FileFormat.PDF);
 

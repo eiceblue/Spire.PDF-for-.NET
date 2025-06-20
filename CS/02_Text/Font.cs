@@ -16,34 +16,37 @@ namespace Font
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            //Load a pdf document
             PdfDocument doc = new PdfDocument();
-
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\Font.pdf");
-            //Create one page
+
+            //Get one page
             PdfPageBase page = doc.Pages[0];
 
-            //Draw the text
             float l = page.Canvas.ClientSize.Width / 2;
             PointF center = new PointF(l, l);
             float r = (float)Math.Sqrt(2 * l * l);
-            PdfRadialGradientBrush brush
-                = new PdfRadialGradientBrush(center, 0f, center, r, Color.Blue, Color.Red);
-            PdfFontFamily[] fontFamilies
-                = (PdfFontFamily[])Enum.GetValues(typeof(PdfFontFamily));
+            PdfRadialGradientBrush brush = new PdfRadialGradientBrush(center, 0f, center, r, Color.Blue, Color.Red);
+            PdfFontFamily[] fontFamilies = (PdfFontFamily[])Enum.GetValues(typeof(PdfFontFamily));
             float y = 200;
-            for(int i = 0; i < fontFamilies.Length; i++)
+            for (int i = 0; i < fontFamilies.Length; i++)
             {
                 String text = String.Format("Font Family: {0}", fontFamilies[i]);
                 float x1 = 40;
-                y =200 + i * 16;
+                y = 200 + i * 16;
+
+                //Define font
                 PdfFont font1 = new PdfFont(PdfFontFamily.Courier, 14f);
                 PdfFont font2 = new PdfFont(fontFamilies[i], 14f);
+
+                //Measure the width of text
                 float x2 = x1 + 10 + font1.MeasureString(text).Width;
+
+                //Draw text
                 page.Canvas.DrawString(text, font1, brush, x1, y);
                 page.Canvas.DrawString(text, font2, brush, x2, y);
             }
-            
+
             //True type font - embedded
             System.Drawing.Font font = new System.Drawing.Font("Arial", 15f, FontStyle.Bold);
             PdfTrueTypeFont trueTypeFont = new PdfTrueTypeFont(font);
@@ -58,8 +61,12 @@ namespace Font
                 + "\u0627\u0644\u0630\u0647\u0627\u0628\u0021";
             trueTypeFont = new PdfTrueTypeFont(font, true);
             RectangleF rctg = new RectangleF(new PointF(40, (y = y + 26f)), page.Canvas.ClientSize);
+
+            //Define the format of string 
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Right);
             format.RightToLeft = true;
+
+            //Draw text
             page.Canvas.DrawString(arabicText, trueTypeFont, brush, rctg, format);
 
             //True type font - not embedded
@@ -86,9 +93,6 @@ namespace Font
             //Save the document
             doc.SaveToFile("Font.pdf");
             doc.Close();
-
-            //Launch the Pdf file
-            PDFDocumentViewer("Font.pdf");
         }
 
         private void PDFDocumentViewer(string fileName)

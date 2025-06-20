@@ -36,7 +36,7 @@ namespace CreatePdf3DAnnotation
             annotation.Activation = new Pdf3DActivation();
             annotation.Activation.ActivationMode = Pdf3DActivationMode.PageOpen;
 
-            //Define a 3D view mode.
+            //Define a 3D view mode and set its parameter
             Pdf3DView View = new Pdf3DView();
             View.Background = new Pdf3DBackground(new PdfRGBColor(Color.Purple));
             View.ViewNodeName = "3DAnnotation";
@@ -49,12 +49,13 @@ namespace CreatePdf3DAnnotation
             annotation.Views.Add(View);
 
             //Add the annotation to Pdf.
-            page.AnnotationsWidget.Add(annotation);
+            page.Annotations.Add(annotation);
 
             String result = "CreatePdf3DAnnotation_out.pdf";
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

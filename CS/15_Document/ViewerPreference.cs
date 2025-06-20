@@ -16,20 +16,32 @@ namespace ViewerPreference
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load pdf document
+            // Load PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\ViewerPreference.pdf");
 
-            //Set view reference
+            // Center the window of the PDF viewer
             doc.ViewerPreferences.CenterWindow = true;
+
+            // Do not display the title of the PDF document in the viewer
             doc.ViewerPreferences.DisplayTitle = false;
+
+            // Do not fit the content of the PDF document to the window of the viewer
             doc.ViewerPreferences.FitWindow = false;
+
+            // Hide the menu bar of the PDF viewer
             doc.ViewerPreferences.HideMenubar = true;
+
+            // Hide the toolbar of the PDF viewer
             doc.ViewerPreferences.HideToolbar = true;
+
+            // Display the PDF document as a single page
             doc.ViewerPreferences.PageLayout = PdfPageLayout.SinglePage;
 
-            //Save pdf file
+            // Save the modified PDF document with the specified filename
             doc.SaveToFile("ViewerPreference_result.pdf");
+
+            // Close the PDF document
             doc.Close();
 
             //Launch the Pdf file

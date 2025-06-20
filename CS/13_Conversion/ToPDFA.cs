@@ -19,11 +19,16 @@ namespace ToPDFA
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Pdf file
+            // Specify the file path of the input PDF file.
             String input = @"..\..\..\..\..\..\Data\ToPDFA.pdf";
 
+            // Create an instance of the PdfStandardsConverter class, passing the input PDF file path as a parameter.
             PdfStandardsConverter converter = new PdfStandardsConverter(input);
+
+            // Specify the desired file name for the resulting PDFA-1b compliant PDF.
             string output = "ToPDFA-result.pdf";
+
+            // Convert the input PDF file to PDFA-1b format and save it using the specified output file name.
             converter.ToPdfA1B(output);
 
             //Launch the result file.

@@ -20,16 +20,21 @@ namespace ToPCL
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Specify the path of the input PDF file.
             string input = @"..\..\..\..\..\..\Data\ToPCL.pdf";
 
-            //Load a PDF file
+            // Create a new PdfDocument object.
             PdfDocument doc = new PdfDocument();
+
+            // Load the PDF document from the specified input file.
             doc.LoadFromFile(input);
 
-            //Save to PCL file
+            // Specify the desired file name for the resulting PCL file.
             string output = "ToPCL_result.pcl";
+
+            // Save the loaded PDF document as a PCL file using the specified output file name.
             doc.SaveToFile(output, FileFormat.PCL);
-           
+
             //Launch the PCL file
             PDFDocumentViewer(output);
         }

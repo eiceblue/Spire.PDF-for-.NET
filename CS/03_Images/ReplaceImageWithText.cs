@@ -1,6 +1,6 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Exporting;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,12 +30,13 @@ namespace ReplaceImageWithText
             //Get the first page.
             PdfPageBase page = doc.Pages[0];
 
-            //Get images of the first page.
-            PdfImageInfo[] imageInfo = page.ImagesInfo;
+            //Create PdfImageHelper object to get Images from page
+            PdfImageHelper helper = new PdfImageHelper();
+            Spire.Pdf.Utilities.PdfImageInfo[] images = helper.GetImagesInfo(page);
 
             //Get width and height of image
-            float widthInPixel = imageInfo[0].Image.Width;
-            float heightInPixel = imageInfo[0].Image.Height;
+            float widthInPixel = images[0].Image.Width;
+            float heightInPixel = images[0].Image.Height;
 
             //Convert unit from Pixel to Point
             PdfUnitConvertor convertor = new PdfUnitConvertor();
@@ -43,19 +44,19 @@ namespace ReplaceImageWithText
             float height = convertor.ConvertFromPixels(heightInPixel, PdfGraphicsUnit.Point);
 
             //Get location of image
-            float xPos=imageInfo[0].Bounds.X;
-            float yPos=imageInfo[0].Bounds.Y;
+            float xPos = images[0].Bounds.X;
+            float yPos = images[0].Bounds.Y;
 
             //Remove the image
-            page.DeleteImage(imageInfo[0].Image);
+            helper.DeleteImage(images[0]);
 
             //Define a rectangle
             RectangleF rect = new RectangleF(new PointF(xPos, yPos), new SizeF(width, height));
 
             //Define string format
-            PdfStringFormat format=new PdfStringFormat();
-            format.Alignment= PdfTextAlignment.Center;
-            format.LineAlignment= PdfVerticalAlignment.Middle;
+            PdfStringFormat format = new PdfStringFormat();
+            format.Alignment = PdfTextAlignment.Center;
+            format.LineAlignment = PdfVerticalAlignment.Middle;
 
             //Draw a string at the location of the image
             page.Canvas.DrawString("ReplacedText", new PdfFont(PdfFontFamily.Helvetica, 18f), PdfBrushes.Purple, rect, format);
@@ -64,6 +65,7 @@ namespace ReplaceImageWithText
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

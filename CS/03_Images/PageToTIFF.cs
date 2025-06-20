@@ -34,6 +34,7 @@ namespace PageToTIFF
         {
             //Get encoder information of all image type
             ImageCodecInfo[] encoders = ImageCodecInfo.GetImageEncoders();
+
             //Find the information of tiff type
             for (int j = 0; j < encoders.Length; j++)
             {
@@ -49,8 +50,10 @@ namespace PageToTIFF
             EncoderParameters ep = new EncoderParameters(2);
             ep.Param[0] = new EncoderParameter(enc, (long)EncoderValue.MultiFrame);
             ep.Param[1] = new EncoderParameter(Encoder.Compression, (long)compressEncoder);
+
             //Get the information of tiff type
             ImageCodecInfo info = GetEncoderInfo("image/tiff");
+
             //Save to image
             image.Save(outFile, info, ep);
         }

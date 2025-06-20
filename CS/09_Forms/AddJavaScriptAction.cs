@@ -20,55 +20,62 @@ namespace AddJavaScriptAction
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Specify the input file path
             string input = @"..\..\..\..\..\..\Data\FormFieldTemplate.pdf";
 
-            //Open pdf document
+            // Create a new PdfDocument object
             PdfDocument pdf = new PdfDocument();
+
+            // Load the PDF document from the specified input file
             pdf.LoadFromFile(input);
 
-            //Get the first page
+            // Get the first page of the PDF document
             PdfPageBase page = pdf.Pages[0];
 
-            //As for existing pdf, the property needs to be set as true
+            // Allow creation of form fields in the document
             pdf.AllowCreateForm = true;
 
-            //Create a new pdf font
+            // Create a font object with Helvetica family, font size 12, and bold style
             PdfFont font = new PdfFont(PdfFontFamily.Helvetica, 12f, PdfFontStyle.Bold);
 
-            //Create a pdf brush
+            // Create a brush object for drawing black color
             PdfBrush brush = PdfBrushes.Black;
 
+            // Specify the starting coordinates for drawing text on the page
             float x = 50;
             float y = 550;
             float tempX = 0;
 
-            //Draw a text into page
+            // Draw a text string on the page
             string text1 = "Enter a number, such as 12345: ";
-            //Draw a text into page
             page.Canvas.DrawString(text1, font, brush, x, y);
-            
-            //Add a textBox field 
+
+            // Add a textBox field to the page
             tempX = font.MeasureString(text1).Width + x + 15;
             PdfTextBoxField textbox = new PdfTextBoxField(page, "Number-TextBox");
             textbox.Bounds = new RectangleF(tempX, y, 100, 15);
             textbox.BorderWidth = 0.75f;
             textbox.BorderStyle = PdfBorderStyle.Solid;
 
-            //Add a JavaScript action to be performed when uses type a keystroke into a text field
+            // Set a JavaScript action for handling key press events in the text field
             string js = PdfJavaScript.GetNumberKeystrokeString(2, 0, 0, 0, "$", true);
             PdfJavaScriptAction jsAction = new PdfJavaScriptAction(js);
             textbox.Actions.KeyPressed = jsAction;
 
-            //Add a JavaScript action to format the value of text field
+            // Add a JavaScript action to format the value of the text field
             js = PdfJavaScript.GetNumberFormatString(2, 0, 0, 0, "$", true);
             jsAction = new PdfJavaScriptAction(js);
             textbox.Actions.Format = jsAction;
+
+            // Add the text box field to the form fields collection of the PDF document
             pdf.Form.Fields.Add(textbox);
 
-            //Save and launch the result file
+            // Specify the output file path for saving the modified PDF document
             string output = "AddJavaScriptAction_out.pdf";
-            //Save to file
+
+            // Save the PDF document to the specified output file
             pdf.SaveToFile(output);
+
 
             //Launch the Pdf file
             PDFDocumentViewer(output);

@@ -23,12 +23,16 @@ namespace Overlay
             PdfDocument doc2 = new PdfDocument();
             doc2.LoadFromFile(@"..\..\..\..\..\..\Data\Overlay2.pdf");
 
-            //Create page template
+            //Create page template form the first page of doc1
             PdfTemplate template = doc1.Pages[0].CreateTemplate();
 
+            //Iterate each page in doc2
             foreach (PdfPageBase page in doc2.Pages)
             {
+                //Set transparency for page 
                 page.Canvas.SetTransparency(0.25f, 0.25f, PdfBlendMode.Overlay);
+
+                //Draw template
                 page.Canvas.DrawTemplate(template, PointF.Empty);
             }
 

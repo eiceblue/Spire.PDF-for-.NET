@@ -1,6 +1,5 @@
 ﻿using Spire.Pdf.Graphics;
-using Spire.Pdf.HtmlConverter;
-using Spire.Pdf.HtmlConverter.Qt;
+using Spire.Additions.Qt;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,53 +20,67 @@ namespace HTMLToPDFWithNewPlugin
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Note you need to download Plugin from our website: https://www.e-iceblue.com/Tutorials/Spire.PDF/Spire.PDF-Program-Guide/Convert-HTML-to-PDF-with-New-Plugin.html
+            // Note: You need to download the Plugin from our website: https://www.e-iceblue.com/Tutorials/Spire.PDF/Spire.PDF-Program-Guide/Convert-HTML-to-PDF-with-New-Plugin.html
+            HtmlConverter.PluginPath = @"..\..\..\..\..\..\Data\plugins";
 
+            // Convert a URL to PDF
             ConvertURLToPDF();
+
+            // Convert an HTML string to PDF
             ConvertHtmlStringToPDF();
 
         }
 
         private void ConvertURLToPDF()
         {
-            Spire.Pdf.HtmlConverter.Qt.HtmlConverter.Convert("https://www.e-iceblue.com/", "HTMLtoPDF.pdf",
+            // Convert a web page (https://www.e-iceblue.com/) to PDF
 
-            //enable javascript
-            true,
+            // Enable JavaScript execution
+            bool enableJavaScript = true;
 
-            //load timeout
-            100 * 1000,
+            // Set the load timeout in milliseconds
+            int loadTimeout = 100 * 1000;
 
-            //page size
-            new SizeF(612, 792),
+            // Set the page size to 612x792 points (8.5x11 inches)
+            SizeF pageSize = new SizeF(612, 792);
 
-            //page margins
-            new PdfMargins(0, 0));
+            // Set the page margins to 0 inch
+            PdfMargins margins = new PdfMargins(0, 0);
+
+            // Perform the conversion by calling the Convert method of HtmlConverter
+            HtmlConverter.Convert("https://www.e-iceblue.com/", "HTMLtoPDF.pdf", enableJavaScript, loadTimeout, pageSize, margins);
         }
 
         private void ConvertHtmlStringToPDF()
         {
-            string input = @"<strong>This is a test for converting HTML string to PDF </strong>
-                 <ul><li>Spire.PDF supports to convert HTML in URL into PDF</li>
-                 <li>Spire.PDF supports to convert HTML string into PDF</li>
-                 <li>With the new plugin</li></ul>";
+            // Convert an HTML string to PDF
 
+            // Specify the input HTML string
+            string input = @"<strong>This is a test for converting HTML string to PDF </strong>
+        <ul><li>Spire.PDF supports converting HTML in URL into PDF</li>
+        <li>Spire.PDF supports converting HTML string into PDF</li>
+        <li>With the new plugin</li></ul>";
+
+            // Specify the output file name
             string outputFile = "ToPDF.pdf";
 
-            Spire.Pdf.HtmlConverter.Qt.HtmlConverter.Convert(input,
+            // Enable JavaScript execution
+            bool enableJavaScript = true;
 
-            outputFile,
-            //enable javascript
-            true,
-            //load timeout
-            10 * 1000,
-            //page size
-            new SizeF(612, 792),
-            //page margins
-            new Spire.Pdf.Graphics.PdfMargins(0),
-            //load from content type
-            LoadHtmlType.SourceCode
-            );
+            // Set the load timeout in milliseconds
+            int loadTimeout = 10 * 1000;
+
+            // Set the page size to 612x792 points (8.5x11 inches)
+            SizeF pageSize = new SizeF(612, 792);
+
+            // Set the page margins to 0 inch
+            PdfMargins margins = new PdfMargins(0);
+
+            // Specify that the input is provided as HTML source code
+            LoadHtmlType htmlSourceType = LoadHtmlType.SourceCode;
+
+            // Perform the conversion by calling the Convert method of HtmlConverter
+            HtmlConverter.Convert(input, outputFile, enableJavaScript, loadTimeout, pageSize, margins, htmlSourceType);
         }
     }
 }

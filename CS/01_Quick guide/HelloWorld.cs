@@ -16,7 +16,7 @@ namespace HelloWorld
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            //Create a pdf instance
             PdfDocument doc = new PdfDocument();
 
             //Create one page

@@ -22,22 +22,25 @@ namespace SignedByTimestamp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Specify the input file path
             string inputFile = @"..\..\..\..\..\..\Data\DigitalSignature.pdf";
 
-            //load a PDF document
+            // Load a PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(inputFile);
 
-            //Load a certificate .pfx file
+            // Specify the path of the certificate file (.pfx)
             String pfxPath = @"..\..\..\..\..\..\Data\gary.pfx";
+            // Create a PdfCertificate object by loading the certificate from the .pfx file and providing the password
             PdfCertificate cert = new PdfCertificate(pfxPath, "e-iceblue", System.Security.Cryptography.X509Certificates.X509KeyStorageFlags.Exportable);
 
-            //Add a signature to the specified position
+            // Add a signature to the specified position on the first page of the document
             PdfSignature signature = new PdfSignature(doc, doc.Pages[0], cert, "signature");
+            // Set the position and size of the signature bounds
             signature.Bounds = new RectangleF(new PointF(90, 550), new SizeF(180, 90));
 
-            //Set the signature content
-            signature.NameLabel = "Digitally signed by:Gary";
+            // Set the content for the signature
+            signature.NameLabel = "Digitally signed by: Gary";
             signature.LocationInfoLabel = "Location:";
             signature.LocationInfo = "CN";
             signature.ReasonLabel = "Reason: ";
@@ -46,14 +49,15 @@ namespace SignedByTimestamp
             signature.ContactInfo = "028-81705109";
             signature.DocumentPermissions = PdfCertificationFlags.AllowFormFill | PdfCertificationFlags.ForbidChanges;
             signature.GraphicsMode = GraphicMode.SignImageAndSignDetail;
+            // Set the source of the signature image
             signature.SignImageSource = PdfImage.FromFile(@"..\..\..\..\..\..\Data\logo.png");
 
-            //Configure a timestamp server
+            // Configure a timestamp server for the signature
             string url = "https://freetsa.org/tsr";
             signature.ConfigureTimestamp(url);
 
-            //Save to file
-            string output = "result.pdf"; 
+            // Save the modified document to a file
+            string output = "result.pdf";
             doc.SaveToFile(output, FileFormat.PDF);
 
             //Launch the file

@@ -41,12 +41,15 @@ namespace AddRadioButtonFieldWithOptions
             float x = 150;
             float y = 550;
             float temX = 0;
+
             //Create a pdf radio button list
             PdfRadioButtonListField radioButton = new PdfRadioButtonListField(page, "RadioButton");
             radioButton.Required = true;
+
             //Add items into radio button list.
             for (int i = 0; i < 3; i++)
             {
+                // Set its style
                 PdfRadioButtonListItem item = new PdfRadioButtonListItem(string.Format("item{0}", i));
                 item.BorderWidth = 0.75f;
                 item.Bounds = new RectangleF(x, y, 15, 15);
@@ -65,6 +68,7 @@ namespace AddRadioButtonFieldWithOptions
 
             //Save the document
             pdf.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

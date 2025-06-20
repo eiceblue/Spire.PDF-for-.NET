@@ -23,19 +23,22 @@ namespace ConvertImageToPDF
 
             //Load a tiff image from system
             PdfImage image = PdfImage.FromFile(@"..\..\..\..\..\..\Data\bg.png");
+
             //Set image display location and size in PDF
             //Calculate rate
             float widthFitRate = image.PhysicalDimension.Width / page.Canvas.ClientSize.Width;
             float heightFitRate = image.PhysicalDimension.Height / page.Canvas.ClientSize.Height;
             float fitRate = Math.Max(widthFitRate, heightFitRate);
+
             //Calculate the size of image 
             float fitWidth = image.PhysicalDimension.Width / fitRate;
             float fitHeight = image.PhysicalDimension.Height / fitRate;
+
             //Draw image
             page.Canvas.DrawImage(image, 0, 30, fitWidth, fitHeight);
 
-           string output = "ConvertImageToPDF-result.pdf";
-
+            //Save the result pdf 
+            string output = "ConvertImageToPDF-result.pdf";
             pdf.SaveToFile(output);
             pdf.Close();
 

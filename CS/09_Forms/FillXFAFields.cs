@@ -20,49 +20,58 @@ namespace FillXFAFields
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //Load a Pdf file
             PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile("XFASample.pdf");
+            doc.LoadFromFile(@"..\..\..\..\..\..\Data\XFASample.pdf");
 
             PdfFormWidget formWidget = doc.Form as PdfFormWidget;
             List<XfaField> xfafields = formWidget.XFAForm.XfaFields;
+
+            // Iterate through each XFA field in the form
             foreach (XfaField xfaField in xfafields)
             {
                 if (xfaField is XfaTextField)
                 {
-                    XfaTextField xf = xfaField as XfaTextField;
-                    
-                    switch (xfaField.Name)
-                    {
-                        case "EmployeeName":
-                            xf.Value = "Gary";
-                            break;
-                        case "Address":
-                            xf.Value = "Chengdu, China";
-                            break;
-                        case "StateProv":
-                            xf.Value = "Sichuan Province";
-                            break;
-                        case "ZipCode":
-                            xf.Value = "610093";
-                            break;
-                        case "SSNumber":
-                            xf.Value = "000-00-0000";
-                            break;
-                        case "HomePhone":
-                            xf.Value = "86-028-81705109";
-                            break;
-                        case "CellPhone":
-                            xf.Value = "123456789";
-                            break;
-                        case "Comments":
-                            xf.Value = "This demo shows how to fill XFA forms using Spire.PDF";
-                            break;
-                        default:
-                            break;
-                    }
+                    XfaTextField textField = xfaField as XfaTextField;
+                    textField.Value = "E-iceblue";
                 }
+                if (xfaField is XfaDateTimeField)
+                {
+                    XfaDateTimeField datetimeField = xfaField as XfaDateTimeField;
+                    datetimeField.Value = DateTime.Now.ToString();
+                }
+                if (xfaField is XfaCheckButtonField)
+                {
+                    XfaCheckButtonField checkButtonField = xfaField as XfaCheckButtonField;
+                    checkButtonField.Checked = true;
+                }
+                if (xfaField is XfaChoiceListField)
+                {
+                    XfaChoiceListField choiceListField = xfaField as XfaChoiceListField;
+                    choiceListField.SelectedItem = choiceListField.Items[0];
+                    choiceListField.SelectedItems.Add("NewItem");
+                    
+                }
+                if (xfaField is XfaDoubleField)
+                {
+                    XfaDoubleField doubleField = xfaField as XfaDoubleField;
+                    doubleField.Value = 2.14;
+                }
+
             }
+
+            // Save the result pdf file
             doc.SaveToFile("FillXfaField.pdf", FileFormat.PDF);
+
+            PDFDocumentViewer("FillXfaField.pdf");
+        }
+        private void PDFDocumentViewer(string fileName)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(fileName);
+            }
+            catch { }
         }
     }
 }

@@ -40,6 +40,7 @@ namespace SetInheritZoom
 
             //Save the document
             pdfdoc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

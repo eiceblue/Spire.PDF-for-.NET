@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Spire.Pdf;
+using Spire.Pdf.Texts;
 using System.IO;
+
 namespace ExtractTextFromParticularPage
 {
     public partial class Form1 : Form
@@ -27,10 +29,10 @@ namespace ExtractTextFromParticularPage
             PdfPageBase page = doc.Pages[0];
 
             // Extract text from page keeping white space
-            String text = page.ExtractText(true);
-
-            // Extract text from page without keeping white space
-            //String text = page.ExtractText(false);
+            PdfTextExtractOptions options = new PdfTextExtractOptions();
+            options.IsExtractAllText = true; //false->Extract text from page without keeping white space
+            PdfTextExtractor pdfTextExtractor = new PdfTextExtractor(page);
+            String text = pdfTextExtractor.ExtractText(options);
 
             String result = Path.GetFullPath("ExtractTextFromParticularPage_out.txt");
             // Create a writer to put the extracted text

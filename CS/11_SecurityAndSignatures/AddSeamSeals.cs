@@ -1,5 +1,4 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Exporting.XPS.Schema;
 using Spire.Pdf.Graphics;
 using System;
 using System.Collections.Generic;
@@ -53,25 +52,45 @@ namespace AddSeamSeals
             //Launch the Pdf file.
             PDFDocumentViewer(result); 
         }
-
-        //Define the GetImage method to segment the seal image according to the number of PDF pages.
+        // Define the GetImage method to segment the seal image according to the number of PDF pages.
         static Image[] GetImage(int num)
         {
+            // Create a list to store segmented images.
             List<Image> lists = new List<Image>();
+
+            // Load the original seal image from the specified path.
             Image image = Image.FromFile(@"..\..\..\..\..\..\Data\SealImage.jpg");
+
+            // Calculate the width of each segmented image based on the number of pages.
             int w = image.Width / num;
+
+            // Initialize a Bitmap object.
             Bitmap bitmap = null;
+
+            // Iterate through each segment.
             for (int i = 0; i < num; i++)
             {
+                // Create a new Bitmap with the calculated width and the height of the original image.
                 bitmap = new Bitmap(w, image.Height);
+
+                // Create a Graphics object from the Bitmap to draw on it.
                 using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bitmap))
                 {
+                    // Clear the graphics surface with a white background.
                     g.Clear(Color.White);
+
+                    // Define a rectangle to specify the portion of the original image to be drawn on the segment.
                     Rectangle rect = new Rectangle(i * w, 0, w, image.Height);
+
+                    // Draw the portion of the original image onto the segment.
                     g.DrawImage(image, new Rectangle(0, 0, bitmap.Width, bitmap.Height), rect, GraphicsUnit.Pixel);
                 }
+
+                // Add the segmented image to the list.
                 lists.Add(bitmap);
             }
+
+            // Convert the list of segmented images to an array and return it.
             return lists.ToArray();
         }
 

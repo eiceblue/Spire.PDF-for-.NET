@@ -11,7 +11,8 @@ using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
 using Spire.Pdf.General;
-using Spire.Pdf.General.Find;
+using Spire.Pdf.Texts;
+
 namespace SearchTextAndAddHyperlink
 {
     public partial class Form1 : Form
@@ -28,30 +29,40 @@ namespace SearchTextAndAddHyperlink
 
             // Read a pdf file
             doc.LoadFromFile(input);
-            
-            // Get the first page of pdf file
+
+            // Get the first page of the pdf file
             PdfPageBase page = doc.Pages[0];
 
-            // Create PdfTextFindCollection object to find all the matched phrases
-            PdfTextFindCollection collection = page.FindText("e-iceblue", TextFindParameter.IgnoreCase);
+            // Create a PdfTextFinder using the first page
+            PdfTextFinder finder = new PdfTextFinder(page);
 
-            // hyperlink url
+            // Set the search parameter to ignore case
+            finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase;
+
+            // Find all occurrences of "e-iceblue" in the PDF and store them in a list
+            List<PdfTextFragment> finds = finder.Find("e-iceblue");
+
+            // Define the hyperlink URL
             String url = "http://www.e-iceblue.com";
-         
-            foreach (PdfTextFind find in collection.Finds)
+
+            // Iterate through each found text fragment
+            foreach (PdfTextFragment find in finds)
             {
-                // Create a PdfUriAnnotation object to add hyperlink for the searched text 
-                PdfUriAnnotation uri = new PdfUriAnnotation(find.Bounds);
+                // Create a PdfUriAnnotation object to add a hyperlink for the searched text
+                PdfUriAnnotation uri = new PdfUriAnnotation(find.Bounds[0]);
                 uri.Uri = url;
                 uri.Border = new PdfAnnotationBorder(1f);
                 uri.Color = Color.Blue;
-                page.AnnotationsWidget.Add(uri);
+
+                // Add the annotation to the page's annotation widget
+                page.Annotations.Add(uri);
             }
 
             String result = "SearchTextAndAddHyperlink_out.pdf";
-  
-            //Save the document
+
+            // Save the modified document to the output file path
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

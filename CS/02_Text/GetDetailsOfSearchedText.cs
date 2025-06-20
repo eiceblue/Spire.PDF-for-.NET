@@ -11,8 +11,9 @@ using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
 using Spire.Pdf.General;
-using Spire.Pdf.General.Find;
 using System.IO;
+using Spire.Pdf.Texts;
+
 namespace GetDetailsOfSearchedText
 {
     public partial class Form1 : Form
@@ -24,37 +25,43 @@ namespace GetDetailsOfSearchedText
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Specify the path of the input PDF file
             String input = @"..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf";
             PdfDocument doc = new PdfDocument();
 
-            // Read a pdf file
+            // Load the PDF document from the specified file
             doc.LoadFromFile(input);
-            
-            // Get the first page of pdf file
+
+            // Get the first page of the PDF document
             PdfPageBase page = doc.Pages[0];
 
-            // Create PdfTextFindCollection object to find all the matched phrases
-            PdfTextFindCollection collection = page.FindText("Spire.PDF for .NET", TextFindParameter.IgnoreCase);
+            // Create a PdfTextFinder object for searching text within the page
+            PdfTextFinder finder = new PdfTextFinder(page);
+            finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase;
 
-            // Create a StringBuilder object to put the details of the text searched
+            // Find occurrences of the specified text within the page
+            List<PdfTextFragment> finds = finder.Find("Spire.PDF for .NET");
+
+            // Create a StringBuilder object to store the details of the searched text
             StringBuilder builder = new StringBuilder();
 
-            foreach (PdfTextFind find in collection.Finds)
+            // Iterate through each found text fragment
+            foreach (PdfTextFragment find in finds)
             {
                 builder.AppendLine("==================================================================================");
-                builder.AppendLine("Match Text: " + find.MatchText);   
-                builder.AppendLine("Text: " + find.SearchText);
-                builder.AppendLine("Size: " + find.Size);
-                builder.AppendLine("Position: " + find.Position);
-                builder.AppendLine("The index of page which is including the searched text : " + find.SearchPageIndex);
-                builder.AppendLine("The line that contains the searched text : " + find.LineText);
-                builder.AppendLine("Match Text: " + find.MatchText);   
-
+                // Append the matched text and the detail of matched text to the StringBuilder
+                builder.AppendLine("Match Text: " + find.Text);
+                builder.AppendLine("Size: " + find.Sizes[0]);
+                builder.AppendLine("Position: " + find.Positions[0]);
+                builder.AppendLine("The line that contains the searched text: " + find.LineText);
             }
 
+            // Specify the output file path for storing the search result
             String result = "GetDetailsOfSearchedText_out.txt";
 
+            // Write the contents of the StringBuilder to the output file
             File.WriteAllText(result, builder.ToString());
+
             //Launch the result file
             DocumentViewer(result);
         }

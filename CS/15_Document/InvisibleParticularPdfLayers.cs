@@ -37,6 +37,7 @@ namespace InvisibleParticularPdfLayers
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

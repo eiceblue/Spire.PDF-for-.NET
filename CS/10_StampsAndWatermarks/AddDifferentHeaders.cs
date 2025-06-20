@@ -21,27 +21,41 @@ namespace AddDifferentHeaders
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the Pdf from disk
+            // Load the PDF document from disk
             PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile("../../../../../../../Data/MultipagePDF.pdf");
+            doc.LoadFromFile(@"../../../../../../../Data/MultipagePDF.pdf");
 
+            // Define header texts
             string header1 = "Header 1";
             string header2 = "Header 2";
 
-            //Define style
+            // Define the font style for the headers
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 15f, FontStyle.Bold));
-            PdfBrush brush=PdfBrushes.Red;
-            RectangleF rect=new RectangleF(new PointF(0,20),new SizeF(doc.PageSettings.Size.Width,50f));
-            PdfStringFormat format=new PdfStringFormat();
-            format.Alignment= PdfTextAlignment.Center;
-            doc.Pages[0].Canvas.DrawString(header1,font,brush,rect,format);
 
+            // Define the brush color for the headers
+            PdfBrush brush = PdfBrushes.Red;
+
+            // Define the rectangle to position the header on the first page
+            RectangleF rect = new RectangleF(new PointF(0, 20), new SizeF(doc.PageSettings.Size.Width, 50f));
+
+            // Define the string format for the headers, aligning them in the center
+            PdfStringFormat format = new PdfStringFormat();
+            format.Alignment = PdfTextAlignment.Center;
+
+            // Draw the first header with the defined font, brush, rectangle, and format on the first page of the document
+            doc.Pages[0].Canvas.DrawString(header1, font, brush, rect, format);
+
+            // Change the font style and brush color for the second header
             font = new PdfTrueTypeFont(new Font("Aleo", 15f, FontStyle.Regular));
             brush = PdfBrushes.Black;
+
+            // Change the alignment of the string format to left alignment for the second header
             format.Alignment = PdfTextAlignment.Left;
+
+            // Draw the second header with the updated font, brush, rectangle, and format on the second page of the document
             doc.Pages[1].Canvas.DrawString(header2, font, brush, rect, format);
 
-            //Save the document
+            // Save the modified PDF document to the specified output file path in PDF format
             string output = "AddingDifferentHeaders_result.pdf";
             doc.SaveToFile(output, FileFormat.PDF);
 

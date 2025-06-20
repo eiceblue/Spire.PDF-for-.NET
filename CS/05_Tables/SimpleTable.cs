@@ -17,14 +17,15 @@ namespace SimpleTable
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //Load a PDF file
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\SimpleTable.pdf");
 
+            //Get the first page
             PdfPageBase page = doc.Pages[0];
-
             float y = 320;
 
-            //Title
+            // Add title to the page
             PdfBrush brush1 = PdfBrushes.Black;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
@@ -32,6 +33,7 @@ namespace SimpleTable
             y = y + font1.MeasureString("Country List", format1).Height;
             y = y + 5;
 
+            // Define data for the table
             String[] data
                 = {
                     "Name;Capital;Continent;Area;Population",
@@ -55,27 +57,30 @@ namespace SimpleTable
                     "Venezuela;Caracas;South America;912047;19700000"
                 };
 
-            String[][] dataSource
-                = new String[data.Length][];
+            // Convert data into a 2D array
+            String[][] dataSource = new String[data.Length][];
             for (int i = 0; i < data.Length; i++)
             {
                 dataSource[i] = data[i].Split(';');
             }
-
+            // Create a new table and set its style
             PdfTable table = new PdfTable();
             table.Style.CellPadding = 2;
             table.Style.HeaderSource = PdfHeaderSource.Rows;
             table.Style.HeaderRowCount = 1;
             table.Style.ShowHeader = true;
+
+            // Specify the data source for table
             table.DataSource = dataSource;
 
+            // Draw the table on the page
             PdfLayoutResult result = table.Draw(page, new PointF(60, y));
             y = y + result.Bounds.Height + 5;
 
+            // Add a note about the number of countries in the list
             PdfBrush brush2 = PdfBrushes.Gray;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 9f));
-            page.Canvas.DrawString(String.Format("* {0} countries in the list.", data.Length - 1),
-                font2, brush2, 65, y);
+            page.Canvas.DrawString(String.Format("* {0} countries in the list.", data.Length - 1), font2, brush2, 65, y);
 
             //Save the document
             doc.SaveToFile("SimpleTable.pdf");

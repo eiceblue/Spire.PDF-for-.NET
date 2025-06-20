@@ -25,14 +25,15 @@ namespace ReplaceFont
 
             //Get the fonts used in PDF
             PdfUsedFont[] fonts = doc.UsedFonts;
-            
-            //Create a new font 
-            PdfTrueTypeFont newfont = new PdfTrueTypeFont(new Font("Arial", 13f),true);
 
+            //Create a new font 
+            PdfTrueTypeFont newfont = new PdfTrueTypeFont(new Font("Arial", 13f), true);
+
+            // Iterate through each used fonts
             foreach (PdfUsedFont font in fonts)
             {
                 //Replace the font with new font
-                font.Replace(newfont);       
+                font.Replace(newfont);
             }
 
             //Save the document

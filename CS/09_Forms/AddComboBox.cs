@@ -21,31 +21,44 @@ namespace AddComboBox
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Create a new PDF document
             PdfDocument doc = new PdfDocument();
+
+            // Load an existing PDF file into the document
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\SampleB_1.pdf");
 
+            // Allow the document to create form fields
             doc.AllowCreateForm = true;
-            
-            //Create comboBox
+
+            // Create a combo box field on the first page of the document with the field name "Combox1"
             PdfComboBoxField comboBoxField = new PdfComboBoxField(doc.Pages[0], "Combox1");
+
+            // Set the size and position of the combo box field
             comboBoxField.Bounds = new RectangleF(60, 300, 70, 30);
+
+            // Set the border width of the combo box field
             comboBoxField.BorderWidth = 0.75f;
+
+            // Set the font of the combo box field to Helvetica with a font size of 9
             comboBoxField.Font = new PdfFont(PdfFontFamily.Helvetica, 9f);
+
+            // Set the combo box field as a required field
             comboBoxField.Required = true;
 
-            //Add items in comboBox
-            comboBoxField.Items.Add(new PdfListFieldItem( "Apple","itme1"));
-            comboBoxField.Items.Add(new PdfListFieldItem( "Banana","itme2"));
-            comboBoxField.Items.Add(new PdfListFieldItem("Pear", "itme3"));
-            comboBoxField.Items.Add(new PdfListFieldItem("Peach", "itme4"));
-            comboBoxField.Items.Add(new PdfListFieldItem("Grape", "itme5"));
+            // Add items to the combo box field
+            comboBoxField.Items.Add(new PdfListFieldItem("Apple", "item1"));
+            comboBoxField.Items.Add(new PdfListFieldItem("Banana", "item2"));
+            comboBoxField.Items.Add(new PdfListFieldItem("Pear", "item3"));
+            comboBoxField.Items.Add(new PdfListFieldItem("Peach", "item4"));
+            comboBoxField.Items.Add(new PdfListFieldItem("Grape", "item5"));
 
-            //Add in form
+            // Add the combo box field to the form fields collection of the PDF document
             doc.Form.Fields.Add(comboBoxField);
 
-            string output="AddComboBox-result.pdf";
+            // Specify the output file name
+            string output = "AddComboBox-result.pdf";
 
-            //Save to file
+            // Save the PDF document to the specified file
             doc.SaveToFile(output);
 
             //Launch the Pdf file

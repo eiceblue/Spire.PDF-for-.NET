@@ -25,7 +25,7 @@ namespace Decryption
             doc.LoadFromFile(encryptedPdf, "test");
 
             //Decrypt the document
-            doc.Security.Encrypt("", "", PdfPermissionsFlags.Default, PdfEncryptionKeySize.Key256Bit, "test");
+            doc.Decrypt();
 
             //Save Pdf file
             doc.SaveToFile("Decryption.pdf", FileFormat.PDF);

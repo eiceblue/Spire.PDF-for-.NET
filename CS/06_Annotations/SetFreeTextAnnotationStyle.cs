@@ -31,11 +31,13 @@ namespace SetFreeTextAnnotationStyle
             //Get the first page of PDF file.
             PdfPageBase page = doc.Pages[0];
 
-            //Initialize a PdfFreeTextAnnotation.
+            //Define a rectangle and create a free text annotation object.
             RectangleF rect = new RectangleF(150, 120, 150, 30);
             PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(rect);
+
             //Specify content.
             textAnnotation.Text = "\nFree Text Annotation Formatting";
+
             //Set free text annotation formatting and add it to page.
             PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
             PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
@@ -45,7 +47,7 @@ namespace SetFreeTextAnnotationStyle
             textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
             textAnnotation.Color = Color.Green;
             textAnnotation.Opacity = 0.8f;
-            page.AnnotationsWidget.Add(textAnnotation);
+            page.Annotations.Add(textAnnotation);
 
             rect = new RectangleF(150, 200, 150, 40);
             textAnnotation = new PdfFreeTextAnnotation(rect);
@@ -58,7 +60,7 @@ namespace SetFreeTextAnnotationStyle
             textAnnotation.LineEndingStyle = PdfLineEndingStyle.RClosedArrow;
             textAnnotation.Color = Color.LightPink;
             textAnnotation.Opacity = 0.8f;
-            page.AnnotationsWidget.Add(textAnnotation);
+            page.Annotations.Add(textAnnotation);
 
             rect = new RectangleF(150, 280, 280, 40);
             textAnnotation = new PdfFreeTextAnnotation(rect);
@@ -71,7 +73,7 @@ namespace SetFreeTextAnnotationStyle
             textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
             textAnnotation.Color = Color.LightSkyBlue;
             textAnnotation.Opacity = 0.8f;
-            page.AnnotationsWidget.Add(textAnnotation);
+            page.Annotations.Add(textAnnotation);
 
             rect = new RectangleF(150, 360, 200, 40);
             textAnnotation = new PdfFreeTextAnnotation(rect);
@@ -84,12 +86,13 @@ namespace SetFreeTextAnnotationStyle
             textAnnotation.LineEndingStyle = PdfLineEndingStyle.RClosedArrow;
             textAnnotation.Color = Color.LightGreen;
             textAnnotation.Opacity = 0.8f;
-            page.AnnotationsWidget.Add(textAnnotation);
+            page.Annotations.Add(textAnnotation);
 
             String result = "SetFreeTextAnnotationFormatting_out.pdf";
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

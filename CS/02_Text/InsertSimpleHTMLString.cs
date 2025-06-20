@@ -43,8 +43,8 @@ namespace InsertSimpleHTMLString
 
             //Draw htmlString  
             richTextElement.Draw(page, new RectangleF(0, 20, page.GetClientSize().Width, page.GetClientSize().Height), format);
-   
 
+            //Save the result PDF
             String result = "InsertSimpleHTMLString-result.pdf";
             doc.SaveToFile(result);
 

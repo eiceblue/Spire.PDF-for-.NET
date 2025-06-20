@@ -18,25 +18,28 @@ namespace PrintPdfDocument
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a document
+            // Create a new PDF document
             PdfDocument doc = new PdfDocument();
 
-            //Load file
+            // Load an existing PDF file into the document
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\PrintPdfDocument.pdf");
 
-            //Set the printer and select the pages you want to print
+            // Create a print dialog to select the printer and pages to print
             PrintDialog dialogPrint = new PrintDialog();
             dialogPrint.AllowPrintToFile = true;
             dialogPrint.AllowSomePages = true;
             dialogPrint.PrinterSettings.FromPage = 1;
             dialogPrint.PrinterSettings.ToPage = doc.Pages.Count;
 
+            // If the user clicks OK in the print dialog, proceed with printing
             if (dialogPrint.ShowDialog() == DialogResult.OK)
-            {   
-                //Print
+            {
+                // Configure the print settings based on the selected printer and page range
                 doc.PrintSettings.SelectPageRange(dialogPrint.PrinterSettings.FromPage, dialogPrint.PrinterSettings.ToPage);
-                doc.PrintSettings.PrinterName= dialogPrint.PrinterSettings.PrinterName;                
-                doc.Print();               
+                doc.PrintSettings.PrinterName = dialogPrint.PrinterSettings.PrinterName;
+
+                // Print the document using the specified settings
+                doc.Print();
             }
         }
     }

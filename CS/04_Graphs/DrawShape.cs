@@ -36,8 +36,9 @@ namespace DrawShape
             PDFDocumentViewer("DrawShape.pdf");
         }
 
-        private void DrawPath(PdfPageBase page)
+        private static void DrawPath(PdfPageBase page)
         {
+            //Define arry to store point of line
             PointF[] points = new PointF[5];
             for (int i = 0; i < points.Length; i++)
             {
@@ -54,11 +55,16 @@ namespace DrawShape
 
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
-            PdfPen pen = new PdfPen(Color.DeepSkyBlue, 0.02f);
-            PdfBrush brush1 = new PdfSolidBrush(Color.CadetBlue);         
 
+            //Define a pen and set style for it
+            PdfPen pen = new PdfPen(Color.DeepSkyBlue, 0.02f);
+            PdfBrush brush1 = new PdfSolidBrush(Color.CadetBlue);
+
+            // Apply scale and TranslateTransform to the graphics
             page.Canvas.ScaleTransform(50f, 50f);
             page.Canvas.TranslateTransform(5f, 1.2f);
+
+            //Draw line
             page.Canvas.DrawPath(pen, path);
 
             page.Canvas.TranslateTransform(2f, 0f);
@@ -90,7 +96,7 @@ namespace DrawShape
             page.Canvas.Restore(state);
         }
 
-        private void DrawSpiro(PdfPageBase page)
+        private static void DrawSpiro(PdfPageBase page)
         {
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
@@ -123,34 +129,41 @@ namespace DrawShape
             page.Canvas.Restore(state);
         }
 
-        private void DrawRectangle(PdfPageBase page)
+        private static void DrawRectangle(PdfPageBase page)
         {
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
 
+            //Draw a pen and set Style for it
             PdfPen pen = new PdfPen(System.Drawing.Color.Chocolate, 1f);
+
+            //Deaw rectangle
             page.Canvas.DrawRectangle(pen, new System.Drawing.Rectangle(new System.Drawing.Point(20, 310), new System.Drawing.Size(150, 120)));
 
             //Restore graphics
             page.Canvas.Restore(state);
         }
-        private void DrawPie(PdfPageBase page)
+        private static void DrawPie(PdfPageBase page)
         {
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
 
             PdfPen pen = new PdfPen(System.Drawing.Color.DarkRed, 2f);
+
+            //Draw pie
             page.Canvas.DrawPie(pen, 220, 320, 100, 90, 360, 360);
 
             //Restore graphics
             page.Canvas.Restore(state);
         }
-        private void DrawEllipse(PdfPageBase page)
+        private static void DrawEllipse(PdfPageBase page)
         {
             //Save graphics state
             PdfGraphicsState state = page.Canvas.Save();
 
             PdfBrush brush = new PdfSolidBrush(System.Drawing.Color.CadetBlue);
+
+            //Draw ellipse
             page.Canvas.DrawEllipse(brush, 380, 325, 80, 80);
 
             //Restore graphics

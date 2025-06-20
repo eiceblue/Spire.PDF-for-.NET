@@ -22,25 +22,30 @@ namespace SpecifyPageToView
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            // Create a new PDF document
             PdfDocument doc = new PdfDocument();
 
-            //Load file from disk.
+            // Load a PDF file from disk
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\Sample.pdf");
 
-            //Create a PdfDestination with specific page, location and 50% zoom factor
-            PdfDestination dest = new PdfDestination(2, new PointF(0, 100), 0.5f);
+            // Get the second page
+            PdfPageBase page = doc.Pages[1];
 
-            //Create GoToAction with dest
+            // Create a PdfDestination object with specific page,location (0, 100)
+            PdfDestination dest = new PdfDestination(page, new PointF(0, 100));
+
+            // Create a PdfGoToAction object with the destination
             PdfGoToAction action = new PdfGoToAction(dest);
 
-            //Set open action
+            // Set the open action of the document to the created action
             doc.AfterOpenAction = action;
 
-            String result = "SpecifyPageToView_out.pdf";
+            // Specify the output file path for saving the modified document
+            string result = "SpecifyPageToView_out.pdf";
 
-            //Save the document
+            // Save the modified document to the specified file
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

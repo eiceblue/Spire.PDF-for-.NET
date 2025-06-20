@@ -13,17 +13,23 @@ namespace SetTabOrder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load old PDF from disk.
+            // Load an existing PDF from disk
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\SetTabOrder.pdf");
 
-            //Set using document structure
+            // Disable incremental updates to the document structure to set tab order
             pdf.FileInfo.IncrementalUpdate = false;
+
+            // Get the first page of the PDF
             PdfPageBase page = pdf.Pages[0];
+
+            // Set the tab order of the page using the structure method
             page.SetTabOrder(TabOrder.Structure);
 
-            //Save the file
+            // Specify the output file name for the modified PDF with the updated tab order
             String result = "SetTabOrder_output.pdf";
+
+            // Save the modified document with the updated tab order to disk
             pdf.SaveToFile(result);
 
             //Launch the file.

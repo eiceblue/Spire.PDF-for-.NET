@@ -29,7 +29,7 @@ namespace PrintWithoutPrintDialog
             doc.PrintSettings.PrintController = new StandardPrintController();
 
             //Print all pages with default printer
-            doc.Print();
+            doc.Print();   
         }
     }
 }

@@ -21,16 +21,25 @@ namespace GetAndSetResolutionKind
 
         private void button1_Click(object sender, EventArgs e)
         {
-             String input = "..\\..\\..\\..\\..\\..\\Data\\CustomDocumentProperties.pdf";
-            //Create a document
+            // Define the input file path for the PDF document
+            String input = "..\\..\\..\\..\\..\\..\\Data\\CustomDocumentProperties.pdf";
+
+            // Create a new PDF document object
             PdfDocument doc = new PdfDocument();
+
+            // Load the PDF document from the specified input file path
             doc.LoadFromFile(input);
-            //Set PrinterResolutionKind
+
+            // Set the PrinterResolutionKind property of the PDF document's PrintSettings to High
             doc.PrintSettings.PrinterResolutionKind = PdfPrinterResolutionKind.High;
 
-            //Get PrinterResolutionKind
+            // Get the current value of the PrinterResolutionKind property of the PDF document's PrintSettings
             PdfPrinterResolutionKind kind = doc.PrintSettings.PrinterResolutionKind;
+
+            // Create a StringBuilder object to build the output string
             StringBuilder builder = new StringBuilder();
+
+            // Use a switch statement to determine the value of the PrinterResolutionKind and append it to the StringBuilder
             switch (kind)
             {
                 case PdfPrinterResolutionKind.High:
@@ -50,8 +59,10 @@ namespace GetAndSetResolutionKind
                     break;
             }
 
-            //Write information to a txt file
+            // Define the output file path for the text file
             string result = "GetAndSetResolutionKind_out.txt";
+
+            // Write the contents of the StringBuilder to the specified text file
             File.WriteAllText(result, builder.ToString());
 
             //Launch the file

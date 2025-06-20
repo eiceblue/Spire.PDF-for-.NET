@@ -25,7 +25,7 @@ namespace AssignIconToButtonField
             PdfDocument doc = new PdfDocument();
             PdfPageBase page = doc.Pages.Add();
 
-            //Create a Button
+            //Create a Button and set its style
             PdfButtonField btn = new PdfButtonField(page, "button1");
             btn.Bounds = new RectangleF(0, 50, 120, 100);
             btn.HighlightMode = PdfHighlightMode.Push;
@@ -55,8 +55,8 @@ namespace AssignIconToButtonField
             String result = "AssignIconToButtonField-result.pdf";
 
             //Save the document
-            doc.SaveToFile(result); 
-            
+            doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
 

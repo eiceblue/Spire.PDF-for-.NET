@@ -24,7 +24,7 @@ namespace GetAllAnnotationsFromPage
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf");
 
             //Get all annotations from the first page.
-            PdfAnnotationCollection annotations = pdf.Pages[0].AnnotationsWidget;
+            PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
 
             StringBuilder content = new StringBuilder();
 

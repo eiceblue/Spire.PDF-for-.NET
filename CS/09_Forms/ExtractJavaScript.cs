@@ -31,6 +31,8 @@ namespace ExtractJavaScript
             string js = null;
 
             PdfFormWidget form = pdf.Form as PdfFormWidget;
+
+            //Iterate each field widget
             for (int i = 0; i < form.FieldsWidget.List.Count; i++)
             {
                 PdfField field = form.FieldsWidget.List[i] as PdfField;
@@ -48,13 +50,14 @@ namespace ExtractJavaScript
                         {
                             //Get JavaScript
                             js = jsa.Script;
-                        }                       
+                        }
                     }
                 }
             }
 
             //Save and launch the result file
             File.WriteAllText("ExtractJavaScript.txt", js);
+
             System.Diagnostics.Process.Start("ExtractJavaScript.txt");
         }
 

@@ -22,10 +22,10 @@ namespace DeleteAnnotation
 
             //Open pdf document
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(input);
+	        doc.LoadFromFile(input);
 
             //Remove the first annotation
-            doc.Pages[0].AnnotationsWidget.RemoveAt(0);
+            doc.Pages[0].Annotations.RemoveAt(0);
 
             string output = "DeleteAnnotation.pdf";
 

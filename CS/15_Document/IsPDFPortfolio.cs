@@ -27,6 +27,7 @@ namespace IsPDFPortfolio
 
             //Judge whether the document is portfolio or not.
             bool value = doc.IsPortfolio;
+
             if (value)
             {
                 MessageBox.Show("The document is portfolio");

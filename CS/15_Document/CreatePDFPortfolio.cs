@@ -24,23 +24,32 @@ namespace CreatePDFPortfolio
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //The folder path for files
+            // The folder path for files
             string[] files = Directory.GetFiles(@"..\..\..\..\..\..\Data\CreatePDFPortfolio");
 
-            //The target file path 
+            // The target file path
             string targetFile = @"..\..\..\..\..\..\Data\Sample.pdf";
 
-            //Create folder and sub folder to add file into it
+            // Create a PDF document with the target file path
             PdfDocument doc = new PdfDocument(targetFile);
+
+            // Iterate through the files array and add each file to the document's collection
             for (int i = 0; i < files.Length; i++)
             {
                 doc.Collection.Folders.AddFile(files[i]);
-                PdfFolder folder = doc.Collection.Folders.CreateSubfolder("SubFolder" + (i+1));
+
+                // Create a subfolder named "SubFolder" followed by the current index
+                PdfFolder folder = doc.Collection.Folders.CreateSubfolder("SubFolder" + (i + 1));
+
+                // Add the current file to the subfolder
                 folder.AddFile(files[i]);
             }
-            //Save the document
+
+            // Save the document to a file named "CreatePDFPortfolio_out.pdf"
             String result = "CreatePDFPortfolio_out.pdf";
             doc.SaveToFile(result);
+
+            // Dispose of the document to release any resources
             doc.Dispose();
 
             //Launch the Pdf file

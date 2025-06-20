@@ -26,10 +26,10 @@ namespace RearrangePageOrder
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\SampleB_3.pdf");
 
             //Rearrange the page order
-            doc.Pages.ReArrange(new int[] { 1, 0});
+            doc.Pages.ReArrange(new int[] { 1, 0 });
 
-            String result="RearrangePageOrder-result.pdf";
             //Save to file
+            String result = "RearrangePageOrder-result.pdf";
             doc.SaveToFile(result, FileFormat.PDF);
 
             //Launch the Pdf file

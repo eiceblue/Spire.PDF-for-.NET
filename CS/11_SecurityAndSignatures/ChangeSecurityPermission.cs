@@ -19,15 +19,35 @@ namespace ChangeSecurityPermission
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create and load a pdf document
+            // Create and load a pdf document
             PdfDocument pdf = new PdfDocument();
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\ChangeSecurityPermission.pdf");
 
-            //Set an owner password, enable the permissions of Printing and Copying, set encryption level
-            pdf.Security.Encrypt("", "test  ", PdfPermissionsFlags.FillFields | PdfPermissionsFlags.FullQualityPrint,PdfEncryptionKeySize.Key256Bit);
+            // Define user and owner passwords
+            string userPassword = "";
+            string ownerPassword = "owner";
 
-            //Save and launch
+            // Create a security policy with the specified passwords
+            PdfSecurityPolicy securityPolicy = new PdfPasswordSecurityPolicy(userPassword, ownerPassword);
+
+            // Set the encryption algorithm to AES 128-bit
+            securityPolicy.EncryptionAlgorithm = PdfEncryptionAlgorithm.AES_128;
+
+            // Allow printing of the document
+            securityPolicy.DocumentPrivilege.AllowPrint = true;
+
+            // Allow filling form fields in the document
+            securityPolicy.DocumentPrivilege.AllowFillFormFields = true;
+
+            // Allow copying content from the document
+            securityPolicy.DocumentPrivilege.AllowContentCopying = true;
+
+            // Encrypt the PDF document using the specified security policy
+            pdf.Encrypt(securityPolicy);
+
+            // Save the encrypted PDF document to a file named "SecurityPermission.pdf"
             pdf.SaveToFile("SecurityPermission.pdf");
+
             System.Diagnostics.Process.Start("SecurityPermission.pdf");
 
         }

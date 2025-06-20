@@ -20,22 +20,22 @@ namespace PaddingForTableCell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Pdf from disk
+            // Load a PDF document from disk
             PdfDocument doc = new PdfDocument();
 
-            //Add a page
-            PdfPageBase page = doc.Pages.Add(PdfPageSize.A4,new PdfMargins(5));
+            // Add a page to the document with A4 size and 5 unit margins
+            PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, new PdfMargins(5));
 
-            //Add a grid
+            // Create a new grid
             PdfGrid grid = new PdfGrid();
 
-            //Set the cell padding
+            // Set the cell padding for the grid
             grid.Style.CellPadding = new PdfPaddings(10, 10, 10, 10);
 
-            //Fill data in grid
+            // Fill the grid with data from a data source
             grid.DataSource = GetData();
 
-            //Set alignment
+            // Set text alignment and vertical alignment for each cell in the grid
             foreach (PdfGridRow row in grid.Rows)
             {
                 foreach (PdfGridCell cell in row.Cells)
@@ -44,12 +44,13 @@ namespace PaddingForTableCell
                 }
             }
 
-            //Draw the grid in page
+            // Draw the grid on the page at position (0, 0)
             grid.Draw(page, new PointF(0, 0));
 
+            // Specify the output file name
             String result = "PaddingForTableCell_out.pdf";
 
-            //Save the pdf document
+            // Save the PDF document to the output file
             doc.SaveToFile(result);
 
             //Launch the document
@@ -57,6 +58,7 @@ namespace PaddingForTableCell
         }
         private String[][] GetData()
         {
+            // Raw data for populating the grid
             String[] data = {
                     "Name;Capital;Continent;Area;Population",
                     "Argentina;Buenos Aires;South America;2777815;32300003",
@@ -79,14 +81,15 @@ namespace PaddingForTableCell
                     "Venezuela;Caracas;South America;912047;19700000"
                 };
 
-            String[][] dataSource
-                = new String[data.Length][];
+            // Process the raw data and convert it into a 2D array
+            String[][] dataSource = new String[data.Length][];
             for (int i = 0; i < data.Length; i++)
             {
                 dataSource[i] = data[i].Split(';');
             }
             return dataSource;
         }
+
         private void PDFDocumentViewer(string fileName)
         {
             try

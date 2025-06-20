@@ -19,21 +19,25 @@ namespace FillFormField
         }
 
         private void button1_Click(object sender, EventArgs e)
-        { 
-            //Load a pdf document
+        {
+            // Load a pdf document
             string input = @"..\..\..\..\..\..\Data\FillFormField.pdf";
             PdfDocument doc = new PdfDocument();
-	    doc.LoadFromFile(input);
-            //Get pdf forms
+            doc.LoadFromFile(input);
+
+            // Get pdf forms
             PdfFormWidget formWidget = doc.Form as PdfFormWidget;
 
-            //Fill pdf form fields
+            // Fill pdf form fields
             for (int i = 0; i < formWidget.FieldsWidget.List.Count; i++)
             {
                 PdfField field = formWidget.FieldsWidget.List[i] as PdfField;
+
+                // Check if the field is a textbox field
                 if (field is PdfTextBoxFieldWidget)
                 {
                     PdfTextBoxFieldWidget textBoxField = field as PdfTextBoxFieldWidget;
+
                     switch (textBoxField.Name)
                     {
                         case "email":
@@ -104,9 +108,11 @@ namespace FillFormField
                     }
                 }
 
+                // Check if the field is a list box field
                 if (field is PdfListBoxWidgetFieldWidget)
                 {
                     PdfListBoxWidgetFieldWidget listBoxField = field as PdfListBoxWidgetFieldWidget;
+
                     switch (listBoxField.Name)
                     {
                         case "email_format":
@@ -116,9 +122,11 @@ namespace FillFormField
                     }
                 }
 
+                // Check if the field is a combo box field
                 if (field is PdfComboBoxWidgetFieldWidget)
                 {
                     PdfComboBoxWidgetFieldWidget comBoxField = field as PdfComboBoxWidgetFieldWidget;
+
                     switch (comBoxField.Name)
                     {
                         case "title":
@@ -128,9 +136,11 @@ namespace FillFormField
                     }
                 }
 
+                // Check if the field is a radio button field
                 if (field is PdfRadioButtonListFieldWidget)
                 {
                     PdfRadioButtonListFieldWidget radioBtnField = field as PdfRadioButtonListFieldWidget;
+
                     switch (radioBtnField.Name)
                     {
                         case "country":
@@ -139,9 +149,11 @@ namespace FillFormField
                     }
                 }
 
+                // Check if the field is a checkbox field
                 if (field is PdfCheckBoxWidgetFieldWidget)
                 {
                     PdfCheckBoxWidgetFieldWidget checkBoxField = field as PdfCheckBoxWidgetFieldWidget;
+
                     switch (checkBoxField.Name)
                     {
                         case "agreement_of_terms":
@@ -150,12 +162,13 @@ namespace FillFormField
                     }
                 }
 
+                // Check if the field is a button field
                 if (field is PdfButtonWidgetFieldWidget)
                 {
                     PdfButtonWidgetFieldWidget btnField = field as PdfButtonWidgetFieldWidget;
+
                     switch (btnField.Name)
                     {
-
                         case "submit":
                             btnField.Text = "Submit";
                             break;
@@ -165,7 +178,7 @@ namespace FillFormField
 
             string output = "FillFormField.pdf";
 
-            //Save pdf document
+            // Save pdf document
             doc.SaveToFile(output);
 
             //Launch the file

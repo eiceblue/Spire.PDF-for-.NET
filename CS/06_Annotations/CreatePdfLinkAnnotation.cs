@@ -34,19 +34,20 @@ namespace CreatePdfLinkAnnotation
 
             //Create a file link annotation based on the two parameters and add the annotation to the new page.
             PdfFileLinkAnnotation link = new PdfFileLinkAnnotation(rect, filePath);
-            page.AnnotationsWidget.Add(link);
+            page.Annotations.Add(link);
 
             //Create a free text annotation based on the same RectangleF, specifying the content.
             PdfFreeTextAnnotation text = new PdfFreeTextAnnotation(rect);
             text.Text = "Click here! This is a link annotation.";
             PdfFont font = new PdfFont(PdfFontFamily.Helvetica, 15);
             text.Font = font;
-            page.AnnotationsWidget.Add(text);
+            page.Annotations.Add(text);
 
             String result = "CreatePdfLinkAnnotation_out.pdf";
 
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

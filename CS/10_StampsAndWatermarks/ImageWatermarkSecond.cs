@@ -18,32 +18,42 @@ namespace ImageWatermarkSecond
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load Pdf document from disk
+            // Load a PDF document from the disk.
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile("../../../../../../Data/PDFTemplate_N.pdf");
 
-            //Load an image
+            // Load an image from a file.
             Image image = Image.FromFile("../../../../../../Data/E-logo.png");
 
-            //Adjust image size
+            // Adjust the size of the image.
             int width = image.Width;
             int height = image.Height;
-            float schale = 1.5f;
-            Size size = new Size((int)(width * schale), (int)(height * schale));
-            Bitmap schaleImage = new Bitmap(image, size);
+            float scale = 1.5f;
+            Size size = new Size((int)(width * scale), (int)(height * scale));
+            Bitmap scaledImage = new Bitmap(image, size);
 
-            //Insert an image into the first PDF page at specific position
-            PdfImage pdfImage = PdfImage.FromImage(schaleImage);
+            // Convert the scaled image to a PDF image.
+            PdfImage pdfImage = PdfImage.FromImage(scaledImage);
+
+            // Get the first page from the document.
             PdfPageBase page = doc.Pages[0];
+
+            // Specify the position on the page to insert the image.
             PointF position = new PointF(160, 260);
+
+            // Save the current state of the canvas and set transparency for the image.
             page.Canvas.Save();
             page.Canvas.SetTransparency(0.5f, 0.5f, PdfBlendMode.Multiply);
+
+            // Draw the image on the page using the specified position.
             page.Canvas.DrawImage(pdfImage, position);
+
+            // Restore the previous state of the canvas.
             page.Canvas.Restore();
 
-            //Save the Pdf document
+            // Save the modified PDF document to a file.
             string output = "ImageWatermarkSecondApproach_out.pdf";
-            doc.SaveToFile(output,FileFormat.PDF);
+            doc.SaveToFile(output, FileFormat.PDF);
 
             //Launch the Pdf file
             PDFDocumentViewer(output);

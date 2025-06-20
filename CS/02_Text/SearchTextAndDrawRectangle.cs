@@ -11,7 +11,8 @@ using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
 using Spire.Pdf.General;
-using Spire.Pdf.General.Find;
+using Spire.Pdf.Texts;
+
 namespace SearchTextAndDrawRectangle
 {
     public partial class Form1 : Form
@@ -28,23 +29,29 @@ namespace SearchTextAndDrawRectangle
 
             // Read a pdf file
             doc.LoadFromFile(input);
-            
+
             // Get the first page of pdf file
             PdfPageBase page = doc.Pages[0];
 
-            // Create PdfTextFindCollection object to find all the matched phrases
-            PdfTextFindCollection collection = page.FindText("Spire.PDF for .NET", TextFindParameter.IgnoreCase);
-           
-            foreach (PdfTextFind find in collection.Finds)
+            // Create a PdfTextFinder object for searching text within the first page
+            PdfTextFinder finder = new PdfTextFinder(page);
+            finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase;
+
+            // Find occurrences of the specified text within the first page
+            List<PdfTextFragment> finds = finder.Find("Spire.PDF for .NET");
+
+            // Iterate through each found text fragment
+            foreach (PdfTextFragment find in finds)
             {
                 // Draw a rectangle with red pen
-                page.Canvas.DrawRectangle(new PdfPen(PdfBrushes.Red,0.9f), find.Bounds);
+                page.Canvas.DrawRectangle(new PdfPen(PdfBrushes.Red, 0.9f), find.Bounds[0]);
             }
-     
+
             String result = "SearchTextAndDrawRectangle_out.pdf";
-  
+
             //Save the document
             doc.SaveToFile(result);
+
             //Launch the Pdf file
             PDFDocumentViewer(result);
         }

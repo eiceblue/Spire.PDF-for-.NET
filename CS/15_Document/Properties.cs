@@ -16,11 +16,11 @@ namespace Properties
 
         private void button1_Click(object sender, EventArgs e)
         {
-             //Load pdf document
+            // Load PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\Properties.pdf");
 
-            //Set document info
+            // Set document information
             doc.DocumentInformation.Author = "E-iceblue";
             doc.DocumentInformation.Creator = "E-iceblue";
             doc.DocumentInformation.Keywords = "pdf, demo, document information";
@@ -28,12 +28,14 @@ namespace Properties
             doc.DocumentInformation.Subject = "Demo of Spire.Pdf";
             doc.DocumentInformation.Title = "Document Information";
 
-            //File info
+            // Set file info
             doc.FileInfo.CrossReferenceType = PdfCrossReferenceType.CrossReferenceStream;
             doc.FileInfo.IncrementalUpdate = false;
 
-            //Save pdf file
+            // Save the PDF file
             doc.SaveToFile("Properties_result.pdf");
+
+            // Close the document
             doc.Close();
 
             //Launch the Pdf file

@@ -51,6 +51,7 @@ namespace ImageAndPageNumber
             //save the file
             string output = "ImageandPageNumberinHeaderFootersection_out.pdf";
             doc.SaveToFile(output,FileFormat.PDF);
+
             PDFDocumentViewer(output);
         }
         private PdfPageTemplateElement CreateHeaderTemplate(PdfDocument doc, PdfMargins margins, SizeF pageSize)
@@ -65,8 +66,8 @@ namespace ImageAndPageNumber
 
             //draw image in header space 
             PdfImage headerImage = PdfImage.FromFile("../../../../../../../Data/E-iceblueLogo.png");
-            float width = headerImage.Width/2;
-            float height = headerImage.Height/2;
+            float width = headerImage.Width / 2;
+            float height = headerImage.Height / 2;
             headerSpace.Graphics.DrawImage(headerImage, x, margins.Top - height - 5, width, height);
 
             //draw line in header space
@@ -79,31 +80,44 @@ namespace ImageAndPageNumber
 
         private PdfPageTemplateElement CreateFooterTemplate(PdfDocument doc, PdfMargins margins, SizeF pageSize)
         {
-            //create a PdfPageTemplateElement object which works as footer space
+            // Create a PdfPageTemplateElement object to serve as the footer space
             PdfPageTemplateElement footerSpace = new PdfPageTemplateElement(pageSize.Width, margins.Bottom);
             footerSpace.Foreground = false;
 
-            //declare two float variables
+            // Declare two float variables for positioning
             float x = margins.Left;
             float y = 0;
 
-            //draw line in footer space
+            // Draw a line in the footer space using a gray pen
             PdfPen pen = new PdfPen(PdfBrushes.Gray, 1);
             footerSpace.Graphics.DrawLine(pen, x, y, pageSize.Width - x, y);
 
-            //draw text in footer space
+            // Draw text in the footer space
             y = y + 5;
+
+            // Define the font for the text
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 10f), true);
-            //draw dynamic field in footer space
+
+            // Create a dynamic field for the page number
             PdfPageNumberField number = new PdfPageNumberField();
+
+            // Create a dynamic field for the page count
             PdfPageCountField count = new PdfPageCountField();
+
+            // Create a composite field that combines the page number and page count fields
             PdfCompositeField compositeField = new PdfCompositeField(font, PdfBrushes.Black, "Page {0} of {1}", number, count);
+
+            // Set the string format for the composite field (left-aligned, top vertical alignment)
             compositeField.StringFormat = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Top);
+
+            // Measure the size of the composite field to determine its bounds
             SizeF size = font.MeasureString(compositeField.Text);
             compositeField.Bounds = new RectangleF(x, y, size.Width, size.Height);
+
+            // Draw the composite field on the footer space
             compositeField.Draw(footerSpace.Graphics);
 
-            //return footerSpace
+            // Return the footer space element
             return footerSpace;
         }
         private void PDFDocumentViewer(string fileName)

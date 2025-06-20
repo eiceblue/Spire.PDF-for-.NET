@@ -20,19 +20,24 @@ namespace AddBorderForText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Create a pdf document
+            //Create a pdf instance
             PdfDocument doc = new PdfDocument();
 
             //Load from file
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\SampleB_1.pdf");
 
-            //Get the first page
+             //Get the first page
             PdfPageBase page = doc.Pages[0];
 
             string text = "Hello, World!";
 
+            //Create the font to use and set the font style 
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Times New Roman", 11, FontStyle.Regular),true);
-            SizeF size = font.MeasureString(text);            
+
+            //Measure the size of the text
+            SizeF size = font.MeasureString(text);
+
+            //Create a PdfSolidBrush instance for setting the color of text
             PdfSolidBrush brush = new PdfSolidBrush(Color.Black);
             int x = 60;
             int y = 300;

@@ -24,22 +24,37 @@ namespace AddImageInTableCell
 
             //Create a table
             PdfTable table = new PdfTable();
-            PdfSolidBrush brush=new PdfSolidBrush(Color.Black);
+            PdfSolidBrush brush = new PdfSolidBrush(Color.Black);
+
+            //Set the border color for table
             table.Style.BorderPen = new PdfPen(brush, 0.5f);
+
+            //Set the header row cell style
             table.Style.HeaderStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center);
             table.Style.HeaderSource = PdfHeaderSource.Rows;
+
+            //Set the header rows count.
             table.Style.HeaderRowCount = 1;
             table.Style.ShowHeader = true;
-
             PdfTrueTypeFont fontHeader = new PdfTrueTypeFont(new Font("Arial", 14f));
+
+            //Set font for header row cell
             table.Style.HeaderStyle.Font = fontHeader;
+
+            //Set back color for header
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
 
+            //Create a font
             PdfTrueTypeFont fontBody = new PdfTrueTypeFont(new Font("Arial", 12f));
+
+            //Set the odd row cell style
             table.Style.AlternateStyle.Font = fontBody;
             table.Style.AlternateStyle.Font = fontBody;
+
+            //Set data source for table
             table.DataSource = GetData();
 
+            // Iterate each column of table
             foreach (PdfColumn column in table.Columns)
             {
                 column.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
@@ -63,6 +78,7 @@ namespace AddImageInTableCell
 
         private DataTable GetData()
         {
+            //Create a DataTable object to add data source
             DataTable dt = new DataTable();
             dt.Columns.Add("column1", typeof(string));
             dt.Columns.Add("column2", typeof(string));
@@ -81,20 +97,25 @@ namespace AddImageInTableCell
         {
             if (args.RowIndex==1&&args.CellIndex == 1)
             {
+                //Load an image
                 PdfImage image = PdfImage.FromFile("../../../../../../Data/E-iceblueLogo.png");
                 float x = (args.Bounds.Width - image.PhysicalDimension.Width) / 2 + args.Bounds.X;
                 float y = (args.Bounds.Height - image.PhysicalDimension.Height) / 2 + args.Bounds.Y;
+
+                //Draw Image
                 args.Graphics.DrawImage(image, x, y);
             }
         }
         void table_BeginRowLayout(object sender, BeginRowLayoutEventArgs args)
         {
-            if(args.RowIndex==1)
+            if (args.RowIndex == 1)
             {
+                //Load an image
                 PdfImage image = PdfImage.FromFile("../../../../../../Data/E-iceblueLogo.png");
-                args.MinimalHeight = image.PhysicalDimension.Height+4;
+                args.MinimalHeight = image.PhysicalDimension.Height + 4;
             }
         }
+
         private void PDFDocumentViewer(string fileName)
         {
             try

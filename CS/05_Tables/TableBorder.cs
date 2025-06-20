@@ -19,8 +19,9 @@ namespace TableBorder
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Raw data for populating the grid
             String[] data
-               = {
+            = {
                     "Name;Capital;Continent;Area;Population",
                     "Argentina;Buenos Aires;South America;2777815;32300003",
                     "Bolivia;La Paz;South America;1098575;7300000",
@@ -42,40 +43,41 @@ namespace TableBorder
                     "Venezuela;Caracas;South America;912047;19700000"
                 };
 
-            String[][] dataSource
-                = new String[data.Length][];
+            // Process the raw data and convert it into a 2D array
+            String[][] dataSource = new String[data.Length][];
             for (int i = 0; i < data.Length; i++)
             {
                 dataSource[i] = data[i].Split(';');
             }
 
-            //Create a pdf document
+            // Create a new PDF document
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\TableBorder.pdf");
-          
+
+            // Get the first page
             PdfPageBase page = doc.Pages[0];
 
-            //Create a pdf table
+            // Create a new PDF table
             PdfTable table = new PdfTable();
 
-            //Set data source of the pdf table
+            // Set the data source for the PDF table
             table.DataSource = dataSource;
 
-            //Set the color of table border
+            // Set the color and style of the table border
             PdfTableStyle style = new PdfTableStyle();
             style.CellPadding = 2;
             style.BorderPen = new PdfPen(Color.Gray, 1f);
             table.Style = style;
 
-            //Add custom method to BeginRowLayout event
+            // Add a custom method to the BeginRowLayout event
             table.BeginRowLayout += new BeginRowLayoutEventHandler(table_BeginRowLayout);
 
-            //Draw the pdf table into pdf document
+            // Draw the PDF table onto the PDF document at a specific position
             table.Draw(page, new PointF(60, 320));
 
             string output = "TableBorder.pdf";
 
-            //Save pdf document
+            // Save the PDF document
             doc.SaveToFile(output);
 
             //Launch the Pdf file
@@ -83,7 +85,7 @@ namespace TableBorder
         }
         private void table_BeginRowLayout(object sender, BeginRowLayoutEventArgs args)
         {
-            //Set the color of table cell border
+            // Set the color and style of the table cell border
             PdfCellStyle cellStyle = new PdfCellStyle();
             cellStyle.BorderPen = new PdfPen(Color.LightBlue, 0.9f);
             args.CellStyle = cellStyle;

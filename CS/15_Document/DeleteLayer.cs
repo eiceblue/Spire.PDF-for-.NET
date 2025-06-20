@@ -18,17 +18,17 @@ namespace DeleteLayer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Load the document from disk
+            // Load the document from disk
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\DeleteLayer.pdf");
 
-            //Delete the "red line" layer
+            // Remove the "red line" layer from the document
             doc.Layers.RemoveLayer("red line");
 
-            //Save the document
+            // Save the modified document to a new file
             doc.SaveToFile("Output.pdf");
 
-            //View the Pdf file
+            // View the Pdf file
             PDFDocumentViewer("Output.pdf");
         }
         private void PDFDocumentViewer(string fileName)

@@ -29,7 +29,7 @@ namespace GetParticularAnnotationInfo
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf");
 
             //Get the annotation collection from the document.
-            PdfAnnotationCollection annotations = pdf.Pages[0].AnnotationsWidget;
+            PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
 
             //Get particular annotation information from the document.
             StringBuilder content = new StringBuilder();
@@ -41,14 +41,11 @@ namespace GetParticularAnnotationInfo
                 content.AppendLine("Annotation author: " + textAnnotation.Author);
                 content.AppendLine("Annotation Name: " + textAnnotation.Name);
             }
-          
 
             String result = "GetParticularAnnotationInfo_out.txt";
-
-
             //Save to file.
             File.WriteAllText(result, content.ToString());
-            
+
             //Launch the file.
             DocumentViewer(result);
         }
