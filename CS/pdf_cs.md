@@ -1,5 +1,3 @@
-# 代码核心功能提取
-
 # Spire.PDF C# Hello World
 ## Create a simple PDF document with "Hello, World!" text
 ```csharp
@@ -12702,4 +12700,5 @@ doc.Print();
 ```
 
 ---
+
 
