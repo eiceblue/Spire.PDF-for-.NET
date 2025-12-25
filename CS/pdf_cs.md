@@ -12701,4 +12701,272 @@ doc.Print();
 
 ---
 
+# spire.pdf text replacement counter
+## count text replacements in pdf
+```csharp
+// Create a PDF document
+PdfDocument pdf = new PdfDocument();
+
+// Load the PDF file
+pdf.LoadFromFile("ReplaceTextInPage.pdf");
+
+// Get the first page
+PdfPageBase page = pdf.Pages[0];
+
+// Create an instance of PdfTextReplacer to replace text
+PdfTextReplacer replacer = new PdfTextReplacer(page);
+
+// Specify the type of replacement to be performed
+replacer.Options.ReplaceType = PdfTextReplaceOptions.ReplaceActionType.WholeWord;
+
+// Replace the text in the document and get replacement count
+int count = replacer.ReplaceAllText("PDF", "Pdf");
+
+// Close the PDF document
+pdf.Close();
+```
+
+---
+
+# Spire.PDF Text Replacement
+## Replace text in a specified area of a PDF document
+```csharp
+// Create an instance of PdfTextReplacer to replace text
+PdfTextReplacer replacer = new PdfTextReplacer(page);
+
+// Set the replacement area for the text replacer
+replacer.Options.SetReplacementArea(new RectangleF(10, 0, 841, 150));
+
+// Specify the type of replacement to be performed
+replacer.Options.ReplaceType = PdfTextReplaceOptions.ReplaceActionType.WholeWord; 
+
+// Replace the text in the document
+replacer.ReplaceAllText("PDF", "Pdf");
+```
+
+---
+
+# PDF Text Markup Annotation Bounds Extraction
+## Extract coordinates of highlight annotation widgets in PDF documents
+```csharp
+// Create a PdfDocument object
+PdfDocument doc = new PdfDocument();
+
+// Loop through each page in the document
+foreach (PdfPageBase page in doc.Pages)
+{
+    // Get all annotations on the page
+    PdfAnnotationCollection annotations = page.Annotations;
+    
+    // Loop through the annotations
+    foreach (PdfAnnotation annotation in annotations)
+    {
+        // Check if the annotation is a highlight annotation
+        if (annotation is PdfTextMarkupAnnotationWidget highlightAnnotation)
+        {
+            // Check if it's a highlight type
+            if (highlightAnnotation.TextMarkupAnnotationType == PdfTextMarkupAnnotationType.Highlight)
+            {
+                // Get the coordinates of each point in the annotation
+                for (int i = 0; i < highlightAnnotation.QuadPoints.Length; i++)
+                {
+                    float x = highlightAnnotation.QuadPoints[i].X;
+                    float y = highlightAnnotation.QuadPoints[i].Y;
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+# PDF Rich Media Annotation Data Extraction
+## Extract data from rich media annotation widgets in PDF files
+```csharp
+//Create a pdf instance
+PdfDocument doc = new PdfDocument();
+
+//Iterate through pages
+for (int i = 0; i < doc.Pages.Count; i++)
+{
+    PdfPageBase page = doc.Pages[i];
+    //Get the annotation collection of the page
+    PdfAnnotationCollection ancoll = page.Annotations;
+    for (int j = 0; j < ancoll.Count; j++)
+    {
+        //Convert to Rich Media Annotations
+        PdfRichMediaAnnotationWidget MediaWidget = ancoll[j] as PdfRichMediaAnnotationWidget;
+        //Obtain data from rich media annotations
+        byte[] data = MediaWidget.RichMediaData;
+        //Obtain names from rich media annotations
+        string embedFileName = MediaWidget.RichMediaName;
+    }
+}
+```
+
+---
+
+# PDF Media Extraction
+## Extract and save video and audio files from PDF documents
+```csharp
+// Create a PDF document
+PdfDocument pdf = new PdfDocument();
+
+// Load the PDF file
+pdf.LoadFromFile("path_to_pdf_file");
+
+// Loop through each page in the PDF document
+for (int i = 0; i < pdf.Pages.Count; i++)
+{
+    // Get the current page
+    PdfPageBase page = pdf.Pages[i];
+
+    // Get all annotations on the current page
+    PdfAnnotationCollection annotations = page.Annotations;
+
+    // Loop through each annotation on the page
+    for (int j = 0; j < annotations.Count; j++)
+    {
+        // Cast the annotation to a rich media annotation widget
+        PdfRichMediaAnnotationWidget MediaWidget = (PdfRichMediaAnnotationWidget)annotations[j];
+
+        // Get the embedded media data (e.g., video, audio)
+        byte[] data = MediaWidget.RichMediaData;
+
+        // Get the original file name of the embedded media
+        String embedFileName = MediaWidget.RichMediaName;
+
+        // Save the embedded media data to a file
+        File.WriteAllBytes(embedFileName, data);
+    }
+}
+
+// Close the PDF document
+pdf.Close();
+```
+
+---
+
+# PDF Button Redirect Information
+## Extract redirect destinations and URIs from button fields in a PDF form
+```csharp
+// Get form widget from PDF document
+PdfFormWidget formWidget = (PdfFormWidget)doc.Form;
+// Create a StringBuilder to store results
+StringBuilder stringBuilder = new StringBuilder();
+stringBuilder.AppendLine("btnAction:");
+// Iterate through all fields in the form
+for (int i = 0; i < formWidget.FieldsWidget.Count; ++i)
+{
+    // Check if field is a button widget
+    var field = formWidget.FieldsWidget[i] as PdfButtonWidgetFieldWidget;
+    
+    // Check for MouseUp NamedAction
+    if (field.Actions.MouseUp != null && field.Actions.MouseUp is PdfNamedAction)
+    {
+        var namedAction = (PdfNamedAction)field.Actions.MouseUp;
+        stringBuilder.AppendLine(formWidget.FieldsWidget[i].Name + "-MouseUp-" + namedAction.Destination.ToString());
+    }
+    // Check for MouseDown NamedAction
+    else if (field.Actions.MouseDown != null && field.Actions.MouseDown is PdfNamedAction)
+    {
+        var namedAction = (PdfNamedAction)field.Actions.MouseDown;
+        stringBuilder.AppendLine(formWidget.FieldsWidget[i].Name + "-MouseDown--" + namedAction.Destination.ToString());
+    }
+    // Check for MouseDown UriAction
+    else if (field.Actions.MouseDown != null && field.Actions.MouseDown is PdfUriAction)
+    {
+        var uriAction = (PdfUriAction)field.Actions.MouseDown;
+        stringBuilder.AppendLine(formWidget.FieldsWidget[i].Name + "-MouseDown--" + uriAction.Uri.ToString());
+    }
+    // Check for MouseUp UriAction
+    else if (field.Actions.MouseUp != null && field.Actions.MouseUp is PdfUriAction)
+    {
+        var uriAction = (PdfUriAction)field.Actions.MouseUp;
+        stringBuilder.AppendLine(formWidget.FieldsWidget[i].Name + "-MouseUp-" + uriAction.Uri.ToString());
+    }
+}
+```
+
+---
+
+# PDF Button Bookmark Reader
+## Extract bookmark information from PDF buttons
+```csharp
+// Create a PDF document
+PdfDocument pdf = new PdfDocument();
+
+// Load the PDF file
+pdf.LoadFromFile("ReadBookmarkInfoOfButton.pdf");
+
+PdfFormWidget formWidget = (PdfFormWidget)pdf.Form;
+StringBuilder stringBuilder = new StringBuilder();
+stringBuilder.AppendLine("btnAction:");
+for (int i = 0; i < formWidget.FieldsWidget.Count; ++i)
+{
+    if (formWidget.FieldsWidget[i] is PdfButtonWidgetFieldWidget)
+    {
+        var field = formWidget.FieldsWidget[i] as PdfButtonWidgetFieldWidget;
+        if (field.Actions.MouseUp != null && field.Actions.MouseUp is PdfNamedAction)
+        {
+            var aaa = (PdfNamedAction)field.Actions.MouseUp;
+            stringBuilder.AppendLine(field.Name + "-MouseUp-" + aaa.Destination.ToString());
+        }
+        else if (field.Actions.MouseDown != null && field.Actions.MouseDown is PdfNamedAction)
+        {
+            var aaa = (PdfNamedAction)field.Actions.MouseDown;
+            stringBuilder.AppendLine(field.Name + "-MouseDown--" + aaa.Destination.ToString());
+        }
+        else if (field.Actions.MouseDown != null && field.Actions.MouseDown is PdfUriAction)
+        {
+            var aaa = (PdfUriAction)field.Actions.MouseDown;
+            stringBuilder.AppendLine(field.Name + "-MouseDown--" + aaa.Uri.ToString());
+        }
+        else if (field.Actions.MouseUp != null && field.Actions.MouseUp is PdfUriAction)
+        {
+            var aaa = (PdfUriAction)field.Actions.MouseUp;
+            stringBuilder.AppendLine(field.Name + "-MouseUp-" + aaa.Uri.ToString());
+        }
+        else if (field.Actions.MouseUp != null && field.Actions.MouseUp is PdfGotoNameAction)
+        {
+            var aaa = (PdfGotoNameAction)field.Actions.MouseUp;
+            stringBuilder.AppendLine(field.Name + "-MouseUp-" + aaa.Destination.ToString());
+        }
+        else if (field.Actions.MouseDown != null && field.Actions.MouseDown is PdfGotoNameAction)
+        {
+            var aaa = (PdfGotoNameAction)field.Actions.MouseDown;
+            stringBuilder.AppendLine(field.Name + "-MouseDown-" + aaa.Destination.ToString());
+        }
+    }
+}       
+
+// Write the result to a text file
+string result = "ReadBookmarkInfoOfButton_out.txt";
+File.WriteAllText(result, stringBuilder.ToString());
+
+// Close the PDF document
+pdf.Close();
+```
+
+---
+
+# PDF Automatic Rotation Printing
+## Demonstrates how to configure PDF printing with automatic page rotation
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Set up multi page printing layout
+PdfMultiPageLayout printParameters = doc.PrintSettings.SelectMultiPageLayout(1, 2);
+// Control whether the page automatically rotates to fit the print layout
+printParameters.AutoRotatePages = true;
+// Horizontal flipping double-sided printing mode
+doc.PrintSettings.Duplex = Duplex.Horizontal;
+// Print the document using the specified settings
+doc.Print();
+```
+
+---
+
 
