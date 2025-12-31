@@ -50,6 +50,10 @@ namespace PageNumberInFooter
                 PdfBrush brush = PdfBrushes.Black;
                 PdfPen pen = new PdfPen(brush, 0.75f);
                 PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Italic), true);
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                 PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Italic, true);
+                */
                 PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Right);
                 format.MeasureTrailingSpaces = true;
 

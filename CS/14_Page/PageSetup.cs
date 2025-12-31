@@ -119,6 +119,10 @@ namespace PageSetup
             // Create a brush and font for the title
             PdfBrush brush2 = new PdfSolidBrush(Color.Black);
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
 
             // Set the format for the title text
             PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center);
@@ -150,6 +154,10 @@ namespace PageSetup
             // Reference content
             // Create a font and format for the reference text
             PdfTrueTypeFont font3 = new PdfTrueTypeFont(new Font("Arial", 9f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font3 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format3 = new PdfStringFormat();
 
             // Set the paragraph indentation and line spacing for the reference text
@@ -174,6 +182,10 @@ namespace PageSetup
 
             // Create a font and brush for the underlined text
             PdfTrueTypeFont font4 = new PdfTrueTypeFont(new Font("Arial", 9f, FontStyle.Underline));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font4 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Underline, true);
+            */
             PdfBrush brush3 = PdfBrushes.Blue;
 
             // Draw the underlined text on the page
@@ -198,6 +210,10 @@ namespace PageSetup
 
             // Create a font for the content text
             PdfTrueTypeFont font5 = new PdfTrueTypeFont(new Font("Arial", 10f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font5 = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
 
             // Set the line spacing for the content text
             format4.LineSpacing = font5.Size * 1.5f;

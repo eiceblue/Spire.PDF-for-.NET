@@ -26,6 +26,10 @@ namespace AddCalendarDropdown
 
             // Create a TrueType font using Arial Unicode MS with a font size of 10
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial Unicode MS", 10f), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial Unicode MS", 10f,PdfFontStyle.Regular, true);
+            */
 
             // Create a new text box field on the page with the field name "date"
             PdfTextBoxField textbox = new PdfTextBoxField(page, "date");

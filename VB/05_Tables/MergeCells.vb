@@ -43,7 +43,17 @@ Namespace MergeCells
 
             ' Customize the font style for the cells in row0 and row1
             row0.Style.Font = New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'row0.Style.Font = New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+            ' =============================================================================
             row1.Style.Font = New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Italic), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'row1.Style.Font = New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Italic, True)
+            ' =============================================================================
 
             ' Set the cell values and formatting for row0
             row0.Cells(0).Value = "Corporation"
@@ -55,6 +65,11 @@ Namespace MergeCells
 
             row0.Cells(4).Value = "World"
             row0.Cells(4).Style.Font = New PdfTrueTypeFont(New Font("Arial", 10.0F, FontStyle.Bold Or FontStyle.Italic), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'row0.Cells(4).Style.Font = New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Bold Or FontStyle.Italic, True)
+            ' =============================================================================
             row0.Cells(4).StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
             row0.Cells(4).Style.BackgroundBrush = PdfBrushes.LightGreen
 

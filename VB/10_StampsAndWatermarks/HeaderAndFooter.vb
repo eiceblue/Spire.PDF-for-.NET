@@ -25,6 +25,11 @@ Namespace HeaderAndFooter
 
             ' Define the font for text
             Dim font As New PdfTrueTypeFont(New Font("Arial", 10.0F, FontStyle.Italic), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Italic, True)
+            ' =============================================================================
 
             ' Create string formats for right alignment and left alignment
             Dim rightAlign As New PdfStringFormat(PdfTextAlignment.Right)
@@ -85,6 +90,12 @@ Namespace HeaderAndFooter
                 ' Update the brush and font for the footer text
                 brush = PdfBrushes.DarkBlue
                 font = New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Bold), True)
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Dim font As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Bold, True)
+                ' =============================================================================
+
 
                 ' Calculate the y position for the footer text
                 y = newPage.Canvas.ClientSize.Height - margin.Bottom - font.Height

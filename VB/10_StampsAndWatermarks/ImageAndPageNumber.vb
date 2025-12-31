@@ -104,6 +104,11 @@ Namespace ImageAndPageNumber
 
 			' Create a font object with Arial font and size 10
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 10.0F), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Create page number and page count fields
 			Dim number As New PdfPageNumberField()

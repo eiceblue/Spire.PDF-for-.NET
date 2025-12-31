@@ -59,6 +59,10 @@ namespace AutomaticField
             // Draw the title for the field list
             PdfBrush brush1 = PdfBrushes.CadetBlue;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
             page.Canvas.DrawString("Automatic Field List", font1, brush1,
                 page.Canvas.ClientSize.Width / 2, y, format1);
@@ -81,6 +85,10 @@ namespace AutomaticField
             };
 
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Italic, true);
+            */
             PdfStringFormat fieldNameFormat = new PdfStringFormat();
             fieldNameFormat.MeasureTrailingSpaces = true;
 

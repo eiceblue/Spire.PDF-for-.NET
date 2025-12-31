@@ -15,7 +15,14 @@ Namespace ImageWatermarkSecond
 			doc.LoadFromFile("../../../../../../Data/PDFTemplate_N.pdf")
 
 			' Create an Image object from the specified image file
-			Dim image As Image = Image.FromFile("../../../../../../Data/E-logo.png")
+			Dim image As Image = image.FromFile("../../../../../../Data/E-logo.png")
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim fs As System.IO.FileStream = System.IO.File.OpenRead(TestUtil.DataPath & "Demo/E-logo.png")
+			'Dim pdfImage As PdfImage = pdfImage.FromStream(fs)
+			' =============================================================================
 
 			' Get the width and height of the image
 			Dim width As Integer = image.Width

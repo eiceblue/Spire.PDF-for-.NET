@@ -38,6 +38,11 @@ namespace CreateMultilayerPDF
 
             // Defines a font to be used for the text
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Calibri", 15f, FontStyle.Regular));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             * PdfTrueTypeFont font = new PdfTrueTypeFont("Calibri", 15f, PdfFontStyle.Regular, true);
+            */
+
 
             // Set the starting position for drawing the text
             float x = 50;

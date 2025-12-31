@@ -31,6 +31,10 @@ namespace CreateStructureTaggedPDF
 
             // Create a true type font with size 14f, underline style
             PdfTrueTypeFont font = new PdfTrueTypeFont(new System.Drawing.Font("Times New Roman", 14), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Times New Roman", 14,PdfFontStyle.Regular,true);
+            */
 
             // Create a brush with black
             PdfSolidBrush brush = new PdfSolidBrush(Color.Black);

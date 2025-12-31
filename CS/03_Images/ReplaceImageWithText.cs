@@ -38,6 +38,12 @@ namespace ReplaceImageWithText
             float widthInPixel = images[0].Image.Width;
             float heightInPixel = images[0].Image.Height;
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*            
+            float widthInPixel = 100;
+            float heightInPixel = 100;
+            */
+
             //Convert unit from Pixel to Point
             PdfUnitConvertor convertor = new PdfUnitConvertor();
             float width = convertor.ConvertFromPixels(widthInPixel, PdfGraphicsUnit.Point);

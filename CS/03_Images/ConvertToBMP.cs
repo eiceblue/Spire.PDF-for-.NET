@@ -31,7 +31,22 @@ namespace ConvertToBMP
                 {
                     image.Save(fileName, ImageFormat.Bmp);
                 }
+
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                using (var image = pdf.SaveAsImage(i))
+                {
+                    string filename = String.Format(outputFile + i + ".bmp");
+                    System.IO.FileStream fileStream = new System.IO.FileStream(fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    
+                    image.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+
+                */
             }
+
+
 
             pdf.Close();
         }

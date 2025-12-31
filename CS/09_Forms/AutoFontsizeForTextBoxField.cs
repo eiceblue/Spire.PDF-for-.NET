@@ -37,6 +37,10 @@ namespace AutoFontsizeForTextBoxField
 
                     // Set the font of the text box field to Arial with a size of 16
                     textBoxField.Font = new PdfTrueTypeFont(new Font("Arial", 16), true);
+                    //////////////////Use the following code for netstandard dlls/////////////////////////
+                    /*
+                     textBoxField.Font = new PdfTrueTypeFont("Arial", 16,PdfFontStyle.Regular,true);
+                    */
 
                     // The "true" value for FontSizeAuto ensures that the font size is automatically adjusted based on the available space
                     textBoxField.FontSizeAuto = true;

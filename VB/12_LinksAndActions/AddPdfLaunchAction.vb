@@ -26,6 +26,12 @@ Namespace AddPdfLaunchAction
 			' Set the font for the text
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 13.0F))
 
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 13.0F, FontStyle.Regular, True)
+			' =============================================================================
+
 			' Set the rectangle for the text
 			Dim rect As New RectangleF(50, 50, 230, 15)
 

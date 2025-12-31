@@ -39,6 +39,12 @@ namespace List
             //Create a font and set style for it
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold), true);
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
+
+
             //Create a PdfStringFormat object to define a string format
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
 

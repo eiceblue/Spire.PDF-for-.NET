@@ -51,6 +51,11 @@ namespace ReplaceFirstSearchedText
             // Defines a font
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 15f, FontStyle.Bold));
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 15f, PdfFontStyle.Bold, true);
+            */
+
             // Gets the bound of the first found text in page
             RectangleF rec = find.Bounds[0];
 

@@ -68,6 +68,11 @@ Namespace AutomaticField
 
 			' Create a PdfTrueTypeFont object with Arial font, size 16, and bold style
 			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+			' =============================================================================
 
 			' Create a PdfStringFormat object for text alignment
 			Dim format1 As New PdfStringFormat(PdfTextAlignment.Center)
@@ -84,6 +89,11 @@ Namespace AutomaticField
 
 			' Create a PdfTrueTypeFont object with Arial font and size 12
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+			' =============================================================================
 
 			' Create a PdfStringFormat object for field name formatting
 			Dim fieldNameFormat As New PdfStringFormat()

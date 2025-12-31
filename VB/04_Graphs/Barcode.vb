@@ -35,6 +35,14 @@ Namespace Barcode
 			' Create brushes and fonts for drawing text and gradients
 			Dim brush1 As PdfBrush = PdfBrushes.Black
 			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Bold), True)
+
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Bold, True)
+			' =============================================================================
+
 			Dim rctg As New RectangleF(New PointF(0, 0), page.Canvas.ClientSize)
 			Dim brush2 As New PdfLinearGradientBrush(rctg, Color.Navy, Color.OrangeRed, PdfLinearGradientMode.Vertical)
 

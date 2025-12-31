@@ -26,6 +26,11 @@ Namespace Attachment
 			' Set brush, font, and format for the title text
 			Dim brush1 As PdfBrush = PdfBrushes.CornflowerBlue
 			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 18.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Arial", 18.0F, FontStyle.Bold, True)
+			' =============================================================================
 			Dim format1 As New PdfStringFormat(PdfTextAlignment.Center)
 
 			' Draw the title text "Attachment" on the page
@@ -52,6 +57,11 @@ Namespace Attachment
 			' Set X position, font, location, and label for the first annotation
 			Dim x As Single = 50
 			Dim font2 As New PdfTrueTypeFont(New Font("Arial", 14.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font2 As New PdfTrueTypeFont("Arial", 14.0F, FontStyle.Bold, True)
+			' =============================================================================
 			Dim location As New PointF(x, y)
 			Dim label As String = "Sales Report Chart"
 			Dim data() As Byte = File.ReadAllBytes("..\..\..\..\..\..\Data\SalesReportChart.png")

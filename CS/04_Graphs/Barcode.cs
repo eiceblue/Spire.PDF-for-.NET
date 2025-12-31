@@ -38,6 +38,13 @@ namespace Barcode
 
             //Create a font and set style for it 
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Bold), true);
+            
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Bold, true);
+            }
+            */
+
 
             PdfTextWidget text = new PdfTextWidget();
             text.Font = font1;

@@ -48,6 +48,10 @@ namespace CustomSignature
         {
             // Create a PdfTrueTypeFont object with Arial font and size 18
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 18f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 18f);
+            */
 
             // Specify the text to be drawn
             string text = "Signature information";

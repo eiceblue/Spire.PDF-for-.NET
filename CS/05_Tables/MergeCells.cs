@@ -56,7 +56,15 @@ namespace MergeCells
 
             // Set font styles for specific rows and cells
             row0.Style.Font = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             row0.Style.Font = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
             row1.Style.Font = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Italic), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             row1.Style.Font = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Italic, true);
+            */
 
             row0.Cells[0].Value = "Corporation";
 
@@ -72,6 +80,10 @@ namespace MergeCells
             // Set value for cell and set style for it
             row0.Cells[4].Value = "World";
             row0.Cells[4].Style.Font = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold | FontStyle.Italic), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             row0.Cells[4].Style.Font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Bold| PdfFontStyle.Italic, true);
+            */
             row0.Cells[4].StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             row0.Cells[4].Style.BackgroundBrush = PdfBrushes.LightGreen;
 

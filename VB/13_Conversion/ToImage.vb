@@ -30,6 +30,18 @@ Namespace ToImage
                     ' Open the saved image using the default associated application
                     Process.Start(fileName)
                 End Using
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Using image = doc.SaveAsImage(i)
+                '    Dim filename As String = String.Format(outputFile & i & ".bmp")
+                '    Using fileStream As New System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write)
+                '        image.CopyTo(fileStream)
+                '        fileStream.Flush()
+                '    End Using
+                'End Using
+                ' =============================================================================
+
             Next i
 
             ' Close the PDF document

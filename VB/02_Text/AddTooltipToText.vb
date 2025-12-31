@@ -24,6 +24,13 @@ Namespace AddTooltipToText
             Dim text1 As String = "Your Office Development Master"
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 18), True)
 
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font1 As New PdfTrueTypeFont("Arial", 18, True)
+            ' =============================================================================
+
+
             ' Measure the size of the text
             Dim sizeF1 As SizeF = font1.MeasureString(text1)
 

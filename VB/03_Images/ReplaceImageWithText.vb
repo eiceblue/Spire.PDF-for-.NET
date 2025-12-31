@@ -28,6 +28,13 @@ Namespace ReplaceImageWithText
             Dim widthInPixel As Single = images(0).Image.Width
             Dim heightInPixel As Single = images(0).Image.Height
 
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim widthInPixel As Single = 100
+            'Dim heightInPixel As Single = 100
+            ' =============================================================================
+
             ' Convert the dimensions from pixels to points
             Dim convertor As New PdfUnitConvertor()
             Dim width As Single = convertor.ConvertFromPixels(widthInPixel, PdfGraphicsUnit.Point)

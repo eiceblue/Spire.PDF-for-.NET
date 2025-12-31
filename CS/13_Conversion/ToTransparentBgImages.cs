@@ -37,8 +37,22 @@ namespace ToTransparentBgImages
             string output = "ToTransparentBackgroundImages_output.png";
             image.Save(output, ImageFormat.Png);
 
-            //Lacunch output
-            PDFDocumentViewer(output);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            using (var image = doc.SaveAsImage(0, PdfImageType.Bitmap))
+            {
+                // SkiaSharp.SKImage image = doc.SaveAsImage(0, Spire.Pdf.Graphics.PdfImageType.Bitmap);
+                FileStream fileStream = new FileStream(outputFile, FileMode.Create, FileAccess.Write);
+                // image.Encode(SkiaSharp.SKEncodedImageFormat.Bmp, 100).SaveTo(fileStream);
+                image.CopyTo(fileStream);
+                fileStream.Flush();
+            }
+            */
+
+        }
+
+        //Lacunch output
+        PDFDocumentViewer(output);
         }
 
         private void PDFDocumentViewer(string fileName)

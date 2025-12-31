@@ -48,6 +48,11 @@ Namespace CustomSignature
         Private Sub DrawGraphics(ByVal g As PdfCanvas)
             ' Create a new PdfTrueTypeFont object using the Arial font with a size of 18 points
             Dim font As New PdfTrueTypeFont(New Font("Arial", 18.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 18.0F, FontStyle.Regular, True)
+            ' =============================================================================
 
             ' Specify the text to be drawn
             Dim text As String = "Signature information"

@@ -76,6 +76,10 @@ namespace Template
 
             // Create an Arial font object with a size of 9f and an italic style
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 9f, FontStyle.Italic));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Italic, true);
+            */
 
             // Create a string format object with centered text alignment and vertically centered alignment
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
@@ -126,6 +130,10 @@ namespace Template
 
             // Draw a header label
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 9f, FontStyle.Italic));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Italic, true);
+            */
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Right);
             String label = "Demo of Spire.Pdf";
             SizeF size = font.MeasureString(label, format);
@@ -194,6 +202,10 @@ namespace Template
 
             // Set the font to Arial, size 16, and bold style
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
 
             // Create a string format for center alignment
             PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center);
@@ -229,6 +241,11 @@ namespace Template
             // Reference content
             // Set the font to Arial, size 9
             PdfTrueTypeFont font3 = new PdfTrueTypeFont(new Font("Arial", 9f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font3 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Regular, true);
+            */
+
 
             // Create a string format with no paragraph indentation
             PdfStringFormat format3 = new PdfStringFormat();
@@ -265,6 +282,10 @@ namespace Template
 
             // Set the font to Arial, size 9, and underlined style
             PdfTrueTypeFont font4 = new PdfTrueTypeFont(new Font("Arial", 9f, FontStyle.Underline));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font4 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Underline, true);
+            */
 
             // Set the brush color to blue
             PdfBrush brush3 = PdfBrushes.Blue;
@@ -291,6 +312,10 @@ namespace Template
 
             // Set the font to Arial, size 10
             PdfTrueTypeFont font5 = new PdfTrueTypeFont(new Font("Arial", 10f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font5 = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
 
             // Set line spacing to 1.5 times the size of the font
             format4.LineSpacing = font5.Size * 1.5f;

@@ -36,6 +36,10 @@ namespace Link
 
             // Set font and label for the first text link.
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 14));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Lucida Sans Unicode", 14, PdfFontStyle.Regular, true);
+            */
             String label = "Simple Text Link: ";
 
             // Draw the label on the page.
@@ -47,6 +51,10 @@ namespace Link
 
             // Set font and URL for the first text link.
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 14, FontStyle.Underline));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont font1 = new PdfTrueTypeFont("Lucida Sans Unicode", 14, PdfFontStyle.Underline, true);
+            */
             String url1 = "http://www.e-iceblue.com";
 
             // Draw the URL on the page.

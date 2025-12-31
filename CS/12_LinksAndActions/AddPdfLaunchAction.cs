@@ -34,6 +34,11 @@ namespace AddPdfLaunchAction
             // Create a PDF Action Annotation with the PDF Launch Action
             string text = "Click here to open file";
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 13f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 13f ,PdfFontStyle.Regular, true);
+            */
+
             RectangleF rect = new RectangleF(50, 50, 230, 15);
             page.Canvas.DrawString(text, font, PdfBrushes.ForestGreen, rect);
             PdfActionAnnotation annotation = new PdfActionAnnotation(rect, launchAction);

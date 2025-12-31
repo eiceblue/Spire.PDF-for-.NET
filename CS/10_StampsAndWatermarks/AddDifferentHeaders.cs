@@ -31,6 +31,10 @@ namespace AddDifferentHeaders
 
             // Define the font style for the headers
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 15f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 15f, PdfFontStyle.Bold, true);
+            */
 
             // Define the brush color for the headers
             PdfBrush brush = PdfBrushes.Red;
@@ -47,6 +51,10 @@ namespace AddDifferentHeaders
 
             // Change the font style and brush color for the second header
             font = new PdfTrueTypeFont(new Font("Aleo", 15f, FontStyle.Regular));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             font = new PdfTrueTypeFont("Aleo", 15f, PdfFontStyle.Regular, true, false);
+            */
             brush = PdfBrushes.Black;
 
             // Change the alignment of the string format to left alignment for the second header

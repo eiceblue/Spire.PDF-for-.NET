@@ -25,6 +25,11 @@ Namespace InlineImageAndPageNumber
 
 			' Create a TrueType font object with Impact font and size 10
 			Dim font As New PdfTrueTypeFont(New Font("Impact", 10.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Impact", 10.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Define the brush for text rendering
 			Dim bursh As PdfBrush = PdfBrushes.DarkGray

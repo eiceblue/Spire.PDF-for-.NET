@@ -31,7 +31,11 @@ namespace ImageAndTextUsingTemplate
 
             //Define font and brush
             PdfTrueTypeFont font=new PdfTrueTypeFont(new Font("Impact",14f,FontStyle.Regular));
-            PdfSolidBrush brush=new PdfSolidBrush(Color.Gray);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Impact", 14f, PdfFontStyle.Regular, true);
+            */
+            PdfSolidBrush brush =new PdfSolidBrush(Color.Gray);
 
             //Load an image
             PdfImage image = PdfImage.FromFile("../../../../../../../Data/E-iceblueLogo.png");

@@ -35,6 +35,12 @@ Namespace AddRepeatingHeader
 			' Create a PdfTrueTypeFont object for the font
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
 
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold,True)
+			' =============================================================================
+
 			' Create a PdfStringFormat object for text alignment
 			Dim format As New PdfStringFormat(PdfTextAlignment.Center)
 
@@ -55,13 +61,29 @@ Namespace AddRepeatingHeader
 			table.Style.ShowHeader = True
 			table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue
 			table.Style.HeaderStyle.Font = New PdfTrueTypeFont(New Font("Arial", 14.0F, FontStyle.Bold))
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'table.Style.HeaderStyle.Font = New PdfTrueTypeFont("Arial", 14.0F, FontStyle.Bold, True)
+			' =============================================================================
 			table.Style.HeaderStyle.StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
 			table.Style.RepeatHeader = True
 			table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue
 			table.Style.DefaultStyle.Font = New PdfTrueTypeFont(New Font("Arial", 10.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'table.Style.DefaultStyle.Font = New PdfTrueTypeFont("Arial", 10.0F)
+			' =============================================================================
 			table.Style.AlternateStyle = New PdfCellStyle()
 			table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow
 			table.Style.AlternateStyle.Font = New PdfTrueTypeFont(New Font("Arial", 10.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'table.Style.AlternateStyle.Font = New PdfTrueTypeFont("Arial", 10.0F)
+			' =============================================================================
 
 			' Set the data source of the table using the 'GetData' function
 			table.DataSource = GetData()
@@ -83,6 +105,11 @@ Namespace AddRepeatingHeader
 			' Create a new PdfBrush object and PdfTrueTypeFont object for additional text
 			Dim brush2 As PdfBrush = PdfBrushes.Gray
 			Dim font2 As New PdfTrueTypeFont(New Font("Arial", 9.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font2 As New PdfTrueTypeFont("Arial", 9.0F)
+			' =============================================================================
 
 			' Draw the additional text indicating the number of countries in the list
 			page.Canvas.DrawString(String.Format("* {0} countries in the list.", table.Rows.Count), font2, brush2, 5, y)

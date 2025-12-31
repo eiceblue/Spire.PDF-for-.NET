@@ -40,6 +40,12 @@ Namespace AddImageInTableCell
 			' Create a new PdfTrueTypeFont object for the header font using Arial with size 14
 			Dim fontHeader As New PdfTrueTypeFont(New Font("Arial", 14.0F))
 
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim fontHeader As New PdfTrueTypeFont("Arial", 14.0F, PdfFontStyle.Regular, True)
+			' =============================================================================
+
 			' Set the font of the header style to the created header font
 			table.Style.HeaderStyle.Font = fontHeader
 
@@ -48,6 +54,12 @@ Namespace AddImageInTableCell
 
 			' Create a new PdfTrueTypeFont object for the body font using Arial with size 12
 			Dim fontBody As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim fontBody As New PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, True)
+			' =============================================================================
 
 			' Set the font of the alternate style (body) to the created body font
 			table.Style.AlternateStyle.Font = fontBody

@@ -19,6 +19,11 @@ Namespace ReplaceFont
 
 			' Create a new font
 			Dim newfont As New PdfTrueTypeFont(New Font("Arial", 13.0F), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim newfont As New PdfTrueTypeFont("Arial", 13.0F, True)
+			' =============================================================================
 
 			For Each font As PdfUsedFont In fonts
 				' Replace the font with the new font

@@ -42,6 +42,11 @@ Namespace ReplaceFirstSearchedText
 
             ' Define a font for the new text
             Dim font As New PdfTrueTypeFont(New Font("Arial", 15.0F, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font As New PdfTrueTypeFont("Arial", 18,FontStyle.Bold, True)
+            ' =============================================================================
 
             ' Get the bounding rectangle of the first found text
             Dim rec As RectangleF = find.Bounds(0)

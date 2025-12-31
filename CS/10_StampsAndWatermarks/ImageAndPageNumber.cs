@@ -97,6 +97,10 @@ namespace ImageAndPageNumber
 
             // Define the font for the text
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 10f), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
 
             // Create a dynamic field for the page number
             PdfPageNumberField number = new PdfPageNumberField();

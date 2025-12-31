@@ -28,6 +28,11 @@ namespace InsertPageBreak
             //Title
             PdfBrush brush1 = PdfBrushes.Black;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
             page.Canvas.DrawString("Country List", font1, brush1, page.Canvas.ClientSize.Width / 2, y, format1);
             y = y + font1.MeasureString("Country List", format1).Height;
@@ -43,6 +48,10 @@ namespace InsertPageBreak
             table.Style.ShowHeader = true;
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
             table.Style.HeaderStyle.Font = new PdfTrueTypeFont(new Font("Arial", 14f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             table.Style.HeaderStyle.Font = new PdfTrueTypeFont("Arial", 14f, PdfFontStyle.Bold, true);
+            */
             table.Style.HeaderStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
             //Repeat header
@@ -51,12 +60,20 @@ namespace InsertPageBreak
             //Set default style for cell
             table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue;
             table.Style.DefaultStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              table.Style.DefaultStyle.Font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
             table.Style.DefaultStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
             //Set the cell style for odd row
             table.Style.AlternateStyle = new PdfCellStyle();
             table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow;
             table.Style.AlternateStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              table.Style.AlternateStyle.Font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
             table.Style.AlternateStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
             //Set data source for table

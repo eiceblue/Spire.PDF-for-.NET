@@ -93,6 +93,12 @@ namespace ChangeBorderColor
 
             grid.Rows[0].Style.Font = new PdfTrueTypeFont(new Font("Arial", 8f, FontStyle.Bold), true);
 
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             grid.Rows[0].Style.Font = new PdfTrueTypeFont("Arial", 8f, PdfFontStyle.Bold, true);
+            */
+
             //Set color of border
             PdfBorders border = new PdfBorders();
             border.All = new PdfPen(Color.LightBlue);

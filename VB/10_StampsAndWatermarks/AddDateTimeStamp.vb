@@ -22,6 +22,11 @@ Namespace AddDateTimeStamp
 
 			' Create a new PdfTrueTypeFont object with Arial font, size 12, and regular style
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Regular), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Create a new PdfSolidBrush object with blue color
 			Dim brush As New PdfSolidBrush(Color.Blue)

@@ -31,6 +31,26 @@ Namespace PageToEMF
 				image.Save(fileName, ImageFormat.Emf)
 			End Using
 
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Using image = pdf.SaveAsImage(pageIndex, PdfImageType.Bitmap)
+			'	Using fileStream As New System.IO.FileStream(outputFile & fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write)
+			'		image.CopyTo(fileStream)
+			'		fileStream.Flush()
+			'	End Using
+			'End Using
+			' =============================================================================
+
+
+			' =============================================================================
+			' Use the following code for NET Core dlls
+			' =============================================================================
+			'Using image As Image = pdf.SaveAsImage(pageIndex, PdfImageType.Bitmap, 300, 300)
+			'	image.Save(fileName, ImageFormat.Emf)
+			'End Using
+			' =============================================================================
+
 			' Close the PdfDocument
 			pdf.Close()
 		End Sub

@@ -47,6 +47,21 @@ namespace RemoveBlankPages
                         // If the image is blank, remove the corresponding PDF page.
                         document.Pages.RemoveAt(i);
                     }
+
+                    //////////////////Use the following code for netstandard dlls/////////////////////////
+                    /*
+                    var image = document.SaveAsImage(i, Spire.Pdf.Graphics.PdfImageType.Bitmap);
+                    image.Position = 0;
+                    byte[] bytes = new byte[image.Length];
+                    image.Read(bytes, 0, bytes.Length);
+                    var bmp = SkiaSharp.SKBitmap.Decode(bytes);
+                    var resized = bmp.Resize(new SkiaSharp.SKImageInfo(1, 1), SkiaSharp.SKSamplingOptions.Default);
+                    var pixel = resized.GetPixel(0, 0);
+                    if (pixel == null || (pixel.Red > 240 && pixel.Green > 240 && pixel.Blue > 240))
+                    {
+                        document.Pages.RemoveAt(i);
+                    }
+                    */
                 }
             }
 

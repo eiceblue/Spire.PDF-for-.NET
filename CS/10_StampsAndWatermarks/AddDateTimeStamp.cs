@@ -32,6 +32,11 @@ namespace AddDateTimeStamp
 
             // Set the font and brush for the text
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Regular), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
+
             PdfSolidBrush brush = new PdfSolidBrush(Color.Blue);
 
             // Generate a string representing the current date and time

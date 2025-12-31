@@ -19,6 +19,11 @@ Namespace ImageWatermarkFirst
 
             ' Create a new Image object from the specified image file path
             Dim img As Image = Image.FromFile("..\..\..\..\..\..\Data\Background.png")
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim img As System.IO.FileStream = System.IO.File.Open(TestUtil.DataPath & "Demo/Background.png", System.IO.FileMode.Open)
+            ' =============================================================================
 
             ' Set the background image of the page to the loaded image
             page.BackgroundImage = img

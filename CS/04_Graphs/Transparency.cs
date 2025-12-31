@@ -40,6 +40,11 @@ namespace Transparency
                 PdfBrush brush = new PdfSolidBrush(Color.OrangeRed);
                 PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
 
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+                */
+
                 // Create PdfStringFormat object to define a string format
                 PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center);
                 String text = String.Format("Transparency Blend Mode: {0}", mode);

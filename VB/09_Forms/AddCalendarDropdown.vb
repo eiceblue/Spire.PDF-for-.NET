@@ -20,6 +20,11 @@ Namespace AddCalendarDropdown
 
 			' Create a TrueType font for the text field
 			Dim font As New PdfTrueTypeFont(New Font("Arial Unicode MS", 10.0F), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial Unicode MS", 10.0F, PdfFontStyle.Regular, True)
+			' =============================================================================
 
 			' Create a new text box field on the page named "date"
 			Dim textbox As New PdfTextBoxField(page, "date")

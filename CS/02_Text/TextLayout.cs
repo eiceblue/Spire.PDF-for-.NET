@@ -30,6 +30,12 @@ namespace TextLayout
             PdfBrush brush1 = new PdfSolidBrush(Color.LightGray);
 
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 8f, FontStyle.Italic));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font1 = new PdfTrueTypeFont(new System.Drawing.Font("Arial", 8f, FontStyle.Italic));
+            */
+
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Right);
             String text = "Demo of Spire.Pdf";
 
@@ -47,6 +53,13 @@ namespace TextLayout
             y = y + 25;
             PdfBrush brush2 = new PdfSolidBrush(Color.Black);
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 18f, FontStyle.Bold));
+            PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 8f, FontStyle.Italic));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 18f, PdfFontStyle.Bold, true);
+            */
+
             PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center);
             format2.CharacterSpacing = 1f;
             text = "Summary of Science";
@@ -63,6 +76,10 @@ namespace TextLayout
             //Refenrence content
             //Define the font style
             PdfTrueTypeFont font3 = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font3 = new PdfTrueTypeFont("Arial", 18f, PdfFontStyle.Regular, true);
+            */
 
             //Define string format
             PdfStringFormat format3 = new PdfStringFormat();
@@ -81,6 +98,13 @@ namespace TextLayout
             float x1 = size.Width;
             format3.ParagraphIndent = 0;
             PdfTrueTypeFont font4 = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Underline));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+               PdfTrueTypeFont font4 = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Underline, true);
+            */
+
+
             PdfBrush brush3 = PdfBrushes.Blue;
             page.Canvas.DrawString(text2, font4, brush3, x1, y, format3);
 
@@ -99,6 +123,12 @@ namespace TextLayout
 
             //Define the font style
             PdfTrueTypeFont font5 = new PdfTrueTypeFont(new Font("Arial", 12f));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+               PdfTrueTypeFont font5 = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
+
             format4.LineSpacing = font5.Size * 1.5f;
 
             PdfStringLayouter textLayouter = new PdfStringLayouter();

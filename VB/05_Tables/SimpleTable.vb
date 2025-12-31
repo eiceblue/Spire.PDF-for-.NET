@@ -24,6 +24,11 @@ Namespace SimpleTable
 			' Set the brush and font for the title "Country List"
 			Dim brush1 As PdfBrush = PdfBrushes.Black
 			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+			' =============================================================================
 			Dim format1 As New PdfStringFormat(PdfTextAlignment.Center)
 
 			' Draw the title "Country List" at the center of the page with specified font and formatting
@@ -67,6 +72,11 @@ Namespace SimpleTable
 			' Set the brush and font for the footnote
 			Dim brush2 As PdfBrush = PdfBrushes.Gray
 			Dim font2 As New PdfTrueTypeFont(New Font("Arial", 9.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font2 As New PdfTrueTypeFont("Arial", 9.0F)
+			' =============================================================================
 
 			' Draw the footnote indicating the number of countries in the list
 			page.Canvas.DrawString(String.Format("* {0} countries in the list.", data.Length - 1), font2, brush2, 65, y)

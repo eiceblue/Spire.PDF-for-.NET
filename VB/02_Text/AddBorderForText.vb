@@ -24,6 +24,13 @@ Namespace AddBorderForText
 			' Define the font for the text
 			Dim font As New PdfTrueTypeFont(New Font("Times New Roman", 11, FontStyle.Regular), True)
 
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim font As New PdfTrueTypeFont("Times New Roman", 11, FontStyle.Regular, True)
+			' =============================================================================
+
 			' Measure the size of the text
 			Dim size As SizeF = font.MeasureString(text)
 

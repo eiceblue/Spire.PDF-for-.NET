@@ -56,6 +56,12 @@ Namespace ChangeBorderColor
             ' Set the font for the first row of the grid
             grid.Rows(0).Style.Font = New PdfTrueTypeFont(New Font("Arial", 8.0F, FontStyle.Bold), True)
 
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'grid.Rows(0).Style.Font = New PdfTrueTypeFont("Arial", 8.0F, FontStyle.Bold, True)
+            ' =============================================================================
+
             ' Create a new border with a light blue color
             Dim border As New PdfBorders()
             border.All = New PdfPen(Color.LightBlue)

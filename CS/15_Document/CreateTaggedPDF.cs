@@ -39,6 +39,10 @@ namespace CreateTaggedPDF
 
             // Set the font and brush for text rendering
             PdfTrueTypeFont font = new PdfTrueTypeFont(new System.Drawing.Font("Times New Roman", 10), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Times New Roman", 10,PdfFontStyle.Regular,true);
+            */
             PdfSolidBrush brush = new PdfSolidBrush(Color.Black);
 
             // Append structure elements to the document's structure tree

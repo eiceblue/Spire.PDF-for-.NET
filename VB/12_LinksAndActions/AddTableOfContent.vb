@@ -32,6 +32,11 @@ Namespace AddTableOfContent
 
             ' Set the font and alignment for the title
             Dim titleFont As New PdfTrueTypeFont(New Font("Arial", 20, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim titleFont As New PdfTrueTypeFont("Arial", 20.0F, FontStyle.Bold, True)
+            ' =============================================================================
             Dim centerAlignment As New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
 
             ' Calculate the location to draw the title on the TOC page
@@ -42,6 +47,11 @@ Namespace AddTableOfContent
 
             ' Set the font for the titles in the TOC
             Dim titlesFont As New PdfTrueTypeFont(New Font("Arial", 14))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim titlesFont As New PdfTrueTypeFont("Arial", 14.0F, FontStyle.Regular, True)
+            ' =============================================================================
 
             ' Create an array to store the titles of each page
             Dim titles(pageCount - 1) As String

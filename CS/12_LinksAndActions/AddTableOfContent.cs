@@ -39,12 +39,21 @@ namespace AddTableOfContent
             // Set the title for the table of contents.
             string title = "Table Of Contents";
             PdfTrueTypeFont titleFont = new PdfTrueTypeFont(new Font("Arial", 20, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont titleFont = new PdfTrueTypeFont("Arial", 20, PdfFontStyle.Bold, true);
+            */
+
             PdfStringFormat centerAlignment = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             PointF location = new PointF(tocPage.Canvas.ClientSize.Width / 2, titleFont.MeasureString(title).Height);
             tocPage.Canvas.DrawString(title, titleFont, PdfBrushes.CornflowerBlue, location, centerAlignment);
 
             // Draw the table of contents entries.
             PdfTrueTypeFont titlesFont = new PdfTrueTypeFont(new Font("Arial", 14));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont titlesFont = new PdfTrueTypeFont("Arial", 14, PdfFontStyle.Regular, true);
+            */
             String[] titles = new String[pageCount];
             for (int i = 0; i < titles.Length; i++)
             {

@@ -48,6 +48,11 @@ namespace SearchWithRegularExpression
             // Defines a font
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 7f, FontStyle.Bold));
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 7f, PdfFontStyle.Bold, true);
+            */
+
             // Defines text horizontal/vertical center format
             PdfStringFormat centerAlign = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 

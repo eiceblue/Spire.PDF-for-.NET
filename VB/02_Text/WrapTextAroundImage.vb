@@ -28,6 +28,11 @@ Namespace WrapTextAroundImage
 
             ' Create a font for text
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 20.0F, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            '  Dim font1 As New PdfTrueTypeFont("Arial", 20.0F, FontStyle.Bold, True)
+            ' =============================================================================
 
             ' Create a string format for text alignment
             Dim format1 As New PdfStringFormat(PdfTextAlignment.Center)
@@ -63,6 +68,12 @@ Namespace WrapTextAroundImage
 
             ' Create a font for the content text
             Dim font2 As New PdfTrueTypeFont(New Font("Arial", 16.0F))
+
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            '   Dim font2 As New PdfTrueTypeFont("Arial", 16.0F)
+            ' =============================================================================
 
             ' Set the line spacing for the content text
             format2.LineSpacing = font2.Size * 1.5F

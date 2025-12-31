@@ -1,4 +1,5 @@
 Imports System.Drawing.Imaging
+Imports System.Net.Mime.MediaTypeNames
 Imports Spire.Pdf
 Imports Spire.Pdf.Graphics
 
@@ -27,6 +28,26 @@ Namespace ConvertAllPagesToEMF
                 Using image As Image = pdf.SaveAsImage(i, PdfImageType.Metafile, 300, 300)
                     image.Save(fileName, ImageFormat.Emf)
                 End Using
+
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Using image = pdf.SaveAsImage(i, PdfImageType.Bitmap)
+                '    Using fileStream As New System.IO.FileStream(fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write)
+                '        image.CopyTo(fileStream)
+                '        fileStream.Flush()
+                '    End Using
+                'End Using
+                ' =============================================================================
+
+
+                ' =============================================================================
+                ' Use the following code for NET Core dlls
+                ' =============================================================================
+                'Using image As Image = pdf.SaveAsImage(i, PdfImageType.Bitmap, 300, 300)
+                '    image.Save(fileName, ImageFormat.Emf)
+                'End Using
+                ' =============================================================================
             Next i
 
             ' Close the document

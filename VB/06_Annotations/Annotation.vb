@@ -37,6 +37,11 @@ Namespace Annotation
             ' Set up brushes, fonts, and string format for drawing text
             Dim brush1 As PdfBrush = PdfBrushes.Black
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 13.0F, FontStyle.Bold Or FontStyle.Italic), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font1 As New PdfTrueTypeFont("Arial", 13.0F, FontStyle.Bold Or FontStyle.Italic, True)
+            ' =============================================================================
             Dim format1 As New PdfStringFormat(PdfTextAlignment.Left)
 
             ' Set the initial y-coordinate position for drawing text
@@ -86,6 +91,11 @@ Namespace Annotation
         Private Function AddDocumentLinkAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new PdfTrueTypeFont object with Arial font and size 12
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new PdfStringFormat object
             Dim format As New PdfStringFormat()
@@ -140,6 +150,11 @@ Namespace Annotation
         Private Function AddFileLinkAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new PdfTrueTypeFont object with Arial font and size 12
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new PdfStringFormat object
             Dim format As New PdfStringFormat()
@@ -188,6 +203,11 @@ Namespace Annotation
         Private Function AddFreeTextAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new PdfTrueTypeFont object with Arial font and size 12
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new PdfStringFormat object
             Dim format As New PdfStringFormat()
@@ -277,6 +297,11 @@ Namespace Annotation
         Private Function AddLineAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new TrueType font object with Arial font and font size 12
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new string format object
             Dim format As New PdfStringFormat()
@@ -340,6 +365,11 @@ Namespace Annotation
         Private Function AddTextMarkupAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new TrueType font with Arial, size 12
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new string format
             Dim format As New PdfStringFormat()
@@ -399,6 +429,11 @@ Namespace Annotation
         Private Function AddPopupAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new TrueType font object with Arial font and font size 12
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new string format object
             Dim format As New PdfStringFormat()
@@ -458,6 +493,11 @@ Namespace Annotation
         Private Function AddRubberStampAnnotation(ByVal page As PdfPageBase, ByVal y As Single) As Single
             ' Create a new TrueType font using Arial with a size of 12 points
             Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Create a new string format object
             Dim format As New PdfStringFormat()

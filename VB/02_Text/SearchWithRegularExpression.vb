@@ -39,6 +39,12 @@ Namespace SearchWithRegularExpression
 			' Specify the font for the new text
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 7.0F, FontStyle.Bold))
 
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim font As New PdfTrueTypeFont("Arial", 7.0F, FontStyle.Bold, true)
+			' =============================================================================
+
 			' Specify the string format for center alignment
 			Dim centerAlign As New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
 

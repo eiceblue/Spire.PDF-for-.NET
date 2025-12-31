@@ -43,6 +43,12 @@ Namespace Transparency
                 ' Create a font for the text
                 Dim font As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
 
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Dim font As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+                ' =============================================================================
+
                 ' Create a string format for center alignment
                 Dim format As New PdfStringFormat(PdfTextAlignment.Center)
 

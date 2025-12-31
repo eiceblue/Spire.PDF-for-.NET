@@ -48,6 +48,11 @@ namespace ReplaceAllSearchedText
             // Defines a font
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Regular));
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
+
             RectangleF rec;
 
             // Iterate through each found text fragment

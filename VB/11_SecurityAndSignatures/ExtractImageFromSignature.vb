@@ -22,6 +22,11 @@ Namespace ExtractImageFromSignature
 
 			' Extract images from signatures in the existing form
 			Dim images() As Image = form.ExtractSignatureAsImages()
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim images() As System.IO.Stream = form.ExtractSignatureAsImages()
+			' =============================================================================
 
 			' Save the images to disk
 			Dim i As Integer = 0

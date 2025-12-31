@@ -119,6 +119,11 @@ Namespace Transition
             ' Create a brush and font for drawing text
             Dim brush2 As PdfBrush = New PdfSolidBrush(Color.Black)
             Dim font2 As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font2 As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+            ' =============================================================================
 
             ' Create a string format for center-aligned text
             Dim format2 As New PdfStringFormat(PdfTextAlignment.Center)
@@ -148,6 +153,11 @@ Namespace Transition
 
             ' Create a new font and string format for additional text
             Dim font3 As New PdfTrueTypeFont(New Font("Arial", 9.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font3 As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Regular, True)
+            ' =============================================================================
             Dim format3 As New PdfStringFormat()
             format3.ParagraphIndent = font3.Size * 2
             format3.MeasureTrailingSpaces = True
@@ -168,6 +178,11 @@ Namespace Transition
 
             ' Create a new font and brush for underlined text
             Dim font4 As New PdfTrueTypeFont(New Font("Arial", 9.0F, FontStyle.Underline))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font4 As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Underline, True)
+            ' =============================================================================
             Dim brush3 As PdfBrush = PdfBrushes.Blue
 
             ' Draw the underlined text on the page
@@ -191,6 +206,11 @@ Namespace Transition
 
             ' Create a new font for the main text content
             Dim font5 As New PdfTrueTypeFont(New Font("Arial", 10.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font5 As New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Regular, True)
+            ' =============================================================================
 
             ' Set the line spacing for the main text content
             format4.LineSpacing = font5.Size * 1.5F

@@ -30,7 +30,13 @@ namespace AddTooltipToText
             //Define the text and its style
             String text1 = "Your Office Development Master";
             PdfTrueTypeFont font1 =new PdfTrueTypeFont(new Font("Arial",18),true);
-            SizeF sizeF1= font1.MeasureString(text1);
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 18, PdfFontStyle.Regular, true);
+            */
+
+            SizeF sizeF1 = font1.MeasureString(text1);
             RectangleF rec1 = new RectangleF(new Point(100,100), sizeF1);
 
             //Draw text 

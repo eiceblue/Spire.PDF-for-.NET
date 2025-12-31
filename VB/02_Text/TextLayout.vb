@@ -28,6 +28,12 @@ Namespace TextLayout
             ' Create a font for text
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 8.0F, FontStyle.Italic))
 
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font1 As New PdfTrueTypeFont("Arial", 8.0F, FontStyle.Italic, True)
+            ' =============================================================================
+
             ' Create a string format for text alignment
             Dim format1 As New PdfStringFormat(PdfTextAlignment.Right)
 
@@ -52,6 +58,13 @@ Namespace TextLayout
             ' Create a brush and font for the header
             Dim brush2 As PdfBrush = New PdfSolidBrush(Color.Black)
             Dim font2 As New PdfTrueTypeFont(New Font("Arial", 18.0F, FontStyle.Bold))
+
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font2 As New PdfTrueTypeFont("Arial", 18.0F, FontStyle.Bold, True)
+            ' =============================================================================
+
 
             ' Create a string format for center alignment
             Dim format2 As New PdfStringFormat(PdfTextAlignment.Center)
@@ -83,6 +96,12 @@ Namespace TextLayout
 
             ' Create a font and string format for the content
             Dim font3 As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font3 As New PdfTrueTypeFont("Arial", 18.0F)
+            ' =============================================================================
             Dim format3 As New PdfStringFormat()
 
             ' Set paragraph indentation, trailing spaces, and line spacing
@@ -113,6 +132,11 @@ Namespace TextLayout
 
             ' Create a font and brush for underlined text
             Dim font4 As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Underline))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font4 As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Underline, True)
+            ' =============================================================================
             Dim brush3 As PdfBrush = PdfBrushes.Blue
 
             ' Draw the second part of the content text
@@ -138,6 +162,12 @@ Namespace TextLayout
 
             ' Create a font for the content text
             Dim font5 As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font5 As New PdfTrueTypeFont("Arial", 12.0F)
+            ' =============================================================================
 
             ' Set the line spacing for the content text
             format4.LineSpacing = font5.Size * 1.5F

@@ -33,6 +33,10 @@ namespace Attachment
             // Add a title to the page
             PdfBrush brush1 = PdfBrushes.CornflowerBlue;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 18f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 18f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
             page.Canvas.DrawString("Attachment", font1, brush1, page.Canvas.ClientSize.Width / 2, y, format1);
 
@@ -57,6 +61,10 @@ namespace Attachment
             // Set the initial x-coordinate and font for the labels
             float x = 50;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 14f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 14f, PdfFontStyle.Bold, true);
+            */
 
             // Add a label and annotation for the Sales Report Chart attachment
             PointF location = new PointF(x, y);

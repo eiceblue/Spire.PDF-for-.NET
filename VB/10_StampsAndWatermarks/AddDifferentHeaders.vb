@@ -23,12 +23,18 @@ Namespace AddDifferentHeaders
 
 			' Define the font for the headers
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 15.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 15.0F, FontStyle.Bold, True)
+			' =============================================================================
 
 			' Define the brush (color) for the headers
 			Dim brush As PdfBrush = PdfBrushes.Red
 
 			' Define the rectangle to position the header on the page
 			Dim rect As New RectangleF(New PointF(0, 20), New SizeF(doc.PageSettings.Size.Width, 50.0F))
+
 
 			' Define the string format for the headers (alignment)
 			Dim format As New PdfStringFormat()
@@ -41,6 +47,11 @@ Namespace AddDifferentHeaders
 
 			' Change the font and brush for the second header
 			font = New PdfTrueTypeFont(New Font("Aleo", 15.0F, FontStyle.Regular))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Aleo", 15.0F, FontStyle.Regular, True)
+			' =============================================================================
 			brush = PdfBrushes.Black
 
 			' Change the alignment of the text to be left-aligned

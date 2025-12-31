@@ -26,6 +26,19 @@ Namespace ConvertAllPagesToPNG
                 Using image As Image = pdf.SaveAsImage(i, 300, 300)
                     image.Save(fileName, ImageFormat.Png)
                 End Using
+
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Using image = pdf.SaveAsImage(i, PdfImageType.Bitmap)
+                '    Dim filename As String = String.Format(outputFile & i & ".bmp")
+                '    Using fileStream As New System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write)
+                '        image.CopyTo(fileStream)
+                '        fileStream.Flush()
+                '    End Using
+                'End Using
+                ' =============================================================================
+
             Next i
 
             ' Close the PDF document

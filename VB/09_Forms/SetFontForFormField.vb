@@ -24,6 +24,11 @@ Namespace SetFontForFormField
 
             ' Set the font for the textbox
             textbox.Font = New PdfTrueTypeFont(New Font("Tahoma", 12), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'textbox.Font = New PdfTrueTypeFont("Tahoma", 12, PdfFontStyle.Regular, True)
+            ' =============================================================================
 
             ' Set the text value for the textbox
             textbox.Text = "Hello World"

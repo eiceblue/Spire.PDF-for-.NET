@@ -37,6 +37,12 @@ namespace AddRepeatingHeader
             // Draw Title text
             PdfBrush brush = PdfBrushes.Black;
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
+
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center);
             page.Canvas.DrawString("Country List", font, brush, page.Canvas.ClientSize.Width / 2, y, format);
 
@@ -54,6 +60,12 @@ namespace AddRepeatingHeader
             table.Style.ShowHeader = true;
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
             table.Style.HeaderStyle.Font = new PdfTrueTypeFont(new Font("Arial", 14f, FontStyle.Bold));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             table.Style.HeaderStyle.Font = new PdfTrueTypeFont("Arial", 14f, PdfFontStyle.Bold, true);
+            */
+
             table.Style.HeaderStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
 
             //Repeat header
@@ -62,11 +74,21 @@ namespace AddRepeatingHeader
             //Set default style for cell
             table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue;
             table.Style.DefaultStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             table.Style.DefaultStyle.Font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
+
 
             //Set the odd row cell style
             table.Style.AlternateStyle = new PdfCellStyle();
             table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow;
             table.Style.AlternateStyle.Font = new PdfTrueTypeFont(new Font("Arial", 10f));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             table.Style.AlternateStyle.Font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Regular, true);
+            */
 
             // Set data source for table
             table.DataSource = GetData();
@@ -86,6 +108,12 @@ namespace AddRepeatingHeader
             y = y + result.Bounds.Height + 5;
             PdfBrush brush2 = PdfBrushes.Gray;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 9f));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Regular, true);
+            */
+
             page.Canvas.DrawString(String.Format("* {0} countries in the list.", table.Rows.Count), font2, brush2, 5, y);
 
             //Save the document

@@ -44,6 +44,22 @@ Namespace Extraction
 					images.Add(info.Image)
 				Next info
 			Next page
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim images As IList(Of Stream) = New List(Of Stream)()
+			'For Each page As PdfPageBase In doc.Pages
+			'	Dim textExtractor As New PdfTextExtractor(page)
+			'	Dim option As New PdfTextExtractOptions()
+			'	buffer.Append(textExtractor.ExtractText(option))
+			'	' foreach (SkiaSharp.SKImage image in page.ExtractImages())
+			'	Dim imageHelper As New PdfImageHelper()
+			'	For Each imageInfo As PdfImageInfo In imageHelper.GetImagesInfo(page)
+			'		images.Add(imageInfo.Image)
+			'	Next
+			'Next
+			' =============================================================================
+
 
 			' Close the PDF document
 			doc.Close()
@@ -59,6 +75,19 @@ Namespace Extraction
 				index += 1
 				image.Save(imageFileName, ImageFormat.Png)
 			Next image
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'For Each image As Stream In images
+			'	Dim imageFileName As String = String.Format(outputFile_I & "Image-{0}.png", index)
+			'	Using fileStream As New FileStream(imageFileName, FileMode.Create, FileAccess.Write)
+			'		image.CopyTo(fileStream)
+			'		fileStream.Flush()
+			'	End Using
+			'	index += 1
+			'Next
+			' =============================================================================
 
 			' Launch the Pdf file
 			PDFDocumentViewer(fileName)

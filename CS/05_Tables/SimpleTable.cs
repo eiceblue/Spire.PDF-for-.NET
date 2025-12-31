@@ -28,6 +28,10 @@ namespace SimpleTable
             // Add title to the page
             PdfBrush brush1 = PdfBrushes.Black;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
             page.Canvas.DrawString("Country List", font1, brush1, page.Canvas.ClientSize.Width / 2, y, format1);
             y = y + font1.MeasureString("Country List", format1).Height;
@@ -80,6 +84,10 @@ namespace SimpleTable
             // Add a note about the number of countries in the list
             PdfBrush brush2 = PdfBrushes.Gray;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 9f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Regular, true);
+            */
             page.Canvas.DrawString(String.Format("* {0} countries in the list.", data.Length - 1), font2, brush2, 65, y);
 
             //Save the document

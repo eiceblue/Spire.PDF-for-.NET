@@ -37,6 +37,10 @@ namespace ExtractImageFromSignature
             // Extract images from the signatures in the existing form
             // The extracted images will be stored in an array
             Image[] images = form.ExtractSignatureAsImages();
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             System.IO.Stream[] images = form.ExtractSignatureAsImages();
+            */
 
             // Save the extracted images to disk
             int i = 0;

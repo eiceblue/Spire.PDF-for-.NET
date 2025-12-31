@@ -42,6 +42,11 @@ Namespace RotateNewPDF
 
 			' Define a font for text
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 13.0F, FontStyle.Bold), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 13.0F, FontStyle.Bold, True)
+			' =============================================================================
 
 			' Set the string format for text
 			Dim format As New PdfStringFormat(PdfTextAlignment.Left)

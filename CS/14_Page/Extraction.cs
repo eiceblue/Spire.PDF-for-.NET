@@ -52,6 +52,24 @@ namespace Extraction
                 }
             }
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            IList<Stream> images = new List<Stream>();
+            foreach (PdfPageBase page in doc.Pages)
+            {
+                  PdfTextExtractor textExtractor = new PdfTextExtractor(page);
+                PdfTextExtractOptions option = new PdfTextExtractOptions();
+                buffer.Append(textExtractor.ExtractText(option));
+                // foreach (SkiaSharp.SKImage image in page.ExtractImages())
+                PdfImageHelper imageHelper = new PdfImageHelper();
+                foreach (PdfImageInfo imageInfo in imageHelper.GetImagesInfo(page))
+                {
+                    images.Add(imageInfo.Image);
+                }
+            }
+            */
+
+
             // Close the PDF document.
             doc.Close();
 
@@ -66,6 +84,18 @@ namespace Extraction
                 String imageFileName = String.Format("Image-{0}.png", index++);
                 image.Save(imageFileName, ImageFormat.Png);
             }
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            foreach (Stream image in images)
+            {
+                String imageFileName
+                    = String.Format(outputFile_I + "Image-{0}.png", index++);
+                FileStream fileStream = new FileStream(imageFileName, FileMode.Create, FileAccess.Write);
+                image.CopyTo(fileStream);
+                fileStream.Flush();
+
+            */
+
 
             //launch the Pdf file.
             PDFDocumentViewer(fileName);

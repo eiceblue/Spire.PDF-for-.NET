@@ -41,6 +41,11 @@ Namespace Link
 
 			' Create a PdfTrueTypeFont object with specified font name and size
 			Dim font As New PdfTrueTypeFont(New Font("Lucida Sans Unicode", 14))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Lucida Sans Unicode", 14.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Define a label for simple text link
 			Dim label As String = "Simple Text Link: "
@@ -59,6 +64,11 @@ Namespace Link
 
 			' Create a new PdfTrueTypeFont object for underlined text
 			Dim font1 As New PdfTrueTypeFont(New Font("Lucida Sans Unicode", 14, FontStyle.Underline))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Lucida Sans Unicode", 14.0F, FontStyl.Underline, True)
+			' =============================================================================
 
 			' Define a URL for the web link
 			Dim url1 As String = "http://www.e-iceblue.com"

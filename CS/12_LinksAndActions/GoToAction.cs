@@ -57,6 +57,10 @@ namespace GoToAction
 
             // Define the font and dimensions of the text box.
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 13f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 13f, PdfFontStyle.Regular, true);
+            */
             float width = 490f;
             float height = font.Height * 2.2f;
             RectangleF rect = new RectangleF(0, 100, width, height);
@@ -97,6 +101,10 @@ namespace GoToAction
 
             // Define the font, dimensions, and formatting for a button.
             PdfTrueTypeFont buttonFont = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont buttonFont = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Bold, true);
+            */
             float buttonWidth = 70;
             float buttonHeight = buttonFont.Height * 1.5f;
             PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);

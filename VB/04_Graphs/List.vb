@@ -32,6 +32,12 @@ Namespace List
             Dim brush1 As PdfBrush = PdfBrushes.Black
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold), True)
 
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font1 As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+            ' =============================================================================
+
             ' Set formatting options for the title text
             Dim format1 As New PdfStringFormat(PdfTextAlignment.Center)
 

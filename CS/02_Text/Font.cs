@@ -47,6 +47,19 @@ namespace Font
                 page.Canvas.DrawString(text, font2, brush, x2, y);
             }
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont trueTypeFont = new PdfTrueTypeFont("Arial", 15f, PdfFontStyle.Bold, true);
+            page.Canvas.DrawString("Font Family: Arial - Embedded", trueTypeFont, brush, 40, (y = y + 26f));
+            String arabicText
+                = "\u0627\u0644\u0630\u0647\u0627\u0628\u0021\u0020"
+                + "\u0628\u062F\u0648\u0631\u0647\u0020\u062D\u0648\u0644\u0647\u0627\u0021\u0020"
+                + "\u0627\u0644\u0630\u0647\u0627\u0628\u0021\u0020"
+                + "\u0627\u0644\u0630\u0647\u0627\u0628\u0021\u0020"
+                + "\u0627\u0644\u0630\u0647\u0627\u0628\u0021";
+
+            */
+
             //True type font - embedded
             System.Drawing.Font font = new System.Drawing.Font("Arial", 15f, FontStyle.Bold);
             PdfTrueTypeFont trueTypeFont = new PdfTrueTypeFont(font);
@@ -68,6 +81,11 @@ namespace Font
 
             //Draw text
             page.Canvas.DrawString(arabicText, trueTypeFont, brush, rctg, format);
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            trueTypeFont = new PdfTrueTypeFont("Batang", 14f, PdfFontStyle.Italic, true);
+            */
 
             //True type font - not embedded
             font = new System.Drawing.Font("Batang", 14f, FontStyle.Italic);

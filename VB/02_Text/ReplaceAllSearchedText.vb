@@ -37,6 +37,11 @@ Namespace ReplaceAllSearchedText
 
 			' Define a font for the new text
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Regular))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim font As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Define a rectangle to cover the found text
 			Dim rec As RectangleF

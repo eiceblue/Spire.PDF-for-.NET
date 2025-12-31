@@ -25,6 +25,12 @@ namespace ImageWatermarkSecond
             // Load an image from a file.
             Image image = Image.FromFile("../../../../../../Data/E-logo.png");
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             System.IO.FileStream fs = System.IO.File.OpenRead(TestUtil.DataPath + "Demo/E-logo.png");
+            PdfImage pdfImage = PdfImage.FromStream(fs);
+            */
+
             // Adjust the size of the image.
             int width = image.Width;
             int height = image.Height;

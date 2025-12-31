@@ -30,6 +30,11 @@ namespace GetTextSizeBasedOnFont
             //Create an instance for PdfTrueTypeFont
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Regular), true);
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 12f, FontStyle.Regular, true);
+            */
+
             //Get text size based on font name and size
             SizeF sizeF2 = font2.MeasureString(text);
             stringB.AppendLine("2. The width is: " + sizeF2.Width + ", the height is: " + sizeF2.Height);

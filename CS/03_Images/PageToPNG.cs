@@ -32,7 +32,26 @@ namespace PageToPNG
             {
                 image.Save(fileName, ImageFormat.Png);
             }
-            
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            using (var image = pdf.SaveAsImage(pageIndex, PdfImageType.Bitmap))
+            {                
+                System.IO.FileStream fileStream = new System.IO.FileStream(outputFile + fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                
+                image.CopyTo(fileStream);
+                fileStream.Flush();
+            }
+            */
+
+            //////////////////Use the following code for NET Core dlls/////////////////////////
+            /*
+            using (Image image = pdf.SaveAsImage(pageIndex, PdfImageType.Bitmap, 300, 300))
+            {
+                image.Save(outputFile + fileName, ImageFormat.Png);
+            }
+            */
+
             pdf.Close();
         }
 

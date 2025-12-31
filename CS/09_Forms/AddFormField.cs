@@ -99,6 +99,10 @@ namespace AddFormField
 
             // Draw the header label on the top template
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 9f, FontStyle.Italic));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Italic, true);
+            */
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Right);
             String label = "Demo of Spire.Pdf";
             SizeF size = font.MeasureString(label, format);
@@ -159,6 +163,10 @@ namespace AddFormField
             PdfBrush brush1 = PdfBrushes.MidnightBlue;
             PdfBrush brush2 = PdfBrushes.Red;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Bold, true);
+            */
 
             // Set the title text and measure its size
             String title = "Your Account Information(* = Required)";
@@ -192,6 +200,11 @@ namespace AddFormField
 
             // Define the font and text for additional information
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 8f, FontStyle.Italic));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 8f, PdfFontStyle.Bold, true);
+            */
+
             String p = "Your information is not public, shared in any way, or displayed on this site.";
 
             // Draw the additional information using font2 and brush1
@@ -208,6 +221,10 @@ namespace AddFormField
             PdfBrush brush1 = PdfBrushes.LightYellow;
             PdfBrush brush2 = PdfBrushes.DarkSlateGray;
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 9f, FontStyle.Bold));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
 
             // Measure the height of the label text using the font
@@ -240,6 +257,10 @@ namespace AddFormField
             // Measure the label of the field
             String label = fieldNode.GetAttribute("label", "");
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 9f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 9f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Right, PdfVerticalAlignment.Middle);
             float labelMaxWidth = width * 0.4f - 2 * padding;
             SizeF labelSize = font1.MeasureString(label, labelMaxWidth, format);
@@ -375,6 +396,10 @@ namespace AddFormField
                 //Draw *
                 float flagX = width * 0.97f + padding;
                 PdfTrueTypeFont font3 = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold));
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                  PdfTrueTypeFont font3 = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Bold, true);
+                */
                 SizeF size = font3.MeasureString("*");
                 float flagY = y + (height - size.Height) / 2;
                 page.Canvas.DrawString("*", font3, PdfBrushes.Red, flagX, flagY);

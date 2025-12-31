@@ -27,11 +27,31 @@ namespace ConvertAllPagesToEMF
             for (int i = 0; i < pdf.Pages.Count; i++)
             {
                 String fileName = String.Format("ToEMF-img-{0}.emf", i);
+
                 //Save page to images in metafile type
                 using (Image image = pdf.SaveAsImage(i, PdfImageType.Metafile, 300, 300))
                 {
                     image.Save(fileName, ImageFormat.Emf);
                 }
+
+
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                using (var image = pdf.SaveAsImage(i, PdfImageType.Bitmap))
+                {
+                    System.IO.FileStream fileStream = new System.IO.FileStream(fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    image.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+                */
+
+                //////////////////Use the following code for NET Core dlls/////////////////////////
+                /*
+                using (Image image = pdf.SaveAsImage(i, PdfImageType.Bitmap, 300, 300))
+                {
+                    image.Save(fileName, ImageFormat.Emf);
+                }
+                */
             }
 
             pdf.Close();

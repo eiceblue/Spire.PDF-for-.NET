@@ -31,6 +31,21 @@ Namespace RemoveBlankPages
 						' Delete the corresponding PDF page if the image is blank
 						document.Pages.RemoveAt(i)
 					End If
+					' =============================================================================
+					' Use the following code for netstandard dlls
+					' =============================================================================
+					'Dim image As Stream = document.SaveAsImage(i, Spire.Pdf.Graphics.PdfImageType.Bitmap)
+					'image.Position = 0
+					'Dim bytes As Byte() = New Byte(image.Length - 1) {}
+					'image.Read(bytes, 0, bytes.Length)
+					'Dim bmp As SkiaSharp.SKBitmap = SkiaSharp.SKBitmap.Decode(bytes)
+					'Dim resized As SkiaSharp.SKBitmap = bmp.Resize(New SkiaSharp.SKImageInfo(1, 1), SkiaSharp.SKSamplingOptions.Default)
+					'Dim pixel As SkiaSharp.SKColor = resized.GetPixel(0, 0)
+
+					'If pixel Is Nothing OrElse (pixel.Red > 240 AndAlso pixel.Green > 240 AndAlso pixel.Blue > 240) Then
+					'	document.Pages.RemoveAt(i)
+					'End If
+					' =============================================================================
 				End If
 
 			Next i

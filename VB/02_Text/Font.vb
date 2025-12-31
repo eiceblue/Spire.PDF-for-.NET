@@ -45,6 +45,13 @@ Namespace Font
 
 			' Create a TrueType font using Arial with bold style.
 			Dim font As New System.Drawing.Font("Arial", 15.0F, FontStyle.Bold)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim font As New PdfTrueTypeFont("Arial", 15.0F, FontStyle.Bold, True)
+			' =============================================================================
+
+
 			Dim trueTypeFont As New PdfTrueTypeFont(font)
 
 			' Adjust the y-coordinate for drawing the next line of text.
@@ -72,6 +79,12 @@ Namespace Font
 			font = New System.Drawing.Font("Batang", 14.0F, FontStyle.Italic)
 			' Create a PdfTrueTypeFont object from the font
 			trueTypeFont = New PdfTrueTypeFont(font)
+
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim font As New PdfTrueTypeFont("Batang", 14.0F, FontStyle.Italic, True)
+			' =============================================================================
 
 			' Increase the value of y by 16
 			y = y + 16.0F

@@ -35,6 +35,10 @@ namespace SetFontForFormField
             
             //Set the font for textbox
             textbox.Font = new PdfTrueTypeFont(new Font("Tahoma", 12), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             textbox.Font = new PdfTrueTypeFont("Tahoma", 12, PdfFontStyle.Regular, true);
+            */
 
             //Set text
             textbox.Text = "Hello World";

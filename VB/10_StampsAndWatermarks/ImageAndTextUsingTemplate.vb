@@ -22,6 +22,11 @@ Namespace ImageAndTextUsingTemplate
 
 			' Create a TrueType font object with Impact font, size 14, and regular style
 			Dim font As New PdfTrueTypeFont(New Font("Impact", 14.0F, FontStyle.Regular))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Impact", 14.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Create a solid brush with gray color
 			Dim brush As New PdfSolidBrush(Color.Gray)

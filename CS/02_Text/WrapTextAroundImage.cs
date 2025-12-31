@@ -36,6 +36,11 @@ namespace WrapTextAroundImage
             // Defines a font
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 20f, FontStyle.Bold));
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 20f, PdfFontStyle.Bold, true);
+            */
+
             // Defines a text center alignment format
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
             format1.CharacterSpacing = 1f;
@@ -60,6 +65,12 @@ namespace WrapTextAroundImage
             text = System.IO.File.ReadAllText(@"..\..\..\..\..\..\Data\text.txt");
 
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 16f));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font2 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Regular, true);
+            */
+
 
             //Set line spacing
             format2.LineSpacing = font2.Size * 1.5f;

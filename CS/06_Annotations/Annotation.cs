@@ -34,6 +34,10 @@ namespace Annotation
             // Add a title to the page
             PdfBrush brush1 = PdfBrushes.Black;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 13f, FontStyle.Bold | FontStyle.Italic), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 13f, PdfFontStyle.Bold|PdfFontStyle.Italic, true);
+            */
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Left);
             float y = 50;
             string s = "The sample demonstrates how to add annotations in PDF document.";
@@ -70,6 +74,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 
@@ -109,6 +117,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 16f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 
@@ -141,6 +153,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 
@@ -190,6 +206,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 
@@ -229,6 +249,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 
@@ -263,6 +287,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 
@@ -297,6 +325,10 @@ namespace Annotation
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Bold, true);
+            */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
 

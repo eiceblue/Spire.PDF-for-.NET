@@ -57,6 +57,10 @@ namespace RotateNewPDF
 
             // Define a font for text
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 13f, FontStyle.Bold), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 13f, PdfFontStyle.Bold, true);
+            */
 
             // Set the string format for text alignment (left-aligned)
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Left);

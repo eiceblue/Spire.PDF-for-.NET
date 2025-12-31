@@ -29,6 +29,11 @@ namespace ReplaceFont
             //Create a new font 
             PdfTrueTypeFont newfont = new PdfTrueTypeFont(new Font("Arial", 13f), true);
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont newfont = new PdfTrueTypeFont("Arial", 13f, PdfFontStyle.Regular, true);
+            */
+
             // Iterate through each used fonts
             foreach (PdfUsedFont font in fonts)
             {

@@ -22,6 +22,12 @@ Namespace InsertPageBreak
 			' Set the brush and font for the title
 			Dim brush1 As PdfBrush = PdfBrushes.Black
 			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Arial", 16.0F, FontStyle.Bold, True)
+			' =============================================================================
+
 
 			' Set the string format for center-aligned text
 			Dim format1 As New PdfStringFormat(PdfTextAlignment.Center)
@@ -47,6 +53,11 @@ Namespace InsertPageBreak
 			' Set the background brush and font for the header
 			table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue
 			table.Style.HeaderStyle.Font = New PdfTrueTypeFont(New Font("Arial", 14.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'table.Style.HeaderStyle.Font = New PdfTrueTypeFont("Arial", 14.0F, FontStyle.Bold, True)
+			' =============================================================================
 
 			' Set the string format for the header
 			table.Style.HeaderStyle.StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
@@ -57,6 +68,12 @@ Namespace InsertPageBreak
 			' Set the default background brush and font for the table cells
 			table.Style.DefaultStyle.BackgroundBrush = PdfBrushes.SkyBlue
 			table.Style.DefaultStyle.Font = New PdfTrueTypeFont(New Font("Arial", 10.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'table.Style.DefaultStyle.Font = New PdfTrueTypeFont("Arial", 10.0F)
+			' =============================================================================
+
 
 			' Set the string format for the table cells
 			table.Style.DefaultStyle.StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
@@ -65,6 +82,11 @@ Namespace InsertPageBreak
 			table.Style.AlternateStyle = New PdfCellStyle()
 			table.Style.AlternateStyle.BackgroundBrush = PdfBrushes.LightYellow
 			table.Style.AlternateStyle.Font = New PdfTrueTypeFont(New Font("Arial", 10.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'table.Style.AlternateStyle.Font = New PdfTrueTypeFont("Arial", 10.0F)
+			' =============================================================================
 
 			' Set the string format for the alternate table cells
 			table.Style.AlternateStyle.StringFormat = New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)

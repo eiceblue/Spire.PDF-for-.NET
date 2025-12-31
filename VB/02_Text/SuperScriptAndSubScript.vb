@@ -17,6 +17,11 @@ Namespace SuperScriptAndSubScript
 
             ' Create a new TrueType font using the Arial font with a size of 20
             Dim font As New PdfTrueTypeFont(New Font("Arial", 20.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            ' Dim font As New PdfTrueTypeFont("Arial", 20.0F, PdfFontStyle.Regular, True)
+            ' =============================================================================
 
             ' Create a new solid brush with black color
             Dim brush As New PdfSolidBrush(Color.Black)

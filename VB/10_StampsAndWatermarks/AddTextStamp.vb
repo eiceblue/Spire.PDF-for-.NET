@@ -27,6 +27,11 @@ Namespace AddTextStamp
 
 			' Create a new PdfTrueTypeFont object with Elephant font, size 10, and italic style
 			Dim font1 As New PdfTrueTypeFont(New Font("Elephant", 10.0F, FontStyle.Italic), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Elephant", 10.0F, FontStyle.Italic, True)
+			' =============================================================================
 
 			' Create a new PdfSolidBrush object with dark red color
 			Dim brush As New PdfSolidBrush(Color.DarkRed)
@@ -62,7 +67,11 @@ Namespace AddTextStamp
 
 			' Create a new PdfTrueTypeFont object with Lucida Sans Unicode font, size 9, and bold style
 			Dim font2 As New PdfTrueTypeFont(New Font("Lucida Sans Unicode", 9.0F, FontStyle.Bold), True)
-
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font2 As New PdfTrueTypeFont("Lucida Sans Unicode", 9.0F, FontStyle.Bold, True)
+			' =============================================================================
 			' Draw the second line of text onto the template using font2 and brush
 			template.Graphics.DrawString(s2, font2, brush, New PointF(2, 30))
 

@@ -51,6 +51,11 @@ Namespace GoToAction
 
 			' Create a font for the text
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 13.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 13.0F, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Specify the width and height of the rectangle for positioning the text
 			Dim width As Single = 490.0F
@@ -93,6 +98,11 @@ Namespace GoToAction
 
 			' Create a font for a button
 			Dim buttonFont As New PdfTrueTypeFont(New Font("Arial", 10.0F, FontStyle.Bold))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim buttonFont As New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Bold, True)
+			' =============================================================================
 
 			' Specify the width and height of the button
 			Dim buttonWidth As Single = 70

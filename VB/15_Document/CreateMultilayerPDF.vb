@@ -26,6 +26,11 @@ Namespace CreateMultilayerPDF
 
 			' Create a PdfTrueTypeFont object using the Calibri font with size 15 and regular style.
 			Dim font As New PdfTrueTypeFont(New Font("Calibri", 15.0F, FontStyle.Regular))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Calibri", 15.0, FontStyle.Regular, True)
+			' =============================================================================
 
 			' Set the initial coordinates for drawing the text.
 			Dim x As Single = 50

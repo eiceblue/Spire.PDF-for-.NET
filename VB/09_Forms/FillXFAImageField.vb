@@ -31,7 +31,13 @@ Namespace FillXFAImageField
                         ' Add an image to the XfaImageField
                         Dim xImageField As XfaImageField = TryCast(xFields(i), XfaImageField)
                         Dim fileStream As New FileStream("..\..\..\..\..\..\Data\E-logo.png", FileMode.Open, FileAccess.Read, FileShare.Read)
+
                         xImageField.Image = Image.FromStream(fileStream)
+                        ' =============================================================================
+                        ' Use the following code for netstandard dlls
+                        ' =============================================================================
+                        'xImageField.Image =fileStream
+                        ' =============================================================================
                     End If
                 Next i
             End If

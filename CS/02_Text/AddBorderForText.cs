@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AddBorderForText
 {
@@ -33,6 +34,13 @@ namespace AddBorderForText
 
             //Create the font to use and set the font style 
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Times New Roman", 11, FontStyle.Regular),true);
+
+
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Times New Roman", 11, PdfFontStyle.Regular, true);
+            */
 
             //Measure the size of the text
             SizeF size = font.MeasureString(text);

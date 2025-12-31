@@ -29,6 +29,10 @@ namespace InlineImageAndPageNumber
 
             // Define font and brush
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Impact", 10f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Impact", 10f, PdfFontStyle.Regular, true);
+            */
             PdfBrush brush = PdfBrushes.DarkGray;
 
             // Measure the size of the text

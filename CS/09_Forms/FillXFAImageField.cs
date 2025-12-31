@@ -39,6 +39,11 @@ namespace FillXFAImageField
                         //add image to ImageFiled
                         XfaImageField xImageField = xFields[i] as XfaImageField;
                         FileStream fileStream = new FileStream(@"..\..\..\..\..\..\Data\E-logo.png", FileMode.Open, FileAccess.Read, FileShare.Read);
+                        //////////////////Use the following code for netstandard dlls/////////////////////////
+                        /*
+                         xImageField.Image = fileStream;
+                        */
+
                         xImageField.Image = Image.FromStream(fileStream);
                     }
                 }

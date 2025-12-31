@@ -22,6 +22,12 @@ namespace SuperScriptAndSubScript
 
             //Set font and brush
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 20f));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 20f, PdfFontStyle.Regular, true);
+            */
+
             PdfSolidBrush brush = new PdfSolidBrush(Color.Black);
 
             string text = "Spire.PDF for .NET";

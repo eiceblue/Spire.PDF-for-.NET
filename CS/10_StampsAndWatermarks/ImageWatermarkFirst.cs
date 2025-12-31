@@ -26,6 +26,11 @@ namespace ImageWatermarkFirst
             // Load the image from a file.
             Image img = Image.FromFile(@"..\..\..\..\..\..\Data\Background.png");
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+                         System.IO.FileStream img = System.IO.File.Open(TestUtil.DataPath + "Demo/Background.png", System.IO.FileMode.Open);
+            */
+
             // Set the loaded image as the background image of the page.
             page.BackgroundImage = img;
 

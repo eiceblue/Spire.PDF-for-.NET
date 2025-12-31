@@ -38,6 +38,19 @@ namespace ToImage
                     // Open the saved image file using the default associated program.
                     System.Diagnostics.Process.Start(fileName);
                 }
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                 using (var image = doc.SaveAsImage(i))
+                {
+                    string filename = String.Format(outputFile + i + ".bmp");
+                    System.IO.FileStream fileStream = new System.IO.FileStream(fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    
+                    image.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+
+                */
+
             }
 
             // Close the PDF document.

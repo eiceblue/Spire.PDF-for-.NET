@@ -37,6 +37,10 @@ namespace AddTextStamp
 
             // Set the font, brush, and pen for drawing the stamp
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Elephant", 10f, FontStyle.Italic), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Elephant", 10f, PdfFontStyle.Italic, true);
+            */
             PdfSolidBrush brush = new PdfSolidBrush(Color.DarkRed);
             PdfPen pen = new PdfPen(brush);
 
@@ -62,6 +66,10 @@ namespace AddTextStamp
             String s2 = "by E-iceblue at " + DateTime.Now.ToString("MM dd, yyyy");
             template.Graphics.DrawString(s1, font1, brush, new PointF(5, 10));
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 9f, FontStyle.Bold), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              PdfTrueTypeFont font2 = new PdfTrueTypeFont("Lucida Sans Unicod", 9f, PdfFontStyle.Bold, true);
+            */
             template.Graphics.DrawString(s2, font2, brush, new PointF(2, 30));
 
             // Create a rubber stamp annotation with the specified rectangle for its size and position

@@ -45,6 +45,10 @@ namespace FileLinkAnnotation
 
             //Define a font
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 13f, FontStyle.Bold), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font1 = new PdfTrueTypeFont("Arial", 13f, PdfFontStyle.Bold, true);
+            */
 
             //Set the string format 
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Left);
@@ -77,6 +81,10 @@ namespace FileLinkAnnotation
         {
             //Define a font
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
 
             //Set the string format 
             PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Left);

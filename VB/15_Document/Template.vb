@@ -82,6 +82,11 @@ Namespace Template
 
             ' Create a new PdfTrueTypeFont for the text font
             Dim font As New PdfTrueTypeFont(New Font("Arial", 9.0F, FontStyle.Italic))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Italic, True)
+            ' =============================================================================
 
             ' Create a new PdfStringFormat for text alignment and vertical alignment
             Dim format As New PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle)
@@ -125,6 +130,12 @@ Namespace Template
 
             ' Create a new PdfTrueTypeFont for the text font
             Dim font As New PdfTrueTypeFont(New Font("Arial", 9.0F, FontStyle.Italic))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Italic, True)
+            ' =============================================================================
+
 
             ' Create a new PdfStringFormat for text alignment
             Dim format As New PdfStringFormat(PdfTextAlignment.Right)
@@ -232,6 +243,11 @@ Namespace Template
             ' Create a brush for text color and a font for text styling
             Dim brush2 As PdfBrush = New PdfSolidBrush(Color.Black)
             Dim font2 As New PdfTrueTypeFont(New Font("Arial", 16.0F, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font2 As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Bold, True)
+            ' =============================================================================
 
             ' Create a format for text alignment and spacing
             Dim format2 As New PdfStringFormat(PdfTextAlignment.Center)
@@ -261,6 +277,11 @@ Namespace Template
 
             ' Display reference content
             Dim font3 As New PdfTrueTypeFont(New Font("Arial", 9.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font3 As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Regular, True)
+            ' =============================================================================
             Dim format3 As New PdfStringFormat()
             format3.ParagraphIndent = font3.Size * 2
             format3.MeasureTrailingSpaces = True
@@ -279,6 +300,11 @@ Namespace Template
 
             ' Create a font and a brush for the underlined text
             Dim font4 As New PdfTrueTypeFont(New Font("Arial", 9.0F, FontStyle.Underline))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font4 As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Underline, True)
+            ' =============================================================================
             Dim brush3 As PdfBrush = PdfBrushes.Blue
 
             ' Draw the second part of the reference text with underline
@@ -302,6 +328,11 @@ Namespace Template
             Dim format4 As New PdfStringFormat()
             text = File.ReadAllText("..\..\..\..\..\..\Data\Summary_of_Science.txt")
             Dim font5 As New PdfTrueTypeFont(New Font("Arial", 10.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font5 As New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Regular, True)
+            ' =============================================================================
             format4.LineSpacing = font5.Size * 1.5F
 
             ' Create a layouter for arranging the text

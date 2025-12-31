@@ -38,6 +38,11 @@ namespace AddImageInTableCell
             table.Style.ShowHeader = true;
             PdfTrueTypeFont fontHeader = new PdfTrueTypeFont(new Font("Arial", 14f));
 
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont fontHeader = new PdfTrueTypeFont("Arial", 14f, PdfFontStyle.Regular, true);
+            */
+
             //Set font for header row cell
             table.Style.HeaderStyle.Font = fontHeader;
 
@@ -46,6 +51,12 @@ namespace AddImageInTableCell
 
             //Create a font
             PdfTrueTypeFont fontBody = new PdfTrueTypeFont(new Font("Arial", 12f));
+
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+            PdfTrueTypeFont fontBody = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
+            */
+
 
             //Set the odd row cell style
             table.Style.AlternateStyle.Font = fontBody;

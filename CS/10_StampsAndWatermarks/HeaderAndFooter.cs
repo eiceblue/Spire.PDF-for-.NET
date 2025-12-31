@@ -33,6 +33,10 @@ namespace HeaderAndFooter
 
             // Define the font for text drawing
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Italic), true);
+            //////////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 10f, PdfFontStyle.Italic, true);
+            */
 
             // Define the string format for right-aligned text
             PdfStringFormat rightAlign = new PdfStringFormat(PdfTextAlignment.Right);
@@ -93,6 +97,10 @@ namespace HeaderAndFooter
                 // Change the font and brush for the footer text
                 brush = PdfBrushes.DarkBlue;
                 font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Bold), true);
+                //////////////////Use the following code for netstandard dlls/////////////////////////
+                /*
+                  font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Bold, true, false);
+                */
                 y = newPage.Canvas.ClientSize.Height - margin.Bottom - font.Height;
 
                 // Draw the footer text on the new page with left alignment

@@ -28,6 +28,12 @@ Namespace GetTextSizeBasedOnFont
 			' Create an instance of PdfTrueTypeFont using the Arial font, size 12, and regular style
 			Dim font2 As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Regular), True)
 
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			' Dim font2 As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Regular, True)
+			' =============================================================================
+
 			' Measure the size of the text based on the font
 			Dim sizeF2 As SizeF = font2.MeasureString(text)
 

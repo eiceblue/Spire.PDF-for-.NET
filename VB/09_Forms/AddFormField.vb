@@ -115,6 +115,11 @@ Namespace AddFormField
 
             ' Create a new PDF true type font and string format for the label
             Dim font As New PdfTrueTypeFont(New Font("Arial", 9.0F, FontStyle.Italic))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Italic, True)
+            ' =============================================================================
             Dim format As New PdfStringFormat(PdfTextAlignment.Right)
             Dim label As String = "Demo of Spire.Pdf"
             Dim size As SizeF = font.MeasureString(label, format)
@@ -180,6 +185,11 @@ Namespace AddFormField
 
             ' Create a new PDF true type font for the title
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font1 As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Bold, True)
+            ' =============================================================================
 
             ' Set the text for the title
             Dim title As String = "Your Account Information(* = Required)"
@@ -219,6 +229,11 @@ Namespace AddFormField
 
             ' Create a new PDF true type font for the description
             Dim font2 As New PdfTrueTypeFont(New Font("Arial", 8.0F, FontStyle.Italic))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font2 As New PdfTrueTypeFont("Arial", 8.0F, FontStyle.Italic, True)
+            ' =============================================================================
 
             ' Set the text for the description
             Dim p As String = "Your information is not public, shared in anyway, or displayed on this site."
@@ -239,6 +254,11 @@ Namespace AddFormField
 
             ' Create a new PDF true type font for the form field label
             Dim font As New PdfTrueTypeFont(New Font("Arial", 9.0F, FontStyle.Bold))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Arial", 9.0F, FontStyle.Bold, True)
+            ' =============================================================================
 
             ' Create a new PDF string format
             Dim format As New PdfStringFormat()
@@ -277,6 +297,11 @@ Namespace AddFormField
 
             ' Create a new PDF true type font for the label
             Dim font1 As New PdfTrueTypeFont(New Font("Arial", 9.0F))
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font1 As New PdfTrueTypeFont("Arial", 9.0F)
+            ' =============================================================================
 
             ' Create a new PDF string format with right alignment and middle vertical alignment
             Dim format As New PdfStringFormat(PdfTextAlignment.Right, PdfVerticalAlignment.Middle)
@@ -452,6 +477,11 @@ Namespace AddFormField
             If required Then
                 Dim flagX As Single = width * 0.97F + padding
                 Dim font3 As New PdfTrueTypeFont(New Font("Arial", 10.0F, FontStyle.Bold))
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Dim font3 As New PdfTrueTypeFont("Arial", 10.0F, FontStyle.Bold, True)
+                ' =============================================================================
                 Dim size As SizeF = font3.MeasureString("*")
                 Dim flagY As Single = y + (height - size.Height) / 2
                 page.Canvas.DrawString("*", font3, PdfBrushes.Red, flagX, flagY)

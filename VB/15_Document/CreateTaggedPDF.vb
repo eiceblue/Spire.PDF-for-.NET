@@ -33,6 +33,11 @@ Namespace CreateTaggedPDF
 
             ' Create a new PdfTrueTypeFont object with Times New Roman font
             Dim font As New PdfTrueTypeFont(New Font("Times New Roman", 10), True)
+            ' =============================================================================
+            ' Use the following code for netstandard dlls
+            ' =============================================================================
+            'Dim font As New PdfTrueTypeFont("Times New Roman", 10.0F, FontStyle.Regular, True)
+            ' =============================================================================
 
             ' Create a new PdfSolidBrush object with black color
             Dim brush As New PdfSolidBrush(Color.Black)

@@ -40,6 +40,11 @@ Namespace DocumentLinkAnnotation
 
 			' Set the font for the text
 			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Bold), True)
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font1 As New PdfTrueTypeFont("Arial", 18.0F, FontStyle.Bold, True)
+			' =============================================================================
 
 			' Set the string format for the text alignment
 			Dim format1 As New PdfStringFormat(PdfTextAlignment.Left)
@@ -84,6 +89,11 @@ Namespace DocumentLinkAnnotation
 		Private Shared Sub AddDocumentLinkAnnotation(ByVal pdf As PdfDocument, ByVal AddPage As Integer, ByVal DestinationPage As Integer, ByVal y As Single)
 			' Create a TrueType font with Arial, size 12
 			Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
+			' =============================================================================
+			' Use the following code for netstandard dlls
+			' =============================================================================
+			'Dim font As New PdfTrueTypeFont("Arial", 12.0F, PdfFontStyle.Regular, True)
+			' =============================================================================
 
 			' Create a StringFormat for left alignment
 			Dim format As New PdfStringFormat(PdfTextAlignment.Left)

@@ -44,6 +44,11 @@ Namespace PageNumberInFooter
 
                 ' Create a TrueType font with Arial, 12pt size, and italic style
                 Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Italic), True)
+                ' =============================================================================
+                ' Use the following code for netstandard dlls
+                ' =============================================================================
+                'Dim font As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Italic, True)
+                ' =============================================================================
 
                 ' Create a string format with right alignment and trailing spaces measurement
                 Dim format As New PdfStringFormat(PdfTextAlignment.Right)
