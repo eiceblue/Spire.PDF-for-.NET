@@ -12970,3 +12970,30 @@ doc.Print();
 ---
 
 
+# 02_Text - ReplaceTextSecond
+## Replaces text occurrences in a specific PDF page using PdfTextReplacer.
+```csharp
+PdfTextReplacer replacer = new PdfTextReplacer(page);
+replacer.ReplaceAllText("Spire.PDF", "E-iceblue");
+replacer.ReplaceText("Adobe Acrobat", "PDF editors");
+```
+
+---
+
+# 04_Graphs - CreateHatchBrush
+## Create a PDF document and draw rectangles with all available PdfHatchStyle patterns.
+```csharp
+PdfDocument pdf = new PdfDocument();
+foreach (PdfHatchStyle type in Enum.GetValues(typeof(PdfHatchStyle)))
+{
+    PdfPageBase page = pdf.Pages.Add();
+    PdfCanvas canves = page.Canvas;
+    Color foreColor = Color.FromArgb(255, 255, 255, 0);
+    Color backColor = Color.FromArgb(255, 78, 167, 46);
+    PdfHatchBrush brush = new PdfHatchBrush(type, foreColor, backColor);
+    canves.DrawRectangle(brush, 100, 100, 300, 200);
+}
+```
+
+---
+

@@ -1,54 +1,53 @@
-﻿Imports Spire.Pdf
+Imports System
+Imports System.Windows.Forms
+Imports Spire.Pdf
 Imports Spire.Pdf.Texts
 
 Namespace ReplaceTextSecond
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Specify the path to the input PDF file
-			Dim input As String = "..\..\..\..\..\..\Data\ReplaceTextInPage.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Input file path
+            Dim input As String = @"..\..\..\..\..\..\Data\ReplaceTextInPage.pdf"
 
-			' Create a new PdfDocument instance
-			Dim doc As New PdfDocument()
+            ' Create a new PdfDocument
+            Dim doc As PdfDocument = New PdfDocument()
 
-			' Load the input PDF file
-			doc.LoadFromFile(input)
+            ' Load the pdf file from disk
+            doc.LoadFromFile(input)
 
-			' Get the first page of the PDF document
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Get the first page of the pdf file
+            Dim page As PdfPageBase = doc.Pages[0]
 
-			' Create a PdfTextReplacer using the first page
-			Dim replacer As New PdfTextReplacer(page)
+            ' Create a PdfTextReplacer using the first page
+            Dim replacer As PdfTextReplacer = New PdfTextReplacer(page)
 
-			' Replace all occurrences of "Spire.PDF" with "E-iceblue"
-			replacer.ReplaceAllText("Spire.PDF", "E-iceblue")
+            ' Replace all occurrences of "Spire.PDF" with "E-iceblue" in this page
+            replacer.ReplaceAllText("Spire.PDF", "E-iceblue")
 
-			' Replace the occurrence of "Adobe Acrobat" with "PDF editors"
-			replacer.ReplaceText("Adobe Acrobat", "PDF editors")
+            ' Replace the first occurrence of "Adobe Acrobat" with "PDF editors"
+            replacer.ReplaceText("Adobe Acrobat", "PDF editors")
+            ' replacer.ReplaceText("Adobe Acrobat", "PDF editors", Color.Red);
 
-			' Specify the output file name
-			Dim result As String = "ReplaceTextInPage_out.pdf"
+            ' Output file path
+            Dim result As String = "ReplaceTextInPage_out.pdf"
 
-			' Save the modified document to a file
-			doc.SaveToFile(result)
+            ' Save the modified document to the output file path
+            doc.SaveToFile(result)
 
-			' Close the document
-			doc.Close()
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
 
-			' Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
 
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-
-	End Class
+    End Class
 End Namespace

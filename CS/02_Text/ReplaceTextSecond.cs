@@ -34,6 +34,7 @@ namespace ReplaceTextSecond
 
             // Replace the first occurrence of "Adobe Acrobat" with "PDF editors"
             replacer.ReplaceText("Adobe Acrobat", "PDF editors");
+            // replacer.ReplaceText("Adobe Acrobat", "PDF editors", Color.Red);
 
             // Output file path
             String result = "ReplaceTextInPage_out.pdf";
