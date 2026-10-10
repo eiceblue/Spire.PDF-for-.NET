@@ -1,5 +1,5 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Fields;
 using Spire.Pdf.Graphics;
 using System;
@@ -30,68 +30,75 @@ namespace CreatePdfLineAnnotation
             PdfPageBase page = document.Pages.Add();
 
             //Create a line annotation.
-            int[] linePoints = new int[] { 100, 650, 180, 650 };
-            PdfLineAnnotation lineAnnotation = new PdfLineAnnotation(linePoints, "This is the first line annotation");
+            int[] linePoints = new int[] { 140, 690, 180, 650 };
+            RectangleF rect = new RectangleF(140, 689, 80, 1);
+            PdfLineAnnotation lineAnnotation = new PdfLineAnnotation(page, rect, new PointF(140, 690), new PointF(220, 690));
+            lineAnnotation.Contents = "This is the first line annotation";
 
             //Set the line border.
-            lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Solid;
-            lineAnnotation.lineBorder.BorderWidth = 1;
+            lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid;
+            lineAnnotation.Border.Width = 1;
 
             //Set the line intent.
-            lineAnnotation.LineIntent = PdfLineIntent.LineDimension;
+            lineAnnotation.Intent = PdfLineIntent.LineDimension;
 
             //Set the line style.
-            lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Butt;
-            lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond;
+            lineAnnotation.StartingStyle = PdfLineEndingStyle.Butt;
+            lineAnnotation.EndingStyle = PdfLineEndingStyle.Diamond;
 
             //Set the line flag.
-            lineAnnotation.Flags = PdfAnnotationFlags.Default;
+            lineAnnotation.Flags = PdfAnnotationFlags.None;
 
             //Set the line color.
-            lineAnnotation.InnerLineColor = new PdfRGBColor(Color.Green);
-            lineAnnotation.BackColor = new PdfRGBColor(Color.Green);
+            lineAnnotation.InteriorColor = new PdfRGBColor(Color.Green);
+            lineAnnotation.Color = new PdfRGBColor(Color.Green);
 
             //Set the leader line.
-            lineAnnotation.LeaderLineExt = 0;
+            lineAnnotation.LeaderLineExtension = 0;
             lineAnnotation.LeaderLine = 0;
 
             //Add the line annotation to the page.
-            page.Annotations.Add(lineAnnotation);
+            PdfAnnotationCollection.Create(page).Add(lineAnnotation);
 
             //Create another line annotation.
-            linePoints = new int[] { 100, 550, 280, 550 };
-            lineAnnotation = new PdfLineAnnotation(linePoints, "This is the second line annotation");
-            lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Underline;
-            lineAnnotation.lineBorder.BorderWidth = 2;
-            lineAnnotation.LineIntent = PdfLineIntent.LineArrow;
-            lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Circle;
-            lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond;
-            lineAnnotation.Flags = PdfAnnotationFlags.Default;
-            lineAnnotation.InnerLineColor = new PdfRGBColor(Color.Pink);
-            lineAnnotation.BackColor = new PdfRGBColor(Color.Pink);
-            lineAnnotation.LeaderLineExt = 0;
+            linePoints = new int[] { 140, 590, 280, 550 };
+            rect = new RectangleF(140, 589, 180, 2);
+            lineAnnotation = new PdfLineAnnotation(page, rect, new PointF(140, 590), new PointF(320, 590));
+            lineAnnotation.Contents = "This is the second line annotation";
+            lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid;
+            lineAnnotation.Border.Width = 2;
+            lineAnnotation.Intent = PdfLineIntent.LineArrow;
+            lineAnnotation.StartingStyle = PdfLineEndingStyle.Circle;
+            lineAnnotation.EndingStyle = PdfLineEndingStyle.Diamond;
+            lineAnnotation.Flags = PdfAnnotationFlags.None;
+            lineAnnotation.InteriorColor = new PdfRGBColor(Color.Pink);
+            lineAnnotation.Color = new PdfRGBColor(Color.Pink);
+            lineAnnotation.LeaderLineExtension = 0;
             lineAnnotation.LeaderLine = 0;
-            page.Annotations.Add(lineAnnotation);
+            PdfAnnotationCollection.Create(page).Add(lineAnnotation);
 
             //Create yet another line annotation.
-            linePoints = new int[] { 100, 450, 280, 450 };
-            lineAnnotation = new PdfLineAnnotation(linePoints, "This is the third line annotation");
-            lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Beveled;
-            lineAnnotation.lineBorder.BorderWidth = 2;
-            lineAnnotation.LineIntent = PdfLineIntent.LineDimension;
-            lineAnnotation.BeginLineStyle = PdfLineEndingStyle.None;
-            lineAnnotation.EndLineStyle = PdfLineEndingStyle.None;
-            lineAnnotation.Flags = PdfAnnotationFlags.Default;
-            lineAnnotation.InnerLineColor = new PdfRGBColor(Color.Blue);
-            lineAnnotation.BackColor = new PdfRGBColor(Color.Blue);
-            lineAnnotation.LeaderLineExt = 1;
+            linePoints = new int[] { 140, 490, 280, 450 };
+            rect = new RectangleF(140, 489, 180, 2);
+            lineAnnotation = new PdfLineAnnotation(page, rect, new PointF(140, 490), new PointF(320, 490));
+            lineAnnotation.Contents = "This is the third line annotation";
+            lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid;
+            lineAnnotation.Border.Width = 2;
+            lineAnnotation.Intent = PdfLineIntent.LineDimension;
+            lineAnnotation.StartingStyle = PdfLineEndingStyle.None;
+            lineAnnotation.EndingStyle = PdfLineEndingStyle.None;
+            lineAnnotation.Flags = PdfAnnotationFlags.None;
+            lineAnnotation.InteriorColor = new PdfRGBColor(Color.Blue);
+            lineAnnotation.Color = new PdfRGBColor(Color.Blue);
+            lineAnnotation.LeaderLineExtension = 1;
             lineAnnotation.LeaderLine = 1;
-            page.Annotations.Add(lineAnnotation);
+            PdfAnnotationCollection.Create(page).Add(lineAnnotation);
 
-            String result = "CreatePdfLineAnnotation_out.pdf";
+            string result = "CreatePdfLineAnnotation.pdf";
 
             //Save the document.
             document.SaveToFile(result);
+            document.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

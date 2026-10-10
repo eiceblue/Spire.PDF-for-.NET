@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 
 namespace AddInkAnnotation
 {
@@ -22,29 +22,24 @@ namespace AddInkAnnotation
             PdfPageBase pdfPage = pdf.Pages.Add();
 
             // Define the points for the ink annotation
-            System.Collections.Generic.List<int[]> inkList = new System.Collections.Generic.List<int[]>();
-            int[] intPoints = new int[]
-            {
-                100, 800,
-                200, 800,
-                200, 700
-            };
-            inkList.Add(intPoints);
+            System.Collections.Generic.List<PointF[]> inkList = new System.Collections.Generic.List<PointF[]>();
+            PointF[] points = new PointF[] { new PointF(140, 840), new PointF(240, 840), new PointF(240, 740) };
+            inkList.Add(points);
 
             // Create an ink annotation using the defined points
-            PdfInkAnnotation ia = new PdfInkAnnotation(inkList);
+            PdfInkAnnotation ia = new PdfInkAnnotation(pdfPage, new RectangleF(140, 740, 100, 100), inkList);
 
             // Set properties of the ink annotation such as color, border width, opacity, and text
             ia.Color = Color.Pink;
             ia.Border.Width = 12;
-            ia.Opacity = 0.3f;
-            ia.Text = "e-iceblue";
+            ia.StrokingOpacity = 0.3f;
+            ia.Contents = "e-iceblue";
 
-            // Add the ink annotation to the page's annotation widget collection
-            pdfPage.Annotations.Add(ia);
+            // Add the ink annotation to the page's annotation collection
+            PdfAnnotationCollection.Create(pdfPage).Add(ia);
 
             // Save the document to PDF format
-            string result = "AddInkAnnotation_result.pdf";
+            string result = "AddInkAnnotation.pdf";
             pdf.SaveToFile(result);
             pdf.Close();
 

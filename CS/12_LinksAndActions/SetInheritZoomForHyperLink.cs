@@ -1,10 +1,11 @@
+using Spire.Pdf;
+using Spire.Pdf.Actions;
+using Spire.Pdf.Destinations;
+using Spire.Pdf.General;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Spire.Pdf;
-using Spire.Pdf.Annotations;
-using Spire.Pdf.General;
-using Spire.Pdf.Graphics;
 
 
 namespace SetInheritZoomForHyperLink
@@ -26,25 +27,24 @@ namespace SetInheritZoomForHyperLink
             pdf.LoadFromFile(inputFile);
 
             // Get the PdfAnnotationCollection of the first page
-            PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
+            PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
 
             // Iterate through each annotation in the collection
             for (int i = 0; i < annotations.Count; i++)
             {
                 // Cast the current annotation to a PdfDocumentLinkAnnotationWidget
-                PdfDocumentLinkAnnotationWidget anno = annotations[i] as PdfDocumentLinkAnnotationWidget;
+                PdfLinkAnnotation anno = annotations[i] as PdfLinkAnnotation;
 
                 // Get the destination of the annotation
-                PdfDestination dest = anno.Destination;
-
-                // Set the mode of the destination to Location
-                dest.Mode = PdfDestinationMode.Location;
-
-                // Set the zoom level of the destination to 0
-                dest.Zoom = 0;
-
-                // Set the new destination for the annotation
-                anno.Destination = dest;
+                PdfXYZExplicitDestination dest = anno.Destination as PdfXYZExplicitDestination;
+                if (dest != null)
+                {
+                    dest.Zoom = 0;
+                }
+                else
+                {
+                    anno.Destination = new PdfXYZExplicitDestination(((anno.Action as PdfGoToAction).Destination as PdfExplicitDestination).Page, 0, 0, 0);
+                }
             }
 
             // Save the modified PDF file to the specified output file

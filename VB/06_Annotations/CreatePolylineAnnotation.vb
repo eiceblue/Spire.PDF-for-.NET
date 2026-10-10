@@ -1,64 +1,48 @@
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
 Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf.Interactive.Annotations
 
 Namespace CreatePolylineAnnotation
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PDF document object
-            Dim pdf As New PdfDocument()
-
-            ' Add a new page to the PDF document
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            'Output file
+            Dim output As String = "CreatePolylineAnnotation.pdf"
+            'Create a pdf document
+            Dim pdf As PdfDocument = New PdfDocument()
+            'Add a new page
             Dim page As PdfPageBase = pdf.Pages.Add()
-
-            ' Create a polyline annotation with specified points on the page
-            Dim polyline As New PdfPolyLineAnnotation(page, New PointF() {New PointF(0, 60), New PointF(30, 45), New PointF(60, 90), New PointF(90, 80)})
-
-            ' Set the color of the polyline annotation to PaleVioletRed
+            'Create a polyline annotation
+            Dim points As PointF[] = New PointF[] { New PointF(40, 100), New PointF(70, 85), New PointF(100, 130), New PointF(130, 120) }
+            Dim polyline As PdfPolylineAnnotation = New PdfPolylineAnnotation(page, New RectangleF(40, 85, 90, 45), points)
+            'Set properties of polyline
             polyline.Color = Color.PaleVioletRed
-
-            ' Set the text content of the polyline annotation
-            polyline.Text = "This is a polygon annotation"
-
-            ' Set the author name of the polyline annotation
-            polyline.Author = "E-ICEBLUE"
-
-            ' Set the subject of the polyline annotation
+            polyline.Contents = "This Is a polygon annotation"
+            polyline.Title = "E-ICEBLUE"
             polyline.Subject = "polygon annotation demo"
-
-            ' Set the name of the polyline annotation
             polyline.Name = "Test Annotation"
-
-            ' Set the border of the polyline annotation with a width of 1f
-            polyline.Border = New PdfAnnotationBorder(1.0F)
-
-            ' Set the modified date of the polyline annotation to current date and time
-            polyline.ModifiedDate = Date.Now
-
-            ' Add the polyline annotation to the page's annotation collection
-            page.Annotations.Add(polyline)
-
-            ' Specify the output file name for the PDF document
-            Dim output As String = "CreatePolylineAnnotation_result.pdf"
-
-            ' Save the PDF document to the specified output file in PDF format
+            polyline.Border.Width = 1f
+            polyline.Intent = PdfPolyIntent.PolyLineDimension
+            polyline.ModifiedDate = DateTime.Now
+            'Add the annotation into page
+            PdfAnnotationCollection.Create(page).Add(polyline)
+            polyline.RefreshAppearances()
+            'Save pdf
             pdf.SaveToFile(output, FileFormat.PDF)
-
-            ' Close the PDF document
             pdf.Close()
-
-            ' Launch the Pdf file
+            'Launch the Pdf file
             FileViewer(output)
         End Sub
         Private Sub FileViewer(ByVal fileName As String)
             Try
-                Process.Start(fileName)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
         End Sub
 
     End Class

@@ -1,5 +1,5 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.Windows.Forms;
 
@@ -22,16 +22,13 @@ namespace SetPropertiesForStamp
             PdfPageBase page = pdf.Pages[0];
 
             // Traverse through each annotation widget on the page.
-            foreach (PdfAnnotation annotation in page.Annotations.List)
+            foreach (PdfAnnotation annotation in PdfAnnotationCollection.Create(page))
             {
-                // Check if the current annotation is a rubber stamp annotation.
-                if (annotation is PdfRubberStampAnnotationWidget)
+                //If it is PdfRubberStampAnnotationWidget
+                if (annotation is PdfRubberStampAnnotation)
                 {
-                    // Cast the annotation to a PdfRubberStampAnnotationWidget.
-                    PdfRubberStampAnnotationWidget stamp = annotation as PdfRubberStampAnnotationWidget;
-
-                    // Set properties for the rubber stamp annotation.
-                    stamp.Author = "TestUser";
+                    PdfRubberStampAnnotation stamp = annotation as PdfRubberStampAnnotation;
+                    stamp.Title = "TestUser";
                     stamp.Subject = "E-iceblue";
                     stamp.CreationDate = DateTime.Now;
                     stamp.ModifiedDate = DateTime.Now;

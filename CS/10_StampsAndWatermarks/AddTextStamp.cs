@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
-using Spire.Pdf.Annotations;
-using Spire.Pdf.Annotations.Appearance;
+
 namespace AddTextStamp
 {
     public partial class Form1 : Form
@@ -72,20 +68,12 @@ namespace AddTextStamp
             */
             template.Graphics.DrawString(s2, font2, brush, new PointF(2, 30));
 
-            // Create a rubber stamp annotation with the specified rectangle for its size and position
-            PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(rectangle);
+            //Create a rubber stamp
+            PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(page, rectangle);
+            stamp.Appearances.SetNormalAppearance(new PdfAppearance(template));
 
-            // Create an appearance object for the rubber stamp annotation
-            PdfAppearance apprearance = new PdfAppearance(stamp);
-
-            // Set the normal appearance of the stamp to use the created template
-            apprearance.Normal = template;
-
-            // Assign the custom appearance to the rubber stamp annotation
-            stamp.Appearance = apprearance;
-
-            // Add the rubber stamp annotation to the page's annotations widget
-            page.Annotations.Add(stamp);
+            //Draw stamp into page
+            PdfAnnotationCollection.Create(page).Add(stamp);
 
             // Specify the file name for the modified PDF document
             string output = "AddTextStamp.pdf";

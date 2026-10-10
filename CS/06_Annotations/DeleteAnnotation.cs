@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System;
 using System.Windows.Forms;
 using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 
 namespace DeleteAnnotation
 {
@@ -22,15 +18,16 @@ namespace DeleteAnnotation
 
             //Open pdf document
             PdfDocument doc = new PdfDocument();
-	        doc.LoadFromFile(input);
+            doc.LoadFromFile(input);
 
             //Remove the first annotation
-            doc.Pages[0].Annotations.RemoveAt(0);
+            PdfAnnotationCollection.Create(doc.Pages[0]).RemoveAt(0);
 
             string output = "DeleteAnnotation.pdf";
 
             //Save pdf document
             doc.SaveToFile(output);
+            doc.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(output);

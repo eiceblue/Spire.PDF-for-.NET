@@ -1,46 +1,52 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Data
+Imports System.Drawing
+Imports System.Linq
+Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 
 Namespace UpdateFreeTextAnnotation
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PdfDocument object
-            Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Create a new PDF document.
+            Dim pdf As PdfDocument = New PdfDocument()
 
-            ' Load an existing PDF file
-            pdf.LoadFromFile("..\..\..\..\..\..\Data\UpdateFreeTextAnnotation.pdf")
+            ' Load an existing PDF document from a file.
+            pdf.LoadFromFile(@"..\..\..\..\..\..\Data\UpdateFreeTextAnnotation.pdf")
 
-            ' Get the collection of annotations from the first page
-            Dim annotations As PdfAnnotationCollection = pdf.Pages(0).Annotations
+            ' Get the collection of annotations from the first page of the PDF document.
+            Dim annotations As PdfAnnotationCollection = PdfAnnotationCollection.Create(pdf.Pages[0])
 
-            ' Iterate through each annotation in the collection
-            For Each annotaion As PdfFreeTextAnnotationWidget In annotations
-                ' Set the color of the annotation to YellowGreen
-                annotaion.Color = Color.YellowGreen
-            Next annotaion
+            ' Iterate through each free text annotation in the collection.
+            For Each annotation As PdfFreeTextAnnotation In annotations
+                ' Change the color of the annotation to YellowGreen.
+                annotation.Color = Color.YellowGreen
+                annotation.RefreshAppearances()
+            Next
 
-            ' Specify the output file name
-            Dim result As String = "UpdateFreeTextAnnotation_out.pdf"
+            Dim result As String = "UpdateFreeTextAnnotation.pdf"
 
-            ' Save the modified PDF document to the specified file
+            ' Save the modified PDF document to a file with the specified filename.
             pdf.SaveToFile(result)
-
-            ' Close the PDF document
             pdf.Close()
 
-            ' Launch the Pdf file
+            'Launch the Pdf file
             PDFDocumentViewer(result)
         End Sub
         Private Sub PDFDocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

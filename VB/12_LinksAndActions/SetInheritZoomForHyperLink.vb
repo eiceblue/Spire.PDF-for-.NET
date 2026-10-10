@@ -1,67 +1,60 @@
 Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf.Actions
+Imports Spire.Pdf.Destinations
 Imports Spire.Pdf.General
-
+Imports Spire.Pdf.Interactive.Annotations
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
 
 Namespace SetInheritZoomForHyperLink
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Declare and initialize the input file path
-			Dim inputFile As String = "..\..\..\..\..\..\Data\SetInheritZoomForHyperLink.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            Dim inputFile As String = @"..\..\..\..\..\..\Data\SetInheritZoomForHyperLink.pdf"
+            Dim outputFile As String = @"output.pdf"
 
-			' Specify the output file path
-			Dim outputFile As String = "output.pdf"
+            ' Load the PDF file
+            Dim pdf As PdfDocument = New PdfDocument()
+            pdf.LoadFromFile(inputFile)
 
-			' Create a new instance of PdfDocument
-			Dim pdf As New PdfDocument()
+            ' Get the PdfAnnotationCollection of the first page
+            Dim annotations As PdfAnnotationCollection = PdfAnnotationCollection.Create(pdf.Pages[0])
 
-			' Load the PDF document from the input file
-			pdf.LoadFromFile(inputFile)
+            ' Iterate through each annotation in the collection
+            Dim i As Integer = 0
+            While i < annotations.Count
+                ' Cast the current annotation to a PdfDocumentLinkAnnotationWidget
+                Dim anno As PdfLinkAnnotation = annotations[i] as PdfLinkAnnotation
 
-			' Get the collection of annotations for the first page of the PDF
-            Dim annotations As PdfAnnotationCollection = pdf.Pages(0).Annotations
+                ' Get the destination of the annotation
+                Dim dest As PdfXYZExplicitDestination = anno.Destination as PdfXYZExplicitDestination
+                If dest != null Then
+                    dest.Zoom = 0
+                End If
+                Else
+                    anno.Destination = New PdfXYZExplicitDestination(((anno.Action as PdfGoToAction).Destination as PdfExplicitDestination).Page, 0, 0, 0)
+            Next
+        End Sub
 
-			' Iterate through each annotation in the collection
-			For i As Integer = 0 To annotations.Count - 1
+            ' Save the modified PDF file to the specified output file
+            pdf.SaveToFile(outputFile, FileFormat.PDF)
 
-				' Convert the annotation to a PdfDocumentLinkAnnotationWidget
-				Dim anno As PdfDocumentLinkAnnotationWidget = TryCast(annotations(i), PdfDocumentLinkAnnotationWidget)
+            ' Close the PDF document
+            pdf.Close()
 
-				' Get the destination of the annotation
-				Dim dest As PdfDestination = anno.Destination
+            'Launch the Pdf file
+            PDFDocumentViewer(outputFile)
+    End Class
 
-				' Set the destination mode to Location
-				dest.Mode = PdfDestinationMode.Location
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
 
-				' Set the zoom level to 0 (inherit zoom)
-				dest.Zoom = 0
-
-				' Update the annotation's destination with the modified values
-				anno.Destination = dest
-
-			Next i
-
-			' Save the modified PDF document to the output file
-			pdf.SaveToFile(outputFile, FileFormat.PDF)
-
-			' Close the PDF document
-			pdf.Close()
-
-			' Launch the Pdf file
-			PDFDocumentViewer(outputFile)
-		End Sub
-
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-
-	End Class
 End Namespace

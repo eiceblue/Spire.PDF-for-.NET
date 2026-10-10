@@ -1,74 +1,53 @@
-Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
-Imports System.Text
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
 Imports System.IO
+Imports System.Text
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Texts
 
 Namespace ExtractHighlightedText
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new instance of PdfDocument
-            Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            'Create a pdf instance
+            Dim doc As PdfDocument = New PdfDocument()
 
-            ' Load the PDF file from the specified path
-            doc.LoadFromFile("..\..\..\..\..\..\Data\ExtractHighlightedText.pdf")
+            'Load a pdf file
+            doc.LoadFromFile(@"..\..\..\..\..\..\Data\ExtractHighlightedText.pdf")
 
-            ' Get the first page of the document
-            Dim page As PdfPageBase = doc.Pages(0)
+            Dim page As PdfPageBase = doc.Pages[0]
+            Dim textMarkupAnnotation As PdfTextMarkupAnnotation
+            Dim stringBuilder As StringBuilder = New StringBuilder()
+            stringBuilder.AppendLine("Extracted hightlighted text:")
+            'Get PdfTextMarkupAnnotationWidget objects
+            Dim i As Integer = 0
+            While i < page.Annotations.Count
+                If PdfAnnotationCollection.Create(page)[i] is PdfTextMarkupAnnotation Then
+                    textMarkupAnnotation = PdfAnnotationCollection.Create(page)[i] as PdfTextMarkupAnnotation
+                    'Get the highlighted text
+                    Dim textExtractor As PdfTextExtractor = New PdfTextExtractor(page)
+                    Dim option As PdfTextExtractOptions = New PdfTextExtractOptions()
+                    option.ExtractArea = textMarkupAnnotation.Rectangle
+                    stringBuilder.AppendLine(textExtractor.ExtractText(option))
 
-            ' Declare variables for text markup annotation and string builder
-            Dim textMarkupAnnotation As PdfTextMarkupAnnotationWidget
-            Dim stringBuilder As New StringBuilder()
-
-            ' Add a header to the string builder
-            stringBuilder.AppendLine("Extracted highlighted text:")
-
-            ' Create a PdfTextExtractor instance for the page
-            Dim pdfTextExtractor As New PdfTextExtractor(page)
-
-            ' Iterate through the annotations on the page
-            For i As Integer = 0 To page.Annotations.Count - 1
-
-                ' Check if the annotation is a text markup annotation
-                If TypeOf page.Annotations(i) Is PdfTextMarkupAnnotationWidget Then
-
-                    ' Cast the annotation to PdfTextMarkupAnnotationWidget
-                    textMarkupAnnotation = TryCast(page.Annotations(i), PdfTextMarkupAnnotationWidget)
-
-                    ' Create PdfTextExtractOptions and set the extraction area to the bounds of the annotation
-                    Dim pdfTextExtractOptions As New PdfTextExtractOptions()
-                    pdfTextExtractOptions.ExtractArea = textMarkupAnnotation.Bounds
-
-                    ' Extract the text using the specified options and append it to the string builder
-                    stringBuilder.AppendLine(pdfTextExtractor.ExtractText(pdfTextExtractOptions))
-
-                    ' Get the color of the text markup annotation
-                    Dim color As Color = textMarkupAnnotation.TextMarkupColor
+                    'Get the highlighted color
+                    Dim color As Color = textMarkupAnnotation.Color
                 End If
-            Next i
-
-            ' Specify the output file path
+            Next
             Dim result As String = "ExtractHighlightedText.txt"
-
-            ' Write the contents of the string builder to the output file
             File.WriteAllText(result, stringBuilder.ToString())
-
-            ' Close the document
-            doc.Close()
-
-            ' Launch the Pdf file
-            PDFDocumentViewer(result)
+            DocumentViewer(result)
         End Sub
-        Private Sub PDFDocumentViewer(ByVal fileName As String)
+        Private Sub DocumentViewer(ByVal fileName As String)
             Try
                 System.Diagnostics.Process.Start(fileName)
-            Catch
-            End Try
+        Catch
+        End Try
         End Sub
 
     End Class

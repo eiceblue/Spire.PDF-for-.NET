@@ -1,61 +1,58 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
+Imports Spire.Pdf.Actions
 Imports Spire.Pdf.Graphics
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Data
+Imports System.Drawing
+Imports System.Linq
+Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 
 Namespace CreatePdfLinkAnnotation
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PDF document
-            Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            'Create a new object of PdfDocument.
+            Dim doc As PdfDocument = New PdfDocument()
 
-            ' Add a new page to the document
+            'Add a page to it.
             Dim page As PdfPageBase = doc.Pages.Add()
 
-            ' Define the rectangle for the link annotation
-            Dim rect As New RectangleF(0, 40, 250, 35)
+            'Declare two parameters that will be passed to the constructor of PdfFileLinkAnnotation class.
+            Dim rect As RectangleF = New RectangleF(40, 80, 250, 35)
+            Dim filePath As String = @"..\..\..\..\..\..\Data\Template_Pdf_3.pdf"
 
-            ' Specify the file path of the linked PDF file
-            Dim filePath As String = "..\..\..\..\..\..\Data\Template_Pdf_3.pdf"
+            'Create a file link annotation based on the two parameters and add the annotation to the new page.
+            Dim link As PdfLinkAnnotation = New PdfLinkAnnotation(page, rect, New PdfLaunchAction(filePath,PdfFilePathType.Relative))
+            PdfAnnotationCollection.Create(page).Add(link)
+            Dim font As PdfFont = New PdfFont(PdfFontFamily.Helvetica, 15)
+            'Create a free text annotation based on the same RectangleF, specifying the content.
+            Dim text As PdfFreeTextAnnotation = New PdfFreeTextAnnotation(page, rect, New PdfDefaultAppearance(font))
+            text.Contents = "Click here! This Is a link annotation."
 
-            ' Create a new file link annotation with the specified rectangle and file path
-            Dim link As New PdfFileLinkAnnotation(rect, filePath)
+            PdfAnnotationCollection.Create(page).Add(text)
 
-            ' Add the file link annotation to the page
-            page.Annotations.Add(link)
+            Dim result As String = "CreatePdfLinkAnnotation.pdf"
 
-            ' Create a new free text annotation with the specified rectangle
-            Dim text As New PdfFreeTextAnnotation(rect)
-
-            ' Set the text content for the free text annotation
-            text.Text = "Click here! This is a link annotation."
-
-            ' Set the font for the free text annotation
-            Dim font As New PdfFont(PdfFontFamily.Helvetica, 15)
-            text.Font = font
-
-            ' Add the free text annotation to the page
-            page.AnnotationsWidget.Add(text)
-
-            ' Save the document to a file
-            Dim result As String = "CreatePdfLinkAnnotation_out.pdf"
+            'Save the document
             doc.SaveToFile(result)
-
-            ' Close the document
             doc.Close()
 
-            ' Launch the Pdf file
+            'Launch the Pdf file
             PDFDocumentViewer(result)
         End Sub
         Private Sub PDFDocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

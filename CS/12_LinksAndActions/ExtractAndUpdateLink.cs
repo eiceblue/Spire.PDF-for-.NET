@@ -1,13 +1,7 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Actions;
+using Spire.Pdf.Interactive.Annotations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ExtractAndUpdateLink
@@ -31,7 +25,7 @@ namespace ExtractAndUpdateLink
             PdfPageBase page = doc.Pages[0];
 
             //Get the annotation collection
-            PdfAnnotationCollection annotations = page.Annotations;
+            PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(page);
 
             //Verify whether widgetCollection is not null or not
             if (annotations.Count > 0)
@@ -40,18 +34,19 @@ namespace ExtractAndUpdateLink
                 foreach (PdfAnnotation pdfAnnotation in annotations)
                 {
                     //if it is PdfTextWebLinkAnnotationWidget
-                    if (pdfAnnotation is PdfTextWebLinkAnnotationWidget)
+                    if (pdfAnnotation is PdfLinkAnnotation)
                     {
 
                         //Get the link annotation
-                        PdfTextWebLinkAnnotationWidget annotation = pdfAnnotation as PdfTextWebLinkAnnotationWidget;
+                        PdfLinkAnnotation annotation = pdfAnnotation as PdfLinkAnnotation;
 
                         //Change the url
-                        annotation.Url = "http://www.e-iceblue.com/Introduce/pdf-for-net-introduce.html";
+                        (annotation.Action as PdfURIAction).URI = "http://www.e-iceblue.com/Introduce/pdf-for-net-introduce.html";
 
                     }
                 }
             }
+
             String result = "ExtractAndUpdateLink_out.pdf";
 
             //Save the document

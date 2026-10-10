@@ -1,65 +1,56 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Graphics
 Imports Spire.Pdf.Actions
 
 Namespace AddPdfLaunchAction
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new PdfDocument
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Create a new PDF document 
+            Dim doc As PdfDocument = New PdfDocument()
 
-			' Add a new page to the document
-			Dim page As PdfPageBase = doc.Pages.Add()
+            ' Add a page to the document
+            Dim page As PdfPageBase = doc.Pages.Add()
 
-			' Create a PdfLaunchAction to launch a file
-			Dim launchAction As New PdfLaunchAction("..\..\..\..\..\..\Data\text.txt")
+            ' Create a PDF Launch Action that will open a text file
+            Dim launchAction As PdfLaunchAction = New PdfLaunchAction("..\\..\\..\\..\\..\\..\\Data\\text.txt",PdfFilePathType.Relative)
 
-			' Set the text to be displayed on the page
-			Dim text As String = "Click here to open file"
+            ' Create a PDF Action Annotation with the PDF Launch Action
+            Dim text As String = "Click here to open file"
+            Dim font As PdfTrueTypeFont = New PdfTrueTypeFont(New Font("Arial", 13f))
+            '''///////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             Dim font As PdfTrueTypeFont = New PdfTrueTypeFont("Arial", 13f ,PdfFontStyle.Regular, True)
+            */
 
-			' Set the font for the text
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 13.0F))
+            Dim rect As RectangleF = New RectangleF(50, 50, 230, 15)
+            page.Canvas.DrawString(text, font, PdfBrushes.ForestGreen, rect)
+            rect = New RectangleF(90, 90, 230, 15)
+            Dim annotation As PdfLinkAnnotation = New PdfLinkAnnotation(page, rect, launchAction)
+            'Add the PDF Action Annotation to page
+            PdfAnnotationCollection.Create(page).Add(annotation)
 
-			' =============================================================================
-			' Use the following code for netstandard dlls
-			' =============================================================================
-			'Dim font As New PdfTrueTypeFont("Arial", 13.0F, FontStyle.Regular, True)
-			' =============================================================================
+            Dim result As String = "AddPdfLaunchAction_out.pdf"
 
-			' Set the rectangle for the text
-			Dim rect As New RectangleF(50, 50, 230, 15)
+            ' Save the document
+            doc.SaveToFile(result)
 
-			' Draw the text on the page using the specified font and rectangle
-			page.Canvas.DrawString(text, font, PdfBrushes.ForestGreen, rect)
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
 
-			' Create a PdfActionAnnotation for the text
-			Dim annotation As New PdfActionAnnotation(rect, launchAction)
-
-			' Add the annotation to the page's annotations collection
-			TryCast(page, PdfNewPage).Annotations.Add(annotation)
-
-			' Save the document to a file
-			Dim result As String = "AddPdfLaunchAction_out.pdf"
-			doc.SaveToFile(result)
-
-			' Close the document
-			doc.Close()
-
-			' Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
+    End Class
 End Namespace

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Attachments;
 using Spire.Pdf.Graphics;
 
@@ -75,20 +75,19 @@ namespace Attachment
             page.Canvas.DrawString(label, font2, PdfBrushes.DarkOrange, bounds);
             bounds = new RectangleF(bounds.Right + 3, bounds.Top, font2.Height / 2, font2.Height);
 
-            // Create a PdfAttachmentAnnotation for the Sales Report Chart attachment
-            PdfAttachmentAnnotation annotation1 = new PdfAttachmentAnnotation(bounds, "SalesReportChart.png", data);
+            //Create a PdfAttachmentAnnotation 
+            PdfFileSpecification fileSpecification = new PdfFileSpecification("SalesReportChart.png", data);
+            PdfFileAttachmentAnnotation annotation1
+                = new PdfFileAttachmentAnnotation(page, bounds, fileSpecification);
+
             annotation1.Color = Color.Teal;
             annotation1.Flags = PdfAnnotationFlags.ReadOnly;
-            annotation1.Icon = PdfAttachmentIcon.Graph;
-            annotation1.Text = "Sales Report Chart";
-
-            // Add the annotation to the page
-            page.Annotations.Add(annotation1);
-
-            // Update the y-coordinate
+            annotation1.Icon = PdfFileIcon.Graph;
+            annotation1.Contents = "Sales Report Chart";
+            //Add the annotation1
+            PdfAnnotationCollection.Create(page).Add(annotation1);
             y = y + size.Height + 3;
 
-            // Repeat the above steps for the remaining attachments and annotations
             location = new PointF(x, y);
             label = "Science Personification Boston";
             data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\SciencePersonificationBoston.jpg");
@@ -98,14 +97,14 @@ namespace Attachment
 
             bounds = new RectangleF(bounds.Right + 3, bounds.Top, font2.Height / 2, font2.Height);
 
-
-            PdfAttachmentAnnotation annotation2
-                = new PdfAttachmentAnnotation(bounds, "SciencePersonificationBoston.jpg", data);
+            PdfFileSpecification fileSpecification2 = new PdfFileSpecification("SciencePersonificationBoston.jpg", data);
+            PdfFileAttachmentAnnotation annotation2
+                = new PdfFileAttachmentAnnotation(page, bounds, fileSpecification2);
             annotation2.Color = Color.Orange;
             annotation2.Flags = PdfAnnotationFlags.NoZoom;
-            annotation2.Icon = PdfAttachmentIcon.PushPin;
-            annotation2.Text = "SciencePersonificationBoston.jpg, from Wikipedia, the free encyclopedia";
-            page.Annotations.Add(annotation2);
+            annotation2.Icon = PdfFileIcon.PushPin;
+            annotation2.Contents = "SciencePersonificationBoston.jpg, from Wikipedia, the free encyclopedia";
+            PdfAnnotationCollection.Create(page).Add(annotation2);
             y = y + size.Height + 2;
 
             location = new PointF(x, y);
@@ -115,29 +114,31 @@ namespace Attachment
             bounds = new RectangleF(location, size);
             page.Canvas.DrawString(label, font2, PdfBrushes.DarkOrange, bounds);
             bounds = new RectangleF(bounds.Right + 3, bounds.Top, font2.Height / 2, font2.Height);
-            PdfAttachmentAnnotation annotation3
-                = new PdfAttachmentAnnotation(bounds, "Wikipedia_Science.png", data);
+            PdfFileSpecification fileSpecification3 = new PdfFileSpecification("Wikipedia_Science.png", data);
+            PdfFileAttachmentAnnotation annotation3
+                = new PdfFileAttachmentAnnotation(page, bounds, fileSpecification3);
             annotation3.Color = Color.SaddleBrown;
             annotation3.Flags = PdfAnnotationFlags.Locked;
-            annotation3.Icon = PdfAttachmentIcon.Tag;
-            annotation3.Text = "Wikipedia_Science.png, from Wikipedia, the free encyclopedia";
-            page.Annotations.Add(annotation3);
+            annotation3.Icon = PdfFileIcon.Tag;
+            annotation3.Contents = "Wikipedia_Science.png, from Wikipedia, the free encyclopedia";
+            PdfAnnotationCollection.Create(page).Add(annotation3);
             y = y + size.Height + 2;
 
             location = new PointF(x, y);
-            label = "PT_Serif-Caption-Web-Regular Font";
+            label = "Hawaii Killer Font";
             data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\PT_Serif-Caption-Web-Regular.ttf");
             size = font2.MeasureString(label);
             bounds = new RectangleF(location, size);
             page.Canvas.DrawString(label, font2, PdfBrushes.DarkOrange, bounds);
             bounds = new RectangleF(bounds.Right + 3, bounds.Top, font2.Height / 2, font2.Height);
-            PdfAttachmentAnnotation annotation4
-                = new PdfAttachmentAnnotation(bounds, "PT_Serif-Caption-Web-Regular.ttf", data);
+            PdfFileSpecification fileSpecification4 = new PdfFileSpecification("PT_Serif-Caption-Web-Regular.ttf", data);
+            PdfFileAttachmentAnnotation annotation4
+                = new PdfFileAttachmentAnnotation(page, bounds, fileSpecification4);
             annotation4.Color = Color.CadetBlue;
             annotation4.Flags = PdfAnnotationFlags.NoRotate;
-            annotation4.Icon = PdfAttachmentIcon.Paperclip;
-            annotation4.Text = "PT_Serif-Caption-Web-Regular, from https://company.paratype.com";
-            page.Annotations.Add(annotation4);
+            annotation4.Icon = PdfFileIcon.Paperclip;
+            annotation4.Contents = "PT Serif Caption Font, from http://www.1001freefonts.com";
+            PdfAnnotationCollection.Create(page).Add(annotation4);
             y = y + size.Height + 2;
 
             // Save the PDF document

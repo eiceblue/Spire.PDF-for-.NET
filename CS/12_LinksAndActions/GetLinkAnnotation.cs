@@ -1,14 +1,9 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Actions;
+using Spire.Pdf.Interactive.Annotations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GetLinkAnnotation
@@ -32,11 +27,11 @@ namespace GetLinkAnnotation
             PdfPageBase page = doc.Pages[0];
 
             //Get the annotation collection
-            PdfAnnotationCollection annotations = page.Annotations;
+            PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(page);
 
             //Create StringBuilder to save 
             StringBuilder content = new StringBuilder();
-             
+
             //Verify whether widgetCollection is not null or not
             if (annotations.Count > 0)
             {
@@ -44,19 +39,20 @@ namespace GetLinkAnnotation
                 foreach (PdfAnnotation pdfAnnotation in annotations)
                 {
                     //if it is PdfTextWebLinkAnnotationWidget
-                    if (pdfAnnotation is PdfTextWebLinkAnnotationWidget)
+                    if (pdfAnnotation is PdfLinkAnnotation)
                     {
 
                         //Get the Url
-                        PdfTextWebLinkAnnotationWidget WebLinkAnnotation = pdfAnnotation as PdfTextWebLinkAnnotationWidget;
-                        string url = WebLinkAnnotation.Url;
+                        PdfLinkAnnotation WebLinkAnnotation = pdfAnnotation as PdfLinkAnnotation;
+                        string url = (WebLinkAnnotation.Action as PdfURIAction).URI;
 
                         //Add strings to StringBuilder
-                        content.AppendLine("The url of link annotation is "+ url);
-                        content.AppendLine("The text of link annotation is " + WebLinkAnnotation.Text);
+                        content.AppendLine("The url of link annotation is " + url.ToString());
+                        content.AppendLine("The text of link annotation is " + WebLinkAnnotation.Contents.ToString());
                     }
                 }
             }
+
 
             String result = "GetLinkAnnotation_out.txt";
 

@@ -1,54 +1,46 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
+Imports System
 Imports System.IO
+Imports System.Windows.Forms
 
 Namespace Extract3DViedoFile
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PdfDocument object
-            Dim pdf As New PdfDocument()
-            pdf.LoadFromFile("..\..\..\..\..\..\Data\3D.pdf")
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            'Load old PDF from disk.
+            Dim pdf As PdfDocument = New PdfDocument()
+            pdf.LoadFromFile(@"..\..\..\..\..\..\Data\3D.pdf")
 
-            ' Get the first page of the PDF document
-            Dim firstPage As PdfPageBase = pdf.Pages(0)
+            'Get the first page.
+            Dim firstPage As PdfPageBase = pdf.Pages[0]
 
-            ' Get the collection of annotations on the first page
-            Dim annot As PdfAnnotationCollection = firstPage.Annotations
+            'Get the annotation collection of the first page
+            Dim annot As PdfAnnotationCollection = PdfAnnotationCollection.Create(firstPage)
 
-            ' Initialize a counter to keep track of the number of 3D annotations found
+            'Define an int variable
             Dim count As Integer = 0
 
-            ' Iterate through each annotation in the collection
-            For i As Integer = 0 To annot.Count - 1
+            'Traverse the annotations
+            Dim i As Integer = 0
+            While i < annot.Count
+                'If it is Pdf3DAnnotation
+                If annot[i] is Pdf3DAnnotation Then
+                    Dim annot3D As Pdf3DAnnotation = annot[i] as Pdf3DAnnotation
 
-                ' Check if the current annotation is a 3D annotation
-                If TypeOf annot(i) Is Pdf3DAnnotation Then
+                    'Get the 3D video data
+                    Dim bytes As Byte[] = annot3D.Artwork.Data
 
-                    ' Cast the annotation to Pdf3DAnnotation type
-                    Dim annot3D As Pdf3DAnnotation = TryCast(annot(i), Pdf3DAnnotation)
-
-                    ' Get the 3D data bytes from the annotation
-                    Dim bytes() As Byte = annot3D._3DData
-
-                    ' Check if the 3D data bytes exist
-                    If bytes IsNot Nothing Then
-
-                        ' Write the 3D data bytes to a file with a unique name based on the counter
-                        File.WriteAllBytes(String.Format("3d-{0}.u3d", count), bytes)
-
-                        ' Increment the counter
+                    'Write the data into .u3d format file
+                    If bytes != null Then
+                        File.WriteAllBytes(String.Format(@"3d-{0}.u3d", count), bytes)
                         count += 1
                     End If
                 End If
-            Next i
-
-            ' Close the document
-            pdf.Close()
+            Next
         End Sub
-	End Class
+    End Class
 End Namespace

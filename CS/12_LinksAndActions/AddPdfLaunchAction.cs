@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Fields;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
-using Spire.Pdf.General;
+
+
 namespace AddPdfLaunchAction
 {
     public partial class Form1 : Form
@@ -29,7 +25,7 @@ namespace AddPdfLaunchAction
             PdfPageBase page = doc.Pages.Add();
 
             // Create a PDF Launch Action that will open a text file
-            PdfLaunchAction launchAction = new PdfLaunchAction("..\\..\\..\\..\\..\\..\\Data\\text.txt");
+            PdfLaunchAction launchAction = new PdfLaunchAction("..\\..\\..\\..\\..\\..\\Data\\text.txt",PdfFilePathType.Relative);
 
             // Create a PDF Action Annotation with the PDF Launch Action
             string text = "Click here to open file";
@@ -41,10 +37,10 @@ namespace AddPdfLaunchAction
 
             RectangleF rect = new RectangleF(50, 50, 230, 15);
             page.Canvas.DrawString(text, font, PdfBrushes.ForestGreen, rect);
-            PdfActionAnnotation annotation = new PdfActionAnnotation(rect, launchAction);
-
-            // Add the PDF Action Annotation to the page
-            (page as PdfNewPage).Annotations.Add(annotation);
+            rect = new RectangleF(90, 90, 230, 15);
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, launchAction);
+            //Add the PDF Action Annotation to page
+            PdfAnnotationCollection.Create(page).Add(annotation);
 
             String result = "AddPdfLaunchAction_out.pdf";
 

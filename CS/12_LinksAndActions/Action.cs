@@ -4,10 +4,10 @@ using System.Data.OleDb;
 using System.Drawing;
 using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Actions;
-using Spire.Pdf.Annotations;
-using Spire.Pdf.General;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Actions;
+using Spire.Pdf.Destinations;
 using Spire.Pdf.Tables;
 
 namespace Action
@@ -46,10 +46,10 @@ namespace Action
             y = y + 2;
 
             //Table top
-            PdfDestination tableTopDest = new PdfDestination(page);
-            tableTopDest.Location = new PointF(0, y);
-            tableTopDest.Mode = PdfDestinationMode.Location;
-            tableTopDest.Zoom = 1f;
+            PdfXYZExplicitDestination tableTopDest = new PdfXYZExplicitDestination(page, 0, y, 1f);
+            //tableTopDest.Location = new PointF(0, y);
+            //tableTopDest.Mode = PdfDestinationMode.Location;
+            //tableTopDest.Zoom = 1f;
 
             //Draw table            
             PdfTrueTypeFont buttonFont = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold));
@@ -59,10 +59,10 @@ namespace Action
             PdfLayoutResult tableLayoutResult = DrawTable(page, y + buttonHeight + 5);
 
             //Table bottom
-            PdfDestination tableBottomDest = new PdfDestination(tableLayoutResult.Page);
-            tableBottomDest.Location = new PointF(0, tableLayoutResult.Bounds.Bottom);
-            tableBottomDest.Mode = PdfDestinationMode.Location;
-            tableBottomDest.Zoom = 1f;
+            PdfXYZExplicitDestination tableBottomDest = new PdfXYZExplicitDestination(tableLayoutResult.Page, 0, tableLayoutResult.Bounds.Bottom, 1f);
+            //tableBottomDest.Location = new PointF(0, tableLayoutResult.Bounds.Bottom);
+            //tableBottomDest.Mode = PdfDestinationMode.Location;
+            //tableBottomDest.Zoom = 1f;
 
             //Go to table bottom
             float x = page.Canvas.ClientSize.Width - buttonWidth;
@@ -71,11 +71,10 @@ namespace Action
             page.Canvas.DrawRectangle(PdfBrushes.DarkGray, buttonBounds);
             page.Canvas.DrawString("To Bottom", buttonFont, PdfBrushes.CadetBlue, buttonBounds, format2);
             PdfGoToAction action1 = new PdfGoToAction(tableBottomDest);
-            PdfActionAnnotation annotation1
-                = new PdfActionAnnotation(buttonBounds, action1);
-            annotation1.Border = new PdfAnnotationBorder(0.75f);
+            PdfLinkAnnotation annotation1 = new PdfLinkAnnotation(page, buttonBounds, action1);
+            annotation1.Border.Width = 0.75f;
             annotation1.Color = Color.LightGray;
-            (page as PdfNewPage).Annotations.Add(annotation1);
+            PdfAnnotationCollection.Create(page).Add(annotation1);
 
             //Go to table top
             float tableBottom = tableLayoutResult.Bounds.Bottom + 5;
@@ -83,14 +82,13 @@ namespace Action
             tableLayoutResult.Page.Canvas.DrawRectangle(PdfBrushes.DarkGray, buttonBounds);
             tableLayoutResult.Page.Canvas.DrawString("To Top", buttonFont, PdfBrushes.CadetBlue, buttonBounds, format2);
             PdfGoToAction action2 = new PdfGoToAction(tableTopDest);
-            PdfActionAnnotation annotation2
-                = new PdfActionAnnotation(buttonBounds, action2);
-            annotation2.Border = new PdfAnnotationBorder(0.75f);
+            PdfLinkAnnotation annotation2 = new PdfLinkAnnotation(page, buttonBounds, action2);
+            annotation2.Border.Width = 0.75f;
             annotation2.Color = Color.LightGray;
-            (tableLayoutResult.Page as PdfNewPage).Annotations.Add(annotation2);
+            PdfAnnotationCollection.Create(tableLayoutResult.Page).Add(annotation2);
 
             //Go to last page
-            PdfNamedAction action3 = new PdfNamedAction(PdfActionDestination.LastPage);
+            PdfNamedAction action3 = new PdfNamedAction(PdfPredefinedAction.LastPage);
             doc.AfterOpenAction = action3;
 
             //Script
@@ -115,7 +113,7 @@ namespace Action
         {
             PdfBrush brush1 = PdfBrushes.Black;
 
-            // Create data table
+            //Create data table
             PdfTable table = new PdfTable();
             table.Style.CellPadding = 2;
             table.Style.BorderPen = new PdfPen(brush1, 0.75f);
@@ -134,9 +132,9 @@ namespace Action
             {
                 conn.ConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=..\..\..\..\..\..\Data\demo.mdb";
                 OleDbCommand command = new OleDbCommand();
-                command.CommandText = "SELECT Description, OnHand, OnOrder, Cost, ListPrice FROM parts";
+                command.CommandText
+                    = " select Description, OnHand, OnOrder, Cost, ListPrice from parts ";
                 command.Connection = conn;
-
                 using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command))
                 {
                     DataTable dataTable = new DataTable();
@@ -145,19 +143,22 @@ namespace Action
                     table.DataSource = dataTable;
                 }
             }
-
-            float width = page.Canvas.ClientSize.Width - (table.Columns.Count + 1) * table.Style.BorderPen.Width;
+            float width
+                = page.Canvas.ClientSize.Width
+                    - (table.Columns.Count + 1) * table.Style.BorderPen.Width;
             for (int i = 0; i < table.Columns.Count; i++)
             {
                 if (i == 0)
                 {
                     table.Columns[i].Width = width * 0.40f * width;
-                    table.Columns[i].StringFormat = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Middle);
+                    table.Columns[i].StringFormat
+                        = new PdfStringFormat(PdfTextAlignment.Left, PdfVerticalAlignment.Middle);
                 }
                 else
                 {
                     table.Columns[i].Width = width * 0.15f * width;
-                    table.Columns[i].StringFormat = new PdfStringFormat(PdfTextAlignment.Right, PdfVerticalAlignment.Middle);
+                    table.Columns[i].StringFormat
+                        = new PdfStringFormat(PdfTextAlignment.Right, PdfVerticalAlignment.Middle);
                 }
             }
 
@@ -165,18 +166,16 @@ namespace Action
             tableLayout.Break = PdfLayoutBreakType.FitElement;
             tableLayout.Layout = PdfLayoutType.Paginate;
 
-            // Draw the table on the page
             PdfLayoutResult result = table.Draw(page, new PointF(0, y), tableLayout);
             y = result.Bounds.Bottom + 3;
 
             PdfBrush brush2 = PdfBrushes.Gray;
             PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Arial", 9f));
-
-            // Add additional information below the table
             result.Page.Canvas.DrawString(String.Format("* {0} parts in the list.", table.Rows.Count),
                 font2, brush2, 5, y);
 
             return result;
+
         }
 
 

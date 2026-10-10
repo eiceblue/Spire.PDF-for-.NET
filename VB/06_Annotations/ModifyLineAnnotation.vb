@@ -1,49 +1,59 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Data
+Imports System.Drawing
+Imports System.Linq
+Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 
 Namespace ModifyLineAnnotation
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PdfDocument object 
-            Dim document As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            Dim result As String = "ModifyLineAnnotation.pdf"
 
-            ' Load an existing PDF document
-            document.LoadFromFile("..\..\..\..\..\..\Data\PdfLineAnnotation.pdf")
+            ' Create a new PdfDocument object
+            Dim document As PdfDocument = New PdfDocument()
 
-            ' Get the first annotation from the first page of the document
-            Dim annotation As PdfAnnotation = document.Pages(0).Annotations(0)
+            ' Load an existing PDF file into the document from the specified path
+            document.LoadFromFile(@"..\..\..\..\..\..\Data\PdfLineAnnotation.pdf")
 
-            ' Check if the annotation is a PdfLineAnnotationWidget
-            If TypeOf annotation Is PdfLineAnnotationWidget Then
-                ' Cast the annotation as a PdfLineAnnotationWidget
-                Dim lineAnn As PdfLineAnnotationWidget = TryCast(annotation, PdfLineAnnotationWidget)
+            ' Retrieve the first annotation from the first page of the document
+            Dim annotation As PdfAnnotation = PdfAnnotationCollection.Create(document.Pages[0])[0]
 
-                ' Modify the author and subject properties of the line annotation
-                lineAnn.Author = "Author_test"
+            ' Check if the retrieved annotation is a PdfLineAnnotation
+            If annotation is PdfLineAnnotation Then
+                ' Cast the annotation as a PdfLineAnnotation to access its specific properties and methods
+                Dim lineAnn As PdfLineAnnotation = annotation as PdfLineAnnotation
+
+                ' Set the title property of the line annotation to "Author_test"
+                lineAnn.Title = "Author_test"
+
+                ' Set the subject property of the line annotation to "Subject_test"
                 lineAnn.Subject = "Subject_test"
             End If
 
-            ' Save the modified document to a file
-            Dim result As String = "ModifyLineAnnotation.pdf"
+            ' Save the modified document to the specified file path
             document.SaveToFile(result)
 
-            ' Close the document
-            document.Close()
+            document.Dispose()
 
-            ' Launch the Pdf file
+            'Launch the Pdf file
             PDFDocumentViewer(result)
         End Sub
 
         Private Sub PDFDocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

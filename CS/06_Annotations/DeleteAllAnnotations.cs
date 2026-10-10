@@ -1,12 +1,6 @@
-﻿using Spire.Pdf;
+using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DeleteAllAnnotations
@@ -27,12 +21,13 @@ namespace DeleteAllAnnotations
             document.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf");
 
             //Remove all annotations
-            document.Pages[0].Annotations.Clear();
+            PdfAnnotationCollection.Create(document.Pages[0]).Clear();
 
-            String result = "DeleteAllAnnotations_out.pdf";
+            String result = "DeleteAllAnnotations.pdf";
 
             //Save the document
             document.SaveToFile(result);
+            document.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

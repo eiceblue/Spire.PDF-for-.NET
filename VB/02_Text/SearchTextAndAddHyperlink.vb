@@ -1,67 +1,60 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports System
+Imports System.Collections.Generic
+Imports System.Drawing
+Imports System.Windows.Forms
+Imports Spire.Pdf
+Imports Spire.Pdf.Actions
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Texts
 
 Namespace SearchTextAndAddHyperlink
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Specify the path to the input PDF file
-            Dim input As String = "..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            Dim input As String = @"..\..\..\..\..\..\Data\SearchReplaceTemplate.pdf"
+            Dim doc As PdfDocument = New PdfDocument()
 
-            ' Create a new PdfDocument object
-            Dim doc As New PdfDocument()
-
-            ' Load the PDF document from the specified input file
+            ' Read a pdf file
             doc.LoadFromFile(input)
 
-            ' Get the first page of the document
-            Dim page As PdfPageBase = doc.Pages(0)
+            ' Get the first page of pdf file
+            Dim page As PdfPageBase = doc.Pages[0]
 
-            ' Create a PdfTextFinder object and specify the search options
-            Dim finder As New PdfTextFinder(page)
-            finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase
+            ' Create PdfTextFindCollection object to find all the matched phrases
+            Dim finds As PdfTextFinder = New PdfTextFinder(doc.Pages[0])
+            finds.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase
+            Dim result As List<PdfTextFragment> = finds.Find("e-iceblue")
 
-            ' Find all occurrences of the text "e-iceblue" on the page
-            Dim finds As List(Of PdfTextFragment) = finder.Find("e-iceblue")
-
-            ' Specify the URL for the hyperlink
+            ' hyperlink url
             Dim url As String = "http://www.e-iceblue.com"
 
-            ' Iterate over each found text fragment
-            For Each find As PdfTextFragment In finds
-                ' Create a PdfUriAnnotation object with the bounds of the found text
-                Dim uri As New PdfUriAnnotation(find.Bounds(0))
-                uri.Uri = url
-                uri.Border = New PdfAnnotationBorder(1.0F)
-                uri.Color = Color.Blue
+            For Each find As PdfTextFragment In result
+                Dim rect As RectangleF = New RectangleF(find.Positions[0].X, find.Positions[0].Y, find.Sizes[0].Width, find.Sizes[0].Height)
+                ' Create a PdfUriAnnotation object to add hyperlink for the searched text 
+                Dim action As PdfURIAction = New PdfURIAction(url)
+                Dim annotation As PdfLinkAnnotation = New PdfLinkAnnotation(page, rect, action)
+                annotation.Border.Width = 1f
+                annotation.Color = Color.Blue
+                PdfAnnotationCollection.Create(page).Add(annotation)
+            Next
 
-                ' Add the annotation to the page's annotation widget collection
-                page.Annotations.Add(uri)
-            Next find
+            Dim outputFile As String = "SearchTextAndAddHyperlink_out.pdf"
 
-            ' Specify the output file name
-            Dim result As String = "SearchTextAndAddHyperlink_out.pdf"
+            ' Save the modified document to the output file path
+            doc.SaveToFile(outputFile)
 
-            ' Save the modified document to the specified output file
-            doc.SaveToFile(result)
-
-            ' Close the document
-            doc.Close()
-
-            ' Launch the Pdf file
-            PDFDocumentViewer(result)
+            'Launch the Pdf file
+            PDFDocumentViewer(outputFile)
         End Sub
 
         Private Sub PDFDocumentViewer(ByVal fileName As String)
             Try
                 System.Diagnostics.Process.Start(fileName)
-            Catch
-            End Try
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

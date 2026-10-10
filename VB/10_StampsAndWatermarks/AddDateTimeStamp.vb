@@ -1,80 +1,61 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
-Imports Spire.Pdf.Annotations.Appearance
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Graphics
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
 
 Namespace AddDateTimeStamp
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new PdfDocument object
-			Dim document As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Load a PDF document from disk
+            Dim document As PdfDocument = New PdfDocument()
+            document.LoadFromFile("../../../../../../Data/PDFTemplate_N.pdf")
 
-			' Load an existing PDF file from the specified path
-			document.LoadFromFile("../../../../../../Data/PDFTemplate_N.pdf")
+            ' Get the first page of the document
+            Dim page As PdfPageBase = document.Pages[0]
 
-			' Access the first page of the document
-			Dim page As PdfPageBase = document.Pages(0)
+            ' Set the font and brush for the text
+            Dim font As PdfTrueTypeFont = New PdfTrueTypeFont(New Font("Arial", 12f, FontStyle.Regular), True)
+            '''///////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             Dim font As PdfTrueTypeFont = New PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, True)
+            */
 
-			' Create a new PdfTrueTypeFont object with Arial font, size 12, and regular style
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Regular), True)
-			' =============================================================================
-			' Use the following code for netstandard dlls
-			' =============================================================================
-			'Dim font As New PdfTrueTypeFont("Arial", 12.0F, FontStyle.Regular, True)
-			' =============================================================================
+            Dim brush As PdfSolidBrush = New PdfSolidBrush(Color.Blue)
 
-			' Create a new PdfSolidBrush object with blue color
-			Dim brush As New PdfSolidBrush(Color.Blue)
+            ' Generate a string representing the current date and time
+            Dim timeString As String = DateTime.Now.ToString("MM/dd/yy hh:mm:ss")
 
-			' Get the current timestamp as a formatted string
-			Dim timeString As String = Date.Now.ToString("MM/dd/yy hh:mm:ss tt ")
+            'Create a template and rectangle, draw the string
+            Dim template As PdfTemplate = New PdfTemplate(140, 15)
+            Dim rect As RectangleF = New RectangleF(New PointF(page.ActualSize.Width - template.Width - 10, page.ActualSize.Height - template.Height - 10), template.Size)
+            template.Graphics.DrawString(timeString, font, brush, New PointF(0, 0))
 
-			' Create a new PdfTemplate object with a specific width and height
-			Dim template As New PdfTemplate(140, 15)
+            'Create stamp annoation
+            Dim stamp As PdfRubberStampAnnotation = New PdfRubberStampAnnotation(page, rect)
+            stamp.Appearances.SetNormalAppearance(New PdfAppearance(template))
 
-			' Define the position and size of the template on the page
-			Dim rect As New RectangleF(New PointF(page.ActualSize.Width - template.Width - 10, page.ActualSize.Height - template.Height - 10), template.Size)
+            'Draw stamp into page
+            PdfAnnotationCollection.Create(page).Add(stamp)
 
-			' Draw the timestamp string onto the template
-			template.Graphics.DrawString(timeString, font, brush, New PointF(0, 0))
+            ' Specify the file name for the modified PDF document
+            Dim output As String = "AddDateTimeStamp_result.pdf"
 
-			' Create a new PdfRubberStampAnnotation object with the defined rectangle
-			Dim stamp As New PdfRubberStampAnnotation(rect)
+            ' Save the modified document to the specified file path in PDF format
+            document.SaveToFile(output, FileFormat.PDF)
 
-			' Create a new PdfAppearance object for the stamp annotation
-			Dim appearance As New PdfAppearance(stamp)
-
-			' Set the appearance of the stamp to use the created template
-			appearance.Normal = template
-
-			' Assign the appearance to the stamp annotation
-			stamp.Appearance = appearance
-
-			' Add the stamp annotation to the page
-            page.Annotations.Add(stamp)
-
-			' Specify the output file name
-			Dim output As String = "AddDateTimeStamp_result.pdf"
-
-			' Save the modified document to a file in PDF format
-			document.SaveToFile(output, FileFormat.PDF)
-
-			' Close the document
-			document.Close()
-
-			' Launch the file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
+    End Class
 End Namespace

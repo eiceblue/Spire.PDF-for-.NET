@@ -1,106 +1,100 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Graphics
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Data
+Imports System.Drawing
+Imports System.Linq
+Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 
 Namespace InvisibleFreeTextAnnotation
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new PdfDocument object 
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Create a new PDF document.
+            Dim doc As PdfDocument = New PdfDocument()
 
-			doc.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_4.pdf")
+            ' Load the PDF file from the specified path.
+            doc.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_4.pdf")
 
-			' Get the first page of the PDF
-			Dim page As PdfPageBase = doc.Pages(0)
+            ' Get the first page of the PDF document.
+            Dim page As PdfPageBase = doc.Pages[0]
 
-			' Define the rectangle for the first free text annotation
-			Dim rect As New RectangleF(100, 120, 150, 30)
+            ' Define a rectangle with specific coordinates and dimensions.
+            Dim rect As RectangleF = New RectangleF(100, 120, 150, 30)
 
-			' Create a new PdfFreeTextAnnotation with the specified rectangle
-			Dim FreetextAnnotation As New PdfFreeTextAnnotation(rect)
+            ' Specify the font for the free text annotation.
+            Dim font As PdfFont = New PdfFont(PdfFontFamily.TimesRoman, 10)
 
-			' Set the text content of the free text annotation
-			FreetextAnnotation.Text = "Invisible Free Text Annotation"
+            ' Specify a default appearance for the free text annotation.
+            Dim defaultAppearance As PdfDefaultAppearance = New PdfDefaultAppearance(font)
 
-			' Create a new font for the annotation
-			Dim font As New PdfFont(PdfFontFamily.TimesRoman, 10)
+            ' Create a new free text annotation using the page, the rectangle and the default appearance.
+            Dim FreetextAnnotation As PdfFreeTextAnnotation = New PdfFreeTextAnnotation(page, rect, defaultAppearance)
 
-			' Create a border for the annotation
-			Dim border As New PdfAnnotationBorder(1.0F)
+            ' Set the text content of the free text annotation.
+            FreetextAnnotation.Contents = "Invisible Free Text Annotation"
 
-			' Set the font and border properties of the free text annotation
-			FreetextAnnotation.Font = font
-			FreetextAnnotation.Border = border
+            ' Set various properties for the free text annotation.
+            FreetextAnnotation.Border.Width = 1f
+            FreetextAnnotation.Border.Color = Color.Purple
+            FreetextAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle
+            FreetextAnnotation.Color = Color.Green
+            FreetextAnnotation.StrokingOpacity = 0.8f
 
-			' Set the border color of the free text annotation to purple
-			FreetextAnnotation.BorderColor = Color.Purple
+            ' Set flags to make the free text annotation invisible.
+            FreetextAnnotation.Flags = PdfAnnotationFlags.Print | PdfAnnotationFlags.NoView
 
-			' Set the line ending style of the free text annotation to a circle
-			FreetextAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle
+            ' Add the free text annotation to the page's annotations collection.
+            PdfAnnotationCollection.Create(page).Add(FreetextAnnotation)
 
-			' Set the color of the free text annotation to green
-			FreetextAnnotation.Color = Color.Green
+            ' Refresh the appearance of the free text annotation.
+            FreetextAnnotation.RefreshAppearances()
 
-			' Set the opacity of the free text annotation to 0.8
-			FreetextAnnotation.Opacity = 0.8F
+            ' Define a new rectangle for the next free text annotation.
+            rect = New RectangleF(100, 180, 150, 30)
 
-			' Set the flags of the free text annotation to enable printing and disable viewing
-			FreetextAnnotation.Flags = PdfAnnotationFlags.Print Or PdfAnnotationFlags.NoView
+            ' Create another free text annotation using the new rectangle.
+            FreetextAnnotation = New PdfFreeTextAnnotation(page, rect, New PdfDefaultAppearance(font))
 
-			' Add the first free text annotation to the page's annotations widget
-            page.Annotations.Add(FreetextAnnotation)
+            ' Set properties for the second free text annotation.
+            FreetextAnnotation.Contents = "Show Free Text Annotation"
+            FreetextAnnotation.Border.Width = 1f
+            FreetextAnnotation.Border.Color = Color.LightPink
+            FreetextAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle
+            FreetextAnnotation.Color = Color.LightGreen
+            FreetextAnnotation.StrokingOpacity = 0.8f
 
-			' Define the rectangle for the second free text annotation
-			rect = New RectangleF(100, 180, 150, 30)
+            ' Add the second free text annotation to the page's annotations collection.
+            PdfAnnotationCollection.Create(page).Add(FreetextAnnotation)
 
-			' Create a new PdfFreeTextAnnotation with the specified rectangle
-			FreetextAnnotation = New PdfFreeTextAnnotation(rect)
+            ' Refresh the appearance of the second free text annotation.
+            FreetextAnnotation.RefreshAppearances()
 
-			' Set the text content of the free text annotation
-			FreetextAnnotation.Text = "Show Free Text Annotation"
+            ' Specify the filename for the output PDF document.
+            Dim result As String = "InvisibleFreeTextAnnotation.pdf"
 
-			' Set the font and border properties of the free text annotation
-			FreetextAnnotation.Font = font
-			FreetextAnnotation.Border = border
+            ' Save the document with the specified filename.
+            doc.SaveToFile(result)
 
-			' Set the border color of the free text annotation to light pink
-			FreetextAnnotation.BorderColor = Color.LightPink
+            doc.Close()
 
-			' Set the line ending style of the free text annotation to a circle
-			FreetextAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
 
-			' Set the color of the free text annotation to light green
-			FreetextAnnotation.Color = Color.LightGreen
-
-			' Set the opacity of the free text annotation to 0.8
-			FreetextAnnotation.Opacity = 0.8F
-
-			' Add the second free text annotation to the page's annotations widget
-            page.Annotations.Add(FreetextAnnotation)
-
-			' Specify the output file path for the modified PDF
-			Dim result As String = "InvisibleFreeTextAnnotation_out.pdf"
-
-			' Save the modified PDF document to the output file
-			doc.SaveToFile(result)
-
-			' Close the PDF document
-			doc.Close()
-
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-
-		Private Sub PDFDocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+        Private Sub PDFDocumentViewer(ByVal filename As String)
+            Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
+        End Sub
+    End Class
 End Namespace

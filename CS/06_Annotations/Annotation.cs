@@ -1,10 +1,13 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Actions;
+using Spire.Pdf.Destinations;
 using Spire.Pdf.General;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Interactive.Annotations;
+using System;
+using System.Drawing;
+using System.Drawing.Printing;
+using System.Windows.Forms;
 
 namespace Annotation
 {
@@ -47,19 +50,19 @@ namespace Annotation
             y = y + 15;
 
             // Add various types of annotations to the page
-            y = AddDocumentLinkAnnotation(page, y);
+            y = AddDocumentLinkAnnotation(page, y, margin);
             y = y + 6;
-            y = AddFileLinkAnnotation(page, y);
+            y = AddFileLinkAnnotation(page, y, margin);
             y = y + 6;
-            y = AddFreeTextAnnotation(page, y);
+            y = AddFreeTextAnnotation(page, y, margin);
             y = y + 6;
-            y = AddLineAnnotation(page, y);
+            y = AddLineAnnotation(page, y, margin);
             y = y + 6;
-            y = AddTextMarkupAnnotation(page, y);
+            y = AddTextMarkupAnnotation(page, y, margin);
             y = y + 6;
-            y = AddPopupAnnotation(page, y);
+            y = AddPopupAnnotation(page, y, margin);
             y = y + 6;
-            y = AddRubberStampAnnotation(page, y);
+            y = AddRubberStampAnnotation(page, y,margin);
 
             // Save the PDF document to a file
             doc.SaveToFile("Annotation.pdf");
@@ -70,7 +73,7 @@ namespace Annotation
         }
 
         // Add a document link annotation to the page
-        private float AddDocumentLinkAnnotation(PdfPageBase page, float y)
+        private float AddDocumentLinkAnnotation(PdfPageBase page, float y, PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -80,40 +83,29 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
             String prompt = "Document Link: ";
             SizeF size = font.MeasureString(prompt);
 
-            // Draw the prompt text
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = font.MeasureString(prompt, format).Width;
 
-            // Set up the destination for the link annotation
-            PdfDestination dest = new PdfDestination(page);
-            dest.Mode = PdfDestinationMode.Location;
-            dest.Location = new PointF(0, y);
-            dest.Zoom = 2f;
+            PdfXYZExplicitDestination dest = new PdfXYZExplicitDestination(page, 0, y, 2f);
 
             String label = "Click me, Zoom 200%";
             size = font.MeasureString(label);
-
-            // Draw the label text
             RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-
-            // Create a document link annotation and set its properties
-            PdfDocumentLinkAnnotation annotation = new PdfDocumentLinkAnnotation(bounds, dest);
+            RectangleF rect = new RectangleF(bounds.X + margin.Left, bounds.Y + margin.Top, bounds.Width, bounds.Height);
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, dest);
             annotation.Color = Color.Blue;
-
-            // Add the annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = bounds.Bottom;
 
             return y;
         }
 
         // Add a file link annotation to the page
-        private float AddFileLinkAnnotation(PdfPageBase page, float y)
+        private float AddFileLinkAnnotation(PdfPageBase page, float y, PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -123,25 +115,22 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
-            // Draw the prompt text
             String prompt = "Launch File: ";
             SizeF size = font.MeasureString(prompt);
+
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = font.MeasureString(prompt, format).Width;
 
-            // Draw the label text
             String label = @"Launch Notepad.exe";
             size = font.MeasureString(label);
             RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
+            RectangleF rect = new RectangleF(bounds.X + margin.Left, bounds.Y + margin.Top, bounds.Width, bounds.Height);
+            PdfLaunchAction action = new PdfLaunchAction(@"C:\Windows\Notepad.exe");
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, action);
 
-            // Create a file link annotation and set its properties
-            PdfFileLinkAnnotation annotation = new PdfFileLinkAnnotation(bounds, @"C:\Windows\Notepad.exe");
             annotation.Color = Color.Blue;
-
-            // Add the annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = bounds.Bottom;
 
             return y;
@@ -149,7 +138,7 @@ namespace Annotation
 
 
         // Add a free text annotation to the page
-        private float AddFreeTextAnnotation(PdfPageBase page, float y)
+        private float AddFreeTextAnnotation(PdfPageBase page, float y, PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -159,50 +148,44 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
-            // Draw the prompt text
             String prompt = "Text Markup: ";
             SizeF size = font.MeasureString(prompt);
+
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = font.MeasureString(prompt, format).Width;
 
-            // Draw the label text and bounding rectangle
             String label = @"I'm a text box, not a TV";
             size = font.MeasureString(label);
             RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
             page.Canvas.DrawRectangle(new PdfPen(Color.Blue, 0.1f), bounds);
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-
-            // Set up the free text annotation with its properties
             PointF location = new PointF(bounds.Right + 16, bounds.Top - 16);
-            RectangleF annotaionBounds = new RectangleF(location, new SizeF(80, 32));
-            PdfFreeTextAnnotation annotation = new PdfFreeTextAnnotation(annotaionBounds);
-            annotation.AnnotationIntent = PdfAnnotationIntent.FreeTextCallout;
-            annotation.Border = new PdfAnnotationBorder(0.5f);
-            annotation.BorderColor = Color.Red;
+            RectangleF rect = new RectangleF(location.X + margin.Left, location.Y + margin.Top, 80, 32);
+            PdfDefaultAppearance defaultAppearance = new PdfDefaultAppearance(font, Color.Green);
+            PdfFreeTextAnnotation annotation = new PdfFreeTextAnnotation(page, rect, defaultAppearance);
+            annotation.Intent = PdfFreeTextIntent.FreeTextCallout;
+            annotation.Border.Width = 0.5f;
+            annotation.Border.Color = Color.Red;
             location = new PointF(bounds.Right + 16, bounds.Top - 16);
-            annotation.CalloutLines = new PointF[] {
-                    new PointF(bounds.Right, bounds.Top),
-                    new PointF(bounds.Right+8, bounds.Top - 8),
-                    location
-                };
+            annotation.CalloutLine
+                = new PointF[] {
+                    new PointF(bounds.Right + margin.Left, bounds.Top  + margin.Top),
+                    new PointF(bounds.Right + 8 + margin.Left, bounds.Top - 8  + margin.Top),
+                    new PointF(location.X + margin.Left, location.Y +  + margin.Top) };
             annotation.Color = Color.Yellow;
             annotation.Flags = PdfAnnotationFlags.Locked;
-            annotation.Font = font;
-            annotation.LineEndingStyle = PdfLineEndingStyle.OpenArrow;
-            annotation.MarkupText = "Just a joke.";
-            annotation.Opacity = 0.75f;
-            annotation.TextMarkupColor = Color.Green;
-
-            // Add the free text annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            annotation.CalloutLineEndingStyle = PdfLineEndingStyle.OpenArrow;
+            annotation.Contents = "Just a joke.";
+            annotation.StrokingOpacity = 0.75f;
+            annotation.RefreshAppearances();
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = bounds.Bottom;
 
             return y;
         }
 
         // Add a line annotation to the page
-        private float AddLineAnnotation(PdfPageBase page, float y)
+        private float AddLineAnnotation(PdfPageBase page, float y, PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -212,40 +195,36 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
-            // Draw the prompt text
             String prompt = "Line Annotation: ";
             SizeF size = font.MeasureString(prompt);
+
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = font.MeasureString(prompt, format).Width;
 
-            // Draw the label text and bounding rectangle
-            String label = @"Line Annotation";
+            String label = @"Line Anotation";
             size = font.MeasureString(label);
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
             RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
+            RectangleF rect = new RectangleF(bounds.X + margin.Left, bounds.Y + margin.Top, bounds.Width, bounds.Height);
             int[] linePoints = new int[]
             {
-                 (int)bounds.Left, (int)bounds.Top, (int)bounds.Right, (int)bounds.Bottom
+                (int)rect.Left, (int)rect.Top, (int)rect.Right, (int)rect.Bottom
             };
-
-            // Create a line annotation and set its properties
-            PdfLineAnnotation annotation = new PdfLineAnnotation(linePoints, "Annotation");
-            annotation.BeginLineStyle = PdfLineEndingStyle.ClosedArrow;
-            annotation.EndLineStyle = PdfLineEndingStyle.ClosedArrow;
-            annotation.LineCaption = true;
-            annotation.BackColor = Color.Black;
-            annotation.CaptionType = PdfLineCaptionType.Inline;
-
-            // Add the line annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfLineAnnotation annotation = new PdfLineAnnotation(page, rect, new PointF(linePoints[0], linePoints[1]), new PointF(linePoints[2], linePoints[3]));
+            annotation.Contents = "Annotation";
+            annotation.StartingStyle = PdfLineEndingStyle.ClosedArrow;
+            annotation.EndingStyle = PdfLineEndingStyle.ClosedArrow;
+            annotation.ShowCaption = true;
+            annotation.Color = Color.Black;
+            annotation.CaptionPosition = PdfCaptionPosition.Inline;
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = bounds.Bottom;
 
             return y;
         }
 
         // Add a text markup annotation to the page
-        private float AddTextMarkupAnnotation(PdfPageBase page, float y)
+        private float AddTextMarkupAnnotation(PdfPageBase page, float y, PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -255,35 +234,28 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
-            // Draw the prompt text
             String prompt = "Highlight incorrect spelling: ";
             SizeF size = font.MeasureString(prompt, format);
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = size.Width;
 
-            // Draw the label text and bounding rectangle
             String label = "demo of anotation";
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
             size = font.MeasureString("demo of ", format);
             x = x + size.Width;
-            PointF incorrectWordLocation = new PointF(x, y);
             String markupText = "Should be 'annotation'";
-
-            // Create a text markup annotation and set its properties
-            PdfTextMarkupAnnotation annotation = new PdfTextMarkupAnnotation(markupText, "anotation", new RectangleF(x, y, 100f, 100f), font);
-            annotation.TextMarkupAnnotationType = PdfTextMarkupAnnotationType.Highlight;
-            annotation.TextMarkupColor = Color.LightSkyBlue;
-
-            // Add the text markup annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfHighlightAnnotation annotation = new PdfHighlightAnnotation(page, new RectangleF(x + margin.Left, y + margin.Top, 50f, 15f));
+            annotation.Contents = "anotation";
+            annotation.Title = markupText;
+            annotation.Color = Color.LightSkyBlue;
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = y + size.Height;
 
             return y;
         }
 
         // Add a popup annotation to the page
-        private float AddPopupAnnotation(PdfPageBase page, float y)
+        private float AddPopupAnnotation(PdfPageBase page, float y, PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -293,35 +265,29 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
-            // Draw the prompt text
             String prompt = "Markup incorrect spelling: ";
             SizeF size = font.MeasureString(prompt, format);
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = size.Width;
 
-            // Draw the label text and bounding rectangle
             String label = "demo of annotation";
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
             x = x + font.MeasureString(label, format).Width;
             String markupText = "All words were spelled correctly";
             size = font.MeasureString(markupText);
-
-            // Create a popup annotation and set its properties
-            PdfPopupAnnotation annotation = new PdfPopupAnnotation(new RectangleF(new PointF(x, y), SizeF.Empty), markupText);
-            annotation.Icon = PdfPopupIcon.Paragraph;
+            PdfPopupAnnotation annotation
+                = new PdfPopupAnnotation(page, new RectangleF(new PointF(x + margin.Left, y + margin.Top), SizeF.Empty));
+            annotation.Contents = markupText;
             annotation.Open = true;
             annotation.Color = Color.Yellow;
-
-            // Add the popup annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = y + size.Height;
 
             return y;
         }
 
         // Add a rubber stamp annotation to the page
-        private float AddRubberStampAnnotation(PdfPageBase page, float y)
+        private float AddRubberStampAnnotation(PdfPageBase page, float y,PdfMargins margin)
         {
             // Set up font and formatting
             PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
@@ -331,30 +297,26 @@ namespace Annotation
             */
             PdfStringFormat format = new PdfStringFormat();
             format.MeasureTrailingSpaces = true;
-
-            // Draw the prompt text
             String prompt = "Markup incorrect spelling: ";
             SizeF size = font.MeasureString(prompt, format);
             page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
             float x = size.Width;
 
-            // Draw the label text and bounding rectangle
             String label = "demo of annotation";
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
             x = x + font.MeasureString(label, format).Width;
             String markupText = "Just a draft, not checked.";
             size = font.MeasureString(markupText);
-
-            // Create a rubber stamp annotation and set its properties
-            PdfRubberStampAnnotation annotation = new PdfRubberStampAnnotation(new RectangleF(x, y, font.Height, font.Height), markupText);
-            annotation.Icon = PdfRubberStampAnnotationIcon.Draft;
+            PdfRubberStampAnnotation annotation
+                = new PdfRubberStampAnnotation(page, new RectangleF(x + margin.Left, y + margin.Top, font.Height, font.Height));
+            annotation.Contents = markupText;
+            annotation.Icon = PdfStampIcon.Draft;
             annotation.Color = Color.Plum;
-
-            // Add the rubber stamp annotation to the page's annotation collection
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
             y = y + size.Height;
 
             return y;
+
         }
 
         private void PDFDocumentViewer(string fileName)

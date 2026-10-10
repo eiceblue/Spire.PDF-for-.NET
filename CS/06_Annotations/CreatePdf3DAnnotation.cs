@@ -1,14 +1,9 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Interactive.Annotations;
+using Spire.Pdf.Multimedia._3DArtwork;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CreatePdf3DAnnotation
@@ -29,32 +24,32 @@ namespace CreatePdf3DAnnotation
             PdfPageBase page = doc.Pages.Add();
 
             //Draw a rectangle on the page to define the canvas area for the 3D file.
-            Rectangle rt = new Rectangle(0, 80, 200, 200);
+            Rectangle rt = new Rectangle(40, 120, 200, 200);
 
             //Initialize a new object of Pdf3DAnnotation, load the .u3d file as 3D annotation.
-            Pdf3DAnnotation annotation = new Pdf3DAnnotation(rt, @"..\..\..\..\..\..\Data\CreatePdf3DAnnotation.u3d");
+            Pdf3DArtwork artwork = new Pdf3DArtwork(@"..\..\..\..\..\..\Data\CreatePdf3DAnnotation.u3d", Pdf3DFileFormat.U3D);
+            Pdf3DAnnotation annotation = new Pdf3DAnnotation(page, rt, artwork);
             annotation.Activation = new Pdf3DActivation();
             annotation.Activation.ActivationMode = Pdf3DActivationMode.PageOpen;
 
-            //Define a 3D view mode and set its parameter
-            Pdf3DView View = new Pdf3DView();
+            //Define a 3D view mode.
+            Pdf3DView View = new Pdf3DView("3DAnnotation");
             View.Background = new Pdf3DBackground(new PdfRGBColor(Color.Purple));
-            View.ViewNodeName = "3DAnnotation";
-            View.RenderMode = new Pdf3DRendermode(Pdf3DRenderStyle.Solid);
+            View.RenderMode = new Pdf3DRenderMode(PdfRenderModeType.Solid);
             View.InternalName = "3DAnnotation";
-            View.LightingScheme = new Pdf3DLighting();
-            View.LightingScheme.Style = Pdf3DLightingStyle.Day;
+            View.LightingScheme = new Pdf3DLightingScheme(PdfLightingSchemeType.Day);
 
             //Set the 3D view mode for the annotation.
             annotation.Views.Add(View);
 
             //Add the annotation to Pdf.
-            page.Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
 
-            String result = "CreatePdf3DAnnotation_out.pdf";
+            string result = "CreatePdf3DAnnotation.pdf";
 
             //Save the document
             doc.SaveToFile(result);
+            doc.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

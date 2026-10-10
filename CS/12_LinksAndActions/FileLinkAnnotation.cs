@@ -1,16 +1,9 @@
 ﻿using Spire.Pdf;
 using Spire.Pdf.Actions;
-using Spire.Pdf.Annotations;
-using Spire.Pdf.General;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Interactive.Annotations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FileLinkAnnotation
@@ -109,15 +102,16 @@ namespace FileLinkAnnotation
 
             //Draw label string
             page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
+            PdfLaunchAction action = new PdfLaunchAction(@"..\..\..\..\..\..\Data\Sample.pdf", PdfFilePathType.Relative);
 
             //Create PdfFileLinkAnnotation on the rectangle and link file "Sample.pdf"
-            PdfFileLinkAnnotation annotation = new PdfFileLinkAnnotation(bounds, @"..\..\..\..\..\..\Data\Sample.pdf");
-           
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, bounds, action);
+
             //Set color for annotation
             annotation.Color = Color.Blue;
 
             //Add annotation to the page
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
 
         }
 

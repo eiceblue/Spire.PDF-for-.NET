@@ -1,131 +1,110 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Fields
 Imports Spire.Pdf.Graphics
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Data
+Imports System.Drawing
+Imports System.Linq
+Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 
 Namespace CreatePdfLineAnnotation
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new PDF document
-			Dim document As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            'Create a PDF document.
+            Dim document As PdfDocument = New PdfDocument()
 
-			' Add a new page to the document
-			Dim page As PdfPageBase = document.Pages.Add()
+            'Add a new page.
+            Dim page As PdfPageBase = document.Pages.Add()
 
-			' Define the points for the first line annotation
-			Dim linePoints() As Integer = {100, 650, 180, 650}
+            'Create a line annotation.
+            Dim linePoints As Integer[] = New Integer[] { 140, 690, 180, 650 }
+            Dim rect As RectangleF = New RectangleF(140, 689, 80, 1)
+            Dim lineAnnotation As PdfLineAnnotation = New PdfLineAnnotation(page, rect, New PointF(140, 690), New PointF(220, 690))
+            lineAnnotation.Contents = "This Is the first line annotation"
 
-			' Create a new line annotation with the specified points and text
-			Dim lineAnnotation As New PdfLineAnnotation(linePoints, "This is the first line annotation")
+            'Set the line border.
+            lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid
+            lineAnnotation.Border.Width = 1
 
-			' Set the border style and width for the line annotation
-			lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Solid
-			lineAnnotation.lineBorder.BorderWidth = 1
+            'Set the line intent.
+            lineAnnotation.Intent = PdfLineIntent.LineDimension
 
-			' Set the line intent for the line annotation
-			lineAnnotation.LineIntent = PdfLineIntent.LineDimension
+            'Set the line style.
+            lineAnnotation.StartingStyle = PdfLineEndingStyle.Butt
+            lineAnnotation.EndingStyle = PdfLineEndingStyle.Diamond
 
-			' Set the line ending styles for the line annotation
-			lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Butt
-			lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond
+            'Set the line flag.
+            lineAnnotation.Flags = PdfAnnotationFlags.None
 
-			' Set the flags for the line annotation
-			lineAnnotation.Flags = PdfAnnotationFlags.Default
+            'Set the line color.
+            lineAnnotation.InteriorColor = New PdfRGBColor(Color.Green)
+            lineAnnotation.Color = New PdfRGBColor(Color.Green)
 
-			' Set the inner line color and background color for the line annotation
-			lineAnnotation.InnerLineColor = New PdfRGBColor(Color.Green)
-			lineAnnotation.BackColor = New PdfRGBColor(Color.Green)
+            'Set the leader line.
+            lineAnnotation.LeaderLineExtension = 0
+            lineAnnotation.LeaderLine = 0
 
-			' Set the leader line extension and leader line properties for the line annotation
-			lineAnnotation.LeaderLineExt = 0
-			lineAnnotation.LeaderLine = 0
+            'Add the line annotation to the page.
+            PdfAnnotationCollection.Create(page).Add(lineAnnotation)
 
-			' Add the line annotation to the page
-            page.Annotations.Add(lineAnnotation)
+            'Create another line annotation.
+            linePoints = New Integer[] { 140, 590, 280, 550 }
+            rect = New RectangleF(140, 589, 180, 2)
+            lineAnnotation = New PdfLineAnnotation(page, rect, New PointF(140, 590), New PointF(320, 590))
+            lineAnnotation.Contents = "This Is the second line annotation"
+            lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid
+            lineAnnotation.Border.Width = 2
+            lineAnnotation.Intent = PdfLineIntent.LineArrow
+            lineAnnotation.StartingStyle = PdfLineEndingStyle.Circle
+            lineAnnotation.EndingStyle = PdfLineEndingStyle.Diamond
+            lineAnnotation.Flags = PdfAnnotationFlags.None
+            lineAnnotation.InteriorColor = New PdfRGBColor(Color.Pink)
+            lineAnnotation.Color = New PdfRGBColor(Color.Pink)
+            lineAnnotation.LeaderLineExtension = 0
+            lineAnnotation.LeaderLine = 0
+            PdfAnnotationCollection.Create(page).Add(lineAnnotation)
 
-			' Define the points for the second line annotation
-			linePoints = New Integer() {100, 550, 280, 550}
+            'Create yet another line annotation.
+            linePoints = New Integer[] { 140, 490, 280, 450 }
+            rect = New RectangleF(140, 489, 180, 2)
+            lineAnnotation = New PdfLineAnnotation(page, rect, New PointF(140, 490), New PointF(320, 490))
+            lineAnnotation.Contents = "This Is the third line annotation"
+            lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid
+            lineAnnotation.Border.Width = 2
+            lineAnnotation.Intent = PdfLineIntent.LineDimension
+            lineAnnotation.StartingStyle = PdfLineEndingStyle.None
+            lineAnnotation.EndingStyle = PdfLineEndingStyle.None
+            lineAnnotation.Flags = PdfAnnotationFlags.None
+            lineAnnotation.InteriorColor = New PdfRGBColor(Color.Blue)
+            lineAnnotation.Color = New PdfRGBColor(Color.Blue)
+            lineAnnotation.LeaderLineExtension = 1
+            lineAnnotation.LeaderLine = 1
+            PdfAnnotationCollection.Create(page).Add(lineAnnotation)
 
-			' Create a new line annotation with the specified points and text
-			lineAnnotation = New PdfLineAnnotation(linePoints, "This is the second line annotation")
+            Dim result As String = "CreatePdfLineAnnotation.pdf"
 
-			' Set the border style and width for the line annotation
-			lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Underline
-			lineAnnotation.lineBorder.BorderWidth = 2
+            'Save the document.
+            document.SaveToFile(result)
+            document.Close()
 
-			' Set the line intent for the line annotation
-			lineAnnotation.LineIntent = PdfLineIntent.LineArrow
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
 
-			' Set the line ending styles for the line annotation
-			lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Circle
-			lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond
-
-			' Set the flags for the line annotation
-			lineAnnotation.Flags = PdfAnnotationFlags.Default
-
-			' Set the inner line color and background color for the line annotation
-			lineAnnotation.InnerLineColor = New PdfRGBColor(Color.Pink)
-			lineAnnotation.BackColor = New PdfRGBColor(Color.Pink)
-
-			' Set the leader line extension and leader line properties for the line annotation
-			lineAnnotation.LeaderLineExt = 0
-			lineAnnotation.LeaderLine = 0
-
-			' Add the line annotation to the page
-            page.Annotations.Add(lineAnnotation)
-
-			' Define the points for the third line annotation
-			linePoints = New Integer() {100, 450, 280, 450}
-
-			' Create a new line annotation with the specified points and text
-			lineAnnotation = New PdfLineAnnotation(linePoints, "This is the third line annotation")
-
-			' Set the border style and width for the line annotation
-			lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Beveled
-			lineAnnotation.lineBorder.BorderWidth = 2
-
-			' Set the line intent for the line annotation
-			lineAnnotation.LineIntent = PdfLineIntent.LineDimension
-
-			' Set the line ending styles for the line annotation
-			lineAnnotation.BeginLineStyle = PdfLineEndingStyle.None
-			lineAnnotation.EndLineStyle = PdfLineEndingStyle.None
-
-			' Set the flags for the line annotation
-			lineAnnotation.Flags = PdfAnnotationFlags.Default
-
-			' Set the inner line color and background color for the line annotation
-			lineAnnotation.InnerLineColor = New PdfRGBColor(Color.Blue)
-			lineAnnotation.BackColor = New PdfRGBColor(Color.Blue)
-
-			' Set the leader line extension and leader line properties for the line annotation
-			lineAnnotation.LeaderLineExt = 1
-			lineAnnotation.LeaderLine = 1
-
-			' Add the line annotation to the page
-            page.Annotations.Add(lineAnnotation)
-
-			' Save the document to a file
-			Dim result As String = "CreatePdfLineAnnotation_out.pdf"
-			document.SaveToFile(result)
-
-			' Close the document
-			document.Close()
-
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-
-		Private Sub PDFDocumentViewer(ByVal filename As String)
-			Try
-				Process.Start(filename)
-			Catch
-			End Try
-		End Sub
-	End Class
+        Private Sub PDFDocumentViewer(ByVal filename As String)
+            Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
+        End Sub
+    End Class
 End Namespace

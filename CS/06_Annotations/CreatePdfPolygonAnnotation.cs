@@ -1,5 +1,5 @@
-﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,24 +27,27 @@ namespace CreatePdfPolygonAnnotation
             //Add a new page to it.
             PdfPageBase page = pdf.Pages.Add();
 
-            //Initialize an instance of PdfPolygonAnnotation, specifying all vertex coordinates which can form a complete shape.
-            PdfPolygonAnnotation polygon = new PdfPolygonAnnotation(page, new PointF[] { new PointF(0, 30), new PointF(30, 15), new PointF(60, 30), new PointF(45, 50), new PointF(15, 50), new PointF(0, 30)});
+            //Initialize an instance of PdfPolygonAnnotation, specifying a rectangle and all vertex coordinates which can form a complete shape.
+            PointF[] points = new PointF[] { new PointF(40, 70), new PointF(70, 55), new PointF(100, 70), new PointF(85, 90), new PointF(55, 90), new PointF(40, 70) };
+            PdfPolygonAnnotation polygon = new PdfPolygonAnnotation(page, new RectangleF(40, 55, 60, 35), points);
 
             //Set the border color, text, border effect and other properties of polygon annotation.
             polygon.Color = Color.PaleVioletRed;
-            polygon.Text = "This is a polygon annotation";
-            polygon.Author = "E-ICEBLUE";
+            polygon.Contents = "This is a polygon annotation";
+            polygon.Title = "E-ICEBLUE";
             polygon.Subject = "polygon annotation demo";
-            polygon.BorderEffect = PdfBorderEffect.BigCloud;
+            polygon.Border.Effect = PdfBorderEffect.Cloudy;
+            polygon.Border.EffectIntensity = 2;
             polygon.ModifiedDate = DateTime.Now;
 
             //Add the annotation to Pdf page and save the document.
-            page.Annotations.Add(polygon);
+            PdfAnnotationCollection.Create(page).Add(polygon);
 
-            String result = "CreatePdfPolygonAnnotation_out.pdf";
+            String result = "CreatePdfPolygonAnnotation.pdf";
 
             //Save the document
             pdf.SaveToFile(result);
+            pdf.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

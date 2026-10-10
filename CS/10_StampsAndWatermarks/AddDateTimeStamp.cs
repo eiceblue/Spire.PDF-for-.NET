@@ -1,15 +1,8 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
-using Spire.Pdf.Annotations.Appearance;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AddDateTimeStamp
@@ -40,29 +33,19 @@ namespace AddDateTimeStamp
             PdfSolidBrush brush = new PdfSolidBrush(Color.Blue);
 
             // Generate a string representing the current date and time
-            String timeString = DateTime.Now.ToString("MM/dd/yy hh:mm:ss tt ");
+            String timeString = DateTime.Now.ToString("MM/dd/yy hh:mm:ss");
 
-            // Create a template with specified dimensions
+            //Create a template and rectangle, draw the string
             PdfTemplate template = new PdfTemplate(140, 15);
-
-            // Define a rectangle to position the template on the page
             RectangleF rect = new RectangleF(new PointF(page.ActualSize.Width - template.Width - 10, page.ActualSize.Height - template.Height - 10), template.Size);
-
-            // Draw the time string onto the template
             template.Graphics.DrawString(timeString, font, brush, new PointF(0, 0));
 
-            // Create a rubber stamp annotation
-            PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(rect);
+            //Create stamp annoation
+            PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(page, rect);
+            stamp.Appearances.SetNormalAppearance(new PdfAppearance(template));
 
-            // Create a custom appearance for the stamp annotation
-            PdfAppearance appearance = new PdfAppearance(stamp);
-            appearance.Normal = template;
-
-            // Assign the custom appearance to the stamp annotation
-            stamp.Appearance = appearance;
-
-            // Add the stamp annotation to the page's annotations widget
-            page.Annotations.Add(stamp);
+            //Draw stamp into page
+            PdfAnnotationCollection.Create(page).Add(stamp);
 
             // Specify the file name for the modified PDF document
             string output = "AddDateTimeStamp_result.pdf";

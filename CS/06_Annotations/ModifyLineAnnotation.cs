@@ -1,5 +1,5 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,17 +29,17 @@ namespace ModifyLineAnnotation
             // Load an existing PDF file into the document from the specified path
             document.LoadFromFile(@"..\..\..\..\..\..\Data\PdfLineAnnotation.pdf");
 
-            // Retrieve the first annotation widget from the first page of the document
-            PdfAnnotation annotation = document.Pages[0].Annotations[0];
+            // Retrieve the first annotation from the first page of the document
+            PdfAnnotation annotation = PdfAnnotationCollection.Create(document.Pages[0])[0];
 
-            // Check if the retrieved annotation is a PdfLineAnnotationWidget
-            if (annotation is PdfLineAnnotationWidget)
+            // Check if the retrieved annotation is a PdfLineAnnotation
+            if (annotation is PdfLineAnnotation)
             {
-                // Cast the annotation as a PdfLineAnnotationWidget to access its specific properties and methods
-                PdfLineAnnotationWidget lineAnn = annotation as PdfLineAnnotationWidget;
+                // Cast the annotation as a PdfLineAnnotation to access its specific properties and methods
+                PdfLineAnnotation lineAnn = annotation as PdfLineAnnotation;
 
-                // Set the author property of the line annotation to "Author_test"
-                lineAnn.Author = "Author_test";
+                // Set the title property of the line annotation to "Author_test"
+                lineAnn.Title = "Author_test";
 
                 // Set the subject property of the line annotation to "Subject_test"
                 lineAnn.Subject = "Subject_test";
@@ -47,6 +47,8 @@ namespace ModifyLineAnnotation
 
             // Save the modified document to the specified file path
             document.SaveToFile(result);
+
+            document.Dispose();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

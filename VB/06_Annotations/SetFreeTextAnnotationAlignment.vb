@@ -1,74 +1,76 @@
 Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
 Imports Spire.Pdf.Graphics
+Imports Spire.Pdf.Interactive.Annotations
+Imports System
+Imports System.Drawing
+Imports System.Reflection
+Imports System.Windows.Forms
 
 Namespace SetFreeTextAnnotationAlignment
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PdfDocument object 
-            Dim pdf As New PdfDocument()
 
-            ' Add a new page to the document
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Create a new PdfDocument object
+            Dim pdf As PdfDocument = New PdfDocument()
+
+            ' Add a new page to the document and assign it to the 'page' variable
             Dim page As PdfPageBase = pdf.Pages.Add()
 
-            ' Define the rectangle for the free text annotation
-            Dim rect As New RectangleF(0, 300, 200, 80)
+            ' Define a rectangle with specific coordinates and dimensions
+            Dim rect As RectangleF = New RectangleF(40, 340, 200, 80)
 
-            ' Create a new PdfFreeTextAnnotation with the specified rectangle
-            Dim textAnnotation As New PdfFreeTextAnnotation(rect)
+            ' Create a new PdfFont object using the Times Roman font family and a font size of 20
+            Dim font As PdfFont = New PdfFont(PdfFontFamily.TimesRoman, 20)
+
+            ' Create a new PdfFreeTextAnnotation object and pass the rectangle as a parameter
+            Dim textAnnotation As PdfFreeTextAnnotation = New PdfFreeTextAnnotation(page, rect, New PdfDefaultAppearance(font))
 
             ' Set the text content of the free text annotation
-            textAnnotation.Text = vbLf & "  Spire.PDF"
+            textAnnotation.Contents = "\n  Spire.PDF"
 
-            ' Create a border for the annotation
-            Dim border As New PdfAnnotationBorder(1.0F)
-
-            ' Create a font for the annotation
-            Dim font As New PdfFont(PdfFontFamily.TimesRoman, 20)
-
-            ' Set the font and border properties of the free text annotation
-            textAnnotation.Font = font
-            textAnnotation.Border = border
+            ' Assign the created border to the border property of the free text annotation
+            textAnnotation.Border.Width = 1f
 
             ' Set the border color of the free text annotation to gray
-            textAnnotation.BorderColor = Color.Gray
+            textAnnotation.Border.Color = Color.Gray
 
-            ' Set the line ending style of the free text annotation to a slash
-            textAnnotation.LineEndingStyle = PdfLineEndingStyle.Slash
+            ' Set the line ending style of the free text annotation to slash
+            textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Slash
 
-            ' Set the color of the free text annotation to light blue
+            ' Set the background color of the free text annotation to light blue
             textAnnotation.Color = Color.LightBlue
 
             ' Set the opacity of the free text annotation to 0.8
-            textAnnotation.Opacity = 0.8F
+            textAnnotation.StrokingOpacity = 0.8f
 
-            ' Set the text alignment of the free text annotation to center
-            textAnnotation.TextAlignment = PdfAnnotationTextAlignment.Center
+            ' Set the alignment of the text within the free text annotation to center
+            Dim builder As PdfFreeTextAppearanceBuilder = New PdfFreeTextAppearanceBuilder(textAnnotation)
+            Dim format As PdfStringFormat = New PdfStringFormat(PdfTextAlignment.Center)
+            builder.SetStringFormat(format)
+            textAnnotation.Appearances.SetNormalAppearance(builder.Build())
 
-            ' Add the free text annotation to the page's annotations widget
-            page.Annotations.Add(textAnnotation)
+            ' Add the free text annotation to the annotations collection of the page
+            PdfAnnotationCollection.Create(page).Add(textAnnotation)
 
-            ' Specify the output file path for the modified PDF
-            Dim output As String = "SetFreeTextAnnotationAlignment.pdf"
+            ' Specify the output file path for the modified PDF document
+            Dim result As String = "SetFreeTextAnnotationAlignment.pdf"
 
-            ' Save the modified PDF document to the output file
-            pdf.SaveToFile(output)
+            ' Save the modified document to the specified file path
+            pdf.SaveToFile(result)
+            pdf.Dispose()
 
-            ' Close the document
-            pdf.Close()
-
-            ' Launch the Pdf file
-            PDFDocumentViewer(output)
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
         End Sub
+
         Private Sub PDFDocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

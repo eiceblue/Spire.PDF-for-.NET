@@ -1,6 +1,5 @@
-﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
-using Spire.Pdf.Graphics;
+using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,19 +28,21 @@ namespace UpdateFreeTextAnnotation
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\UpdateFreeTextAnnotation.pdf");
 
             // Get the collection of annotations from the first page of the PDF document.
-            PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
+            PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
 
             // Iterate through each free text annotation in the collection.
-            foreach (PdfFreeTextAnnotationWidget annotation in annotations)
+            foreach (PdfFreeTextAnnotation annotation in annotations)
             {
                 // Change the color of the annotation to YellowGreen.
                 annotation.Color = Color.YellowGreen;
+                annotation.RefreshAppearances();
             }
 
-            String result = "UpdateFreeTextAnnotation_out.pdf";
+            String result = "UpdateFreeTextAnnotation.pdf";
 
             // Save the modified PDF document to a file with the specified filename.
             pdf.SaveToFile(result);
+            pdf.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

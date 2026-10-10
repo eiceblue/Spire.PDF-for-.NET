@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using Spire.Pdf;
-using Spire.Pdf.Graphics;
-using System.IO;
+﻿using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.General;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
+using Spire.Pdf.Destinations;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace AddTableOfContent
 {
@@ -94,14 +90,15 @@ namespace AddTableOfContent
                 tocPage.Canvas.DrawString(pageNumText, titlesFont, PdfBrushes.CadetBlue, pageNumlocation, y);
 
                 // Add the table of contents action.
-                location = new PointF(0, y);
+                location = new PointF(0 + 40, y + 40);
                 RectangleF titleBounds = new RectangleF(location, new SizeF(tocPage.Canvas.ClientSize.Width, titleSize.Height));
-                PdfDestination Dest = new PdfDestination(navigatedPage, new PointF(-doc.PageSettings.Margins.Top, -doc.PageSettings.Margins.Left));
-                PdfActionAnnotation action = new PdfActionAnnotation(titleBounds, new PdfGoToAction(Dest));
-                action.Border = new PdfAnnotationBorder(0);
-                (tocPage as PdfNewPage).Annotations.Add(action);
+                PdfXYZExplicitDestination Dest = new PdfXYZExplicitDestination(navigatedPage, -doc.PageSettings.Margins.Top, -doc.PageSettings.Margins.Left);
+                PdfLinkAnnotation annotation = new PdfLinkAnnotation(tocPage, titleBounds, new PdfGoToAction(Dest));
+                annotation.Border.Width = 0;
+                PdfAnnotationCollection.Create(tocPage).Add(annotation);
                 y += titleSize.Height + 10;
             }
+
 
             string output = "AddTableOfContent.pdf";
 

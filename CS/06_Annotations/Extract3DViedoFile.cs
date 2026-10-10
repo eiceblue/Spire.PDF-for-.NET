@@ -1,5 +1,5 @@
-﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -23,7 +23,7 @@ namespace Extract3DViedoFile
             PdfPageBase firstPage = pdf.Pages[0];
 
             //Get the annotation collection of the first page
-            PdfAnnotationCollection annot = firstPage.Annotations;
+            PdfAnnotationCollection annot = PdfAnnotationCollection.Create(firstPage);
 
             //Define an int variable
             int count = 0;
@@ -37,7 +37,7 @@ namespace Extract3DViedoFile
                     Pdf3DAnnotation annot3D = annot[i] as Pdf3DAnnotation;
 
                     //Get the 3D video data
-                    byte[] bytes = annot3D._3DData;
+                    byte[] bytes = annot3D.Artwork.Data;
 
                     //Write the data into .u3d format file
                     if (bytes != null)

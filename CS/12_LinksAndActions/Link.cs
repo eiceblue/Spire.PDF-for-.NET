@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Actions;
-using Spire.Pdf.Annotations;
 
 namespace Link
 {
@@ -62,73 +62,52 @@ namespace Link
             y = y + font1.MeasureString(url1).Height + 25;
 
             // Set font and label for the second web link.
-            label = "Web Link: ";
-            page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-            x = font.MeasureString(label, format).Width;
-
-            // Set text and properties for the second web link.
             String text = "E-iceblue home";
-            PdfTextWebLink link2 = new PdfTextWebLink();
-            link2.Text = text;
-            link2.Url = url1;
-            link2.Font = font1;
-            link2.Brush = PdfBrushes.CadetBlue;
-
-            // Draw the second web link on the page.
-            link2.DrawTextWebLink(page.Canvas, new PointF(x, y));
+            PdfURIAction action2 = new PdfURIAction(url1);
+            PdfLinkAnnotation link2 = new PdfLinkAnnotation(page, new RectangleF(x + margin.Left, y + margin.Top, 50, 20), action2);
+            link2.Border.Width = 0;
+            link2.Contents = text;
+            page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, new PointF(x, y));
+            PdfAnnotationCollection.Create(page).Add(link2);
             y = y + font1.MeasureString(text).Height + 30;
 
-            // Set font and label for the URI annotation.
-            label = "URI Annotation: ";
+            label = "URI Annonation: ";
             page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
             x = font.MeasureString(label, format).Width;
             text = "Google";
-            PointF location = new PointF(x, y);
+            PointF location = new PointF(x + margin.Left, y + margin.Top);
             SizeF size = font1.MeasureString(text);
             RectangleF linkBounds = new RectangleF(location, size);
+            PdfURIAction action3 = new PdfURIAction("http://www.google.com");
+            PdfLinkAnnotation link3 = new PdfLinkAnnotation(page, linkBounds, action3);
 
-            // Create a URI annotation and set its properties.
-            PdfUriAnnotation link3 = new PdfUriAnnotation(linkBounds);
-            link3.Border = new PdfAnnotationBorder(0);
-            link3.Uri = "http://www.google.com";
-
-            // Add the URI annotation to the page's annotations collection.
-            (page as PdfNewPage).Annotations.Add(link3);
-
-            // Draw the text for the URI annotation.
+            link3.Border.Width = 0;
+            PdfAnnotationCollection.Create(page).Add(link3);
             page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, x, y);
             y = y + size.Height + 30;
 
-            // Set font and label for the URI annotation with an action.
-            label = "URI Annotation Action: ";
+            label = "URI Annonation Action: ";
             page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
             x = font.MeasureString(label, format).Width;
             text = "JavaScript Action (Click Me)";
-            location = new PointF(x - 2, y - 2);
+            location = new PointF(x - 2 + margin.Left, y - 2 + margin.Top);
             size = font1.MeasureString(text);
             size = new SizeF(size.Width + 5, size.Height + 5);
             linkBounds = new RectangleF(location, size);
-
-            // Create a URI annotation with border and color.
-            PdfUriAnnotation link4 = new PdfUriAnnotation(linkBounds);
-            link4.Border = new PdfAnnotationBorder(0.75f);
+            //Script
+            String script
+                = "app.alert({"
+                + "    cMsg: \"Hello.\","
+                + "    nIcon: 3,"
+                + "    cTitle: \"JavaScript Action\""
+                + "});";
+            PdfJavaScriptAction action4 = new PdfJavaScriptAction(script);
+            PdfLinkAnnotation link4 = new PdfLinkAnnotation(page, linkBounds, action4);
+            link4.Border.Width = 0.75f;
             link4.Color = Color.CadetBlue;
 
-            // Define JavaScript action script.
-            String script = "app.alert({" +
-                "cMsg: \"Hello.\"," +
-                "nIcon: 3," +
-                "cTitle: \"JavaScript Action\"" +
-                "});";
 
-            // Create a JavaScript action and assign it to the URI annotation.
-            PdfJavaScriptAction action = new PdfJavaScriptAction(script);
-            link4.Action = action;
-
-            // Add the URI annotation with the JavaScript action to the page's annotations collection.
-            (page as PdfNewPage).Annotations.Add(link4);
-
-            // Draw the text for the URI annotation with the JavaScript action.
+            PdfAnnotationCollection.Create(page).Add(link4);
             page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, x, y);
             y = y + size.Height + 30;
 
@@ -136,25 +115,27 @@ namespace Link
             page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
             x = font.MeasureString(label, format).Width;
             text = "Go to forum to ask questions";
-            link2 = new PdfTextWebLink();
-            link2.Text = text;
-            link2.Url = "https://www.e-iceblue.com/forum/components-f5.html";
-            link2.Font = font1;
-            link2.Brush = PdfBrushes.CadetBlue;
-            link2.DrawTextWebLink(page.Canvas, new PointF(x, y));
+            PdfURIAction action5 = new PdfURIAction("https://www.e-iceblue.com/forum/components-f5.html");
+            link2 = new PdfLinkAnnotation(page, new RectangleF(x + margin.Left, y + margin.Top, 100, 20), action5);
+            link2.Border.Width = 0;
+            link2.Contents = text;
+            page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, new PointF(x, y));
+            PdfAnnotationCollection.Create(page).Add(link2);
             y = y + font1.MeasureString(text).Height + 30;
 
             label = "Contct us:  ";
             page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
             x = font.MeasureString(label, format).Width;
             text = "Send an email";
-            link2 = new PdfTextWebLink();
-            link2.Text = text;
-            link2.Url = "mailto:support@e-iceblue.com";
-            link2.Font = font1;
-            link2.Brush = PdfBrushes.CadetBlue;
-            link2.DrawTextWebLink(page.Canvas, new PointF(x, y));
+            PdfURIAction action6 = new PdfURIAction("mailto:support@e-iceblue.com");
+            link2 = new PdfLinkAnnotation(page, new RectangleF(x + margin.Left, y + margin.Top, 50, 20), action6);
+            link2.Border.Width = 0;
+            link2.Contents = text;
+            page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, new PointF(x, y));
+            PdfAnnotationCollection.Create(page).Add(link2);
             y = y + font1.MeasureString(text).Height + 30;
+
+
 
             //Save pdf file.
             doc.SaveToFile("Link.pdf");

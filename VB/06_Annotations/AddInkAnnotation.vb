@@ -1,63 +1,53 @@
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
 Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf.Interactive.Annotations
 
 Namespace AddInkAnnotation
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new PdfDocument object
-			Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Create a PDF document
+            Dim pdf As PdfDocument = New PdfDocument()
 
-			' Add a new page to the document
-			Dim pdfPage As PdfPageBase = pdf.Pages.Add()
+            ' Add a page to the document
+            Dim pdfPage As PdfPageBase = pdf.Pages.Add()
 
-			' Create a list to store ink points
-			Dim inkList As New List(Of Integer())()
+            ' Define the points for the ink annotation
+            Dim inkList As System.Collections.Generic.List<PointF[]> = New System.Collections.Generic.List<PointF[]>()
+            Dim points As PointF[] = New PointF[] { New PointF(140, 840), New PointF(240, 840), New PointF(240, 740) }
+            inkList.Add(points)
 
-			' Define the coordinates for an ink point
-			Dim intPoints() As Integer = {100, 800, 200, 800, 200, 700}
+            ' Create an ink annotation using the defined points
+            Dim ia As PdfInkAnnotation = New PdfInkAnnotation(pdfPage, New RectangleF(140, 740, 100, 100), inkList)
 
-			' Add the ink points to the ink list
-			inkList.Add(intPoints)
+            ' Set properties of the ink annotation such as color, border width, opacity, and text
+            ia.Color = Color.Pink
+            ia.Border.Width = 12
+            ia.StrokingOpacity = 0.3f
+            ia.Contents = "e-iceblue"
 
-			' Create a new PdfInkAnnotation object with the specified ink points
-			Dim ia As New PdfInkAnnotation(inkList)
+            ' Add the ink annotation to the page's annotation collection
+            PdfAnnotationCollection.Create(pdfPage).Add(ia)
 
-			' Set the color of the ink annotation to Pink
-			ia.Color = Color.Pink
+            ' Save the document to PDF format
+            Dim result As String = "AddInkAnnotation.pdf"
+            pdf.SaveToFile(result)
+            pdf.Close()
 
-			' Set the width of the border of the ink annotation to 12
-			ia.Border.Width = 12
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
 
-			' Set the opacity of the ink annotation to 0.3
-			ia.Opacity = 0.3F
-
-			' Set the text content of the ink annotation to "e-iceblue"
-			ia.Text = "e-iceblue"
-
-			' Add the ink annotation to the page's collection of annotations
-            pdfPage.Annotations.Add(ia)
-
-			' Save the document to a PDF file with the specified result filename
-			Dim result As String = "AddInkAnnotation_result.pdf"
-			pdf.SaveToFile(result)
-
-			' Close the document
-			pdf.Close()
-
-			'Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-
-	End Class
+    End Class
 End Namespace

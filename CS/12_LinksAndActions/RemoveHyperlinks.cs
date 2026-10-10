@@ -1,12 +1,6 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace RemoveHyperlinks
@@ -28,7 +22,7 @@ namespace RemoveHyperlinks
             PdfPageBase page = document.Pages[0];
 
             // Get the collection of annotations on the page.
-            PdfAnnotationCollection widgetCollection = page.Annotations;
+            PdfAnnotationCollection widgetCollection = PdfAnnotationCollection.Create(page);
 
             // Check if the widgetCollection is not null and contains annotations.
             if (widgetCollection.Count > 0)
@@ -40,10 +34,10 @@ namespace RemoveHyperlinks
                     PdfAnnotation annotation = widgetCollection[i];
 
                     // Check if the annotation is a TextWebLink Annotation.
-                    if (annotation is PdfTextWebLinkAnnotationWidget)
+                    if (annotation is PdfLinkAnnotation)
                     {
                         // Cast the annotation to TextWebLink Annotation.
-                        PdfTextWebLinkAnnotationWidget link = annotation as PdfTextWebLinkAnnotationWidget;
+                        PdfLinkAnnotation link = annotation as PdfLinkAnnotation;
 
                         // Remove the TextWebLink annotation from the collection.
                         widgetCollection.Remove(link);

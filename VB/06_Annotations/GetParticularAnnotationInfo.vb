@@ -1,55 +1,57 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Data
+Imports System.Drawing
 Imports System.IO
+Imports System.Linq
 Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 
 Namespace GetParticularAnnotationInfo
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PdfDocument object 
-            Dim pdf As New PdfDocument()
-            pdf.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_3.pdf")
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            'Create a new PDF document.
+            Dim pdf As PdfDocument = New PdfDocument()
 
-            ' Get the collection of annotations from the first page of the PDF
-            Dim annotations As PdfAnnotationCollection = pdf.Pages(0).Annotations
+            'Load the file from disk.
+            pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf")
 
-            ' Create a StringBuilder to store the annotation information
-            Dim content As New StringBuilder()
+            'Get the annotation collection from the document.
+            Dim annotations As PdfAnnotationCollection = PdfAnnotationCollection.Create(pdf.Pages[0])
 
-            ' Check if the first annotation is a text annotation
-            If TypeOf annotations(0) Is PdfTextAnnotationWidget Then
-                ' Cast the annotation as a PdfTextAnnotationWidget
-                Dim textAnnotation As PdfTextAnnotationWidget = TryCast(annotations(0), PdfTextAnnotationWidget)
-
-                ' Retrieve and append the annotation's text, modified date, author, and name to the StringBuilder
-                content.AppendLine("Annotation text: " & textAnnotation.Text)
-                content.AppendLine("Annotation ModifiedDate: " & textAnnotation.ModifiedDate.ToString())
-                content.AppendLine("Annotation author: " & textAnnotation.Author)
-                content.AppendLine("Annotation Name: " & textAnnotation.Name)
+            'Get particular annotation information from the document.
+            Dim content As StringBuilder = New StringBuilder()
+            If annotations[0] is PdfTextAnnotation Then
+                Dim textAnnotation As PdfTextAnnotation = annotations[0] as PdfTextAnnotation
+                content.AppendLine("Annotation text: " + textAnnotation.Contents)
+                content.AppendLine("Annotation ModifiedDate: " + textAnnotation.ModifiedDate.ToString())
+                content.AppendLine("Annotation author: " + textAnnotation.Title)
+                content.AppendLine("Annotation Name: " + textAnnotation.Name)
             End If
 
-            ' Specify the output file path for the annotation information
             Dim result As String = "GetParticularAnnotationInfo_out.txt"
-
-            ' Write the contents of the StringBuilder to the output file
+            'Save to file.
             File.WriteAllText(result, content.ToString())
 
-            ' Close the PDF document
             pdf.Close()
 
-            ' Launch the file
+            'Launch the file.
             DocumentViewer(result)
         End Sub
+
         Private Sub DocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

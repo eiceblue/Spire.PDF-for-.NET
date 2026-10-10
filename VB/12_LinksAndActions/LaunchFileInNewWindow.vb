@@ -1,71 +1,64 @@
-﻿Imports Spire.Pdf
+Imports Spire.Pdf
 Imports Spire.Pdf.Actions
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Texts
+Imports System
+Imports System.Collections.Generic
+Imports System.Drawing
+Imports System.Linq
+Imports System.Windows.Forms
 
 Namespace LaunchFileInNewWindow
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a New PdfDocument object
-            Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Load an existing PDF document from disk.
+            Dim pdf As PdfDocument = New PdfDocument()
+            pdf.LoadFromFile(@"..\..\..\..\..\..\Data\DocumentsLinks.pdf")
 
-            ' Load a PDF file from a specified path
-            pdf.LoadFromFile("..\..\..\..\..\..\Data\DocumentsLinks.pdf")
+            'Define the variables
+            ' PdfTextFinder[] finds = null;
+            Dim test As String[] = { "Spire.PDF" }
 
-            ' Specify an array of strings to search for in the document
-            Dim test() As String = {"Spire.PDF"}
-
-            ' Iterate over each page in the document
+            'Traverse the pages
             For Each page As PdfPageBase In pdf.Pages
-                ' Iterate over each element in the "test" array
-                For i As Integer = 0 To test.Length - 1
-                    ' Create a PdfTextFinder object to find occurrences of the current element in the current page
-                    Dim finder As New PdfTextFinder(page)
-                    finder.Options.Parameter = TextFindParameter.WholeWord
+                Dim finds As PdfTextFinder = New PdfTextFinder(page)
+                Dim i As Integer = 0
+                While i < test.Length
+                    'Find the defined string
+                    finds.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.WholeWord
+                    Dim result As List<PdfTextFragment> = finds.Find(test[i])
 
-                    ' Find all instances of the current element
-                    Dim finds As List(Of PdfTextFragment) = finder.Find(test(i))
+                    'Traverse the finds
+                    For Each find As PdfTextFragment In result
+                        Dim launchAction As PdfLaunchAction = New PdfLaunchAction(@"..\..\..\..\..\..\Data\Sample.pdf", PdfFilePathType.Relative)
 
-                    ' Iterate over each found text fragment
-                    For Each find As PdfTextFragment In finds
-                        ' Create a PdfLaunchAction to open a file in a new window
-                        Dim launchAction As New PdfLaunchAction("..\..\..\..\..\..\Data\Sample.pdf", PdfFilePathType.Relative)
-                        launchAction.IsNewWindow = True
+                        'Set open document in a new window
+                        launchAction.NewWindow = True
 
-                        ' Get the bounding rectangle of the found text fragment
-                        Dim rect As RectangleF = find.Bounds(0)
+                        'Add annotation
+                        Dim rect As RectangleF = New RectangleF(result.First().Positions[0].X, result.First().Positions[0].Y, result.First().Sizes[0].Width, result.First().Sizes[0].Height)
+                        Dim annotation As PdfLinkAnnotation = New PdfLinkAnnotation(page, rect, launchAction)
+                        PdfAnnotationCollection.Create(page).Add(annotation)
+                    Next
+                Next
+            Next
 
-                        ' Create a PdfActionAnnotation with the launch action and the bounding rectangle
-                        Dim annotation As New PdfActionAnnotation(rect, launchAction)
+            ' Save the modified PDF document to a new file.
+            Dim outputFile As String = "LaunchFileInNewWindow.pdf"
+            pdf.SaveToFile(outputFile)
 
-                        ' Add the annotation to the page's annotation collection
-                        TryCast(page, PdfPageWidget).Annotations.Add(annotation)
-                    Next find
-                Next i
-            Next page
-
-            ' Specify the output file name as "LaunchFileInNewWindow.pdf"
-            Dim result As String = "LaunchFileInNewWindow.pdf"
-
-            ' Save the modified document to a PDF file
-            pdf.SaveToFile(result)
-
-            ' Close the PDF document
-            pdf.Close()
-
-            ' Launch the file
-            DocumentViewer(result)
+            'Launch the file.
+            DocumentViewer(outputFile)
         End Sub
         Private Sub DocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
         End Sub
     End Class
 End Namespace

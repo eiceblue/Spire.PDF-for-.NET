@@ -1,67 +1,57 @@
+Imports System
+Imports System.Windows.Forms
 Imports Spire.Pdf
 Imports System.IO
 Imports System.Text
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf.Interactive.Annotations
 
 Namespace GetAllAnnotationsFromPage
-    Partial Public Class Form1
-        Inherits Form
+    Public Partial Class Form1 : Inherits Form
         Public Sub New()
             InitializeComponent()
         End Sub
 
-        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-            ' Create a new PdfDocument object
-            Dim pdf As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
 
-            ' Load a PDF file from the specified path
-            pdf.LoadFromFile("..\..\..\..\..\..\Data\Template_Pdf_3.pdf")
+            'Create a new PDF document.
+            Dim pdf As PdfDocument = New PdfDocument()
 
-            ' Get the collection of annotations on the first page
-            Dim annotations As PdfAnnotationCollection = pdf.Pages(0).Annotations
+            'Load the file from disk.
+            pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf")
 
-            ' Create a StringBuilder to store the annotation information
-            Dim content As New StringBuilder()
+            'Get all annotations from the first page.
+            Dim annotations As PdfAnnotationCollection = PdfAnnotationCollection.Create(pdf.Pages[0])
 
-            ' Iterate through each annotation in the collection
-            For i As Integer = 0 To annotations.Count - 1
+            Dim content As StringBuilder = New StringBuilder()
 
-                ' Check if the current annotation is a PopupAnnotationWidget
-                If TypeOf annotations(i) Is PdfPopupAnnotationWidget Then
-
-                    ' Skip the iteration if it is a PopupAnnotationWidget
-                    Continue For
+            Dim i As Integer = 0
+            While i < annotations.Count
+                'A text annotation will attach a popup annotation since they are father-son relationship.
+                'The annotation information exists in the text annotation, so here we mask the blank popup annotation.
+                If annotations[i] is PdfPopupAnnotation Then
+                    Continue
+                content.AppendLine("Annotation information: ")
+                content.AppendLine("Text: " + annotations[i].Contents)
+                Dim modifiedDate As String = annotations[i].ModifiedDate.ToString()
+                content.AppendLine("ModifiedDate: " + modifiedDate)
                 End If
 
-                ' Append annotation information header
-                content.AppendLine("Annotation information: ")
-
-                ' Append the annotation text
-                content.AppendLine("Text: " & annotations(i).Text)
-
-                ' Get the modified date of the annotation and append it
-                Dim modifiedDate As String = annotations(i).ModifiedDate.ToString()
-                content.AppendLine("ModifiedDate: " & modifiedDate)
-            Next i
-
-            ' Specify the result file name
             Dim result As String = "Result-GetAllAnnotationsFromPage.txt"
 
-            ' Write the annotation information to the result file
+            'Save to file.
             File.WriteAllText(result, content.ToString())
 
-            ' Close the PDF document
             pdf.Close()
 
-            ' Launch the file
+            'Launch the file.
             PDFDocumentViewer(result)
-        End Sub
+            Next
 
         Private Sub PDFDocumentViewer(ByVal filename As String)
             Try
-                Process.Start(filename)
-            Catch
-            End Try
+                System.Diagnostics.Process.Start(filename)
+        Catch
+        End Try
+        End Sub
         End Sub
     End Class
-End Namespace

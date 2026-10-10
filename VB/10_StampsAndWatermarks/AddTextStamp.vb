@@ -1,112 +1,90 @@
-﻿Imports Spire.Pdf
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.Graphics
-Imports Spire.Pdf.Annotations
-Imports Spire.Pdf.Annotations.Appearance
+
 Namespace AddTextStamp
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Specify the input file path
-			Dim input As String = "..\..\..\..\..\..\Data\AddTextStamp.pdf"
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Specify the file path for the input PDF document
+            Dim input As String = "..\\..\\..\\..\\..\\..\\Data\\AddTextStamp.pdf"
 
-			' Create a new PdfDocument object
-			Dim document As New PdfDocument()
+            ' Create a new instance of PdfDocument
+            Dim document As PdfDocument = New PdfDocument()
 
-			' Load an existing PDF file from the specified input file path
-			document.LoadFromFile(input)
+            ' Load the PDF document from the specified file path
+            document.LoadFromFile(input)
 
-			' Access the first page of the document
-			Dim page As PdfPageBase = document.Pages(0)
+            ' Get the first page of the document
+            Dim page As PdfPageBase = document.Pages[0]
 
-			' Create a new PdfTemplate object with a specific width and height
-			Dim template As New PdfTemplate(125, 55)
+            ' Create a template with specific dimensions to hold the stamp
+            Dim template As PdfTemplate = New PdfTemplate(125, 55)
 
-			' Create a new PdfTrueTypeFont object with Elephant font, size 10, and italic style
-			Dim font1 As New PdfTrueTypeFont(New Font("Elephant", 10.0F, FontStyle.Italic), True)
-			' =============================================================================
-			' Use the following code for netstandard dlls
-			' =============================================================================
-			'Dim font1 As New PdfTrueTypeFont("Elephant", 10.0F, FontStyle.Italic, True)
-			' =============================================================================
+            ' Set the font, brush, and pen for drawing the stamp
+            Dim font1 As PdfTrueTypeFont = New PdfTrueTypeFont(New Font("Elephant", 10f, FontStyle.Italic), True)
+            '''///////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             Dim font1 As PdfTrueTypeFont = New PdfTrueTypeFont("Elephant", 10f, PdfFontStyle.Italic, True)
+            */
+            Dim brush As PdfSolidBrush = New PdfSolidBrush(Color.DarkRed)
+            Dim pen As PdfPen = New PdfPen(brush)
 
-			' Create a new PdfSolidBrush object with dark red color
-			Dim brush As New PdfSolidBrush(Color.DarkRed)
+            ' Define a rectangle that represents the bounds of the stamp
+            Dim rectangle As RectangleF = New RectangleF(New PointF(5, 5), template.Size)
 
-			' Create a new PdfPen object with the defined brush
-			Dim pen As New PdfPen(brush)
+            ' Define the corner radius for the stamp's rounded corners
+            Dim CornerRadius As Integer = 20
 
-			' Define the rectangle for drawing the stamp
-			Dim rectangle As New RectangleF(New PointF(5, 5), template.Size)
+            ' Create a path for the stamp shape using arcs and lines
+            Dim path As PdfPath = New PdfPath()
+            path.AddArc(template.GetBounds().X, template.GetBounds().Y, CornerRadius, CornerRadius, 180, 90)
+            path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y, CornerRadius, CornerRadius, 270, 90)
+            path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 0, 90)
+            path.AddArc(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 90, 90)
+            path.AddLine(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, template.GetBounds().X, template.GetBounds().Y + CornerRadius / 2)
 
-			' Define the corner radius for the stamp rectangle
-			Dim CornerRadius As Integer = 20
+            ' Draw the stamp shape on the template
+            template.Graphics.DrawPath(pen, path)
 
-			' Create a new PdfPath object to define the shape of the stamp
-			Dim path As New PdfPath()
-			path.AddArc(template.GetBounds().X, template.GetBounds().Y, CornerRadius, CornerRadius, 180, 90)
-			path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y, CornerRadius, CornerRadius, 270, 90)
-			path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 0, 90)
-			path.AddArc(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 90, 90)
-			path.AddLine(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, template.GetBounds().X, template.GetBounds().Y + CornerRadius \ 2)
+            ' Draw the stamp text on the template
+            Dim s1 As String = "REVISED\n"
+            Dim s2 As String = "by E-iceblue at " + DateTime.Now.ToString("MM dd, yyyy")
+            template.Graphics.DrawString(s1, font1, brush, New PointF(5, 10))
+            Dim font2 As PdfTrueTypeFont = New PdfTrueTypeFont(New Font("Lucida Sans Unicode", 9f, FontStyle.Bold), True)
+            '''///////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+              Dim font2 As PdfTrueTypeFont = New PdfTrueTypeFont("Lucida Sans Unicod", 9f, PdfFontStyle.Bold, True)
+            */
+            template.Graphics.DrawString(s2, font2, brush, New PointF(2, 30))
 
-			' Draw the defined path onto the template using the pen
-			template.Graphics.DrawPath(pen, path)
+            'Create a rubber stamp
+            Dim stamp As PdfRubberStampAnnotation = New PdfRubberStampAnnotation(page, rectangle)
+            stamp.Appearances.SetNormalAppearance(New PdfAppearance(template))
 
-			' Define the first line of text for the stamp
-			Dim s1 As String = "REVISED" & vbLf
+            'Draw stamp into page
+            PdfAnnotationCollection.Create(page).Add(stamp)
 
-			' Define the second line of text for the stamp
-			Dim s2 As String = "by E-iceblue at " & Date.Now.ToString("MM dd, yyyy")
+            ' Specify the file name for the modified PDF document
+            Dim output As String = "AddTextStamp.pdf"
 
-			' Draw the first line of text onto the template using font1 and brush
-			template.Graphics.DrawString(s1, font1, brush, New PointF(5, 10))
+            ' Save the modified PDF document
+            document.SaveToFile(output)
 
-			' Create a new PdfTrueTypeFont object with Lucida Sans Unicode font, size 9, and bold style
-			Dim font2 As New PdfTrueTypeFont(New Font("Lucida Sans Unicode", 9.0F, FontStyle.Bold), True)
-			' =============================================================================
-			' Use the following code for netstandard dlls
-			' =============================================================================
-			'Dim font2 As New PdfTrueTypeFont("Lucida Sans Unicode", 9.0F, FontStyle.Bold, True)
-			' =============================================================================
-			' Draw the second line of text onto the template using font2 and brush
-			template.Graphics.DrawString(s2, font2, brush, New PointF(2, 30))
-
-			' Create a new PdfRubberStampAnnotation object with the defined rectangle
-			Dim stamp As New PdfRubberStampAnnotation(rectangle)
-
-			' Create a new PdfAppearance object for the stamp annotation
-			Dim appearance As New PdfAppearance(stamp)
-
-			' Set the appearance of the stamp to use the created template
-			appearance.Normal = template
-
-			' Assign the appearance to the stamp annotation
-			stamp.Appearance = appearance
-
-			' Add the stamp annotation to the page
-            page.Annotations.Add(stamp)
-
-			' Specify the output file name
-			Dim output As String = "AddTextStamp.pdf"
-
-			' Save the modified document to a file
-			document.SaveToFile(output)
-
-			' Close the document
-			document.Close()
-
-			' Launch the file
-			PDFDocumentViewer(output)
-		End Sub
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+            'Launch the file
+            PDFDocumentViewer(output)
+        End Sub
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
+    End Class
 End Namespace

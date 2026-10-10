@@ -391,29 +391,32 @@ converter.ToEmbeddedFontDocument(output);
 
 ---
 
-# Spire.PDF Extract Highlighted Text
-## Extract text that has been highlighted in a PDF document
-```csharp
-//Create a pdf instance
-PdfDocument doc = new PdfDocument();
+# 02_Text - ExtractHighlightedText
+## Extracts highlighted text and highlighted color from PDF text markup annotations.
 
+```csharp
+PdfDocument doc = new PdfDocument();
 PdfPageBase page = doc.Pages[0];
-PdfTextMarkupAnnotationWidget textMarkupAnnotation;
+
+PdfTextMarkupAnnotation textMarkupAnnotation;
 StringBuilder stringBuilder = new StringBuilder();
-PdfTextExtractor pdfTextExtractor = new PdfTextExtractor(page);
-//Get PdfTextMarkupAnnotationWidget objects
+stringBuilder.AppendLine("Extracted highlighted text:");
+
+// Get PdfTextMarkupAnnotation objects
 for (int i = 0; i < page.Annotations.Count; i++)
 {
-    if (page.Annotations[i] is PdfTextMarkupAnnotationWidget)
+    if (PdfAnnotationCollection.Create(page)[i] is PdfTextMarkupAnnotation)
     {
-        textMarkupAnnotation = page.Annotations[i] as PdfTextMarkupAnnotationWidget;
-        //Get the highlighted text
-        PdfTextExtractOptions pdfTextExtractOptions = new PdfTextExtractOptions();
-        pdfTextExtractOptions.ExtractArea = textMarkupAnnotation.Bounds;
-        stringBuilder.AppendLine(pdfTextExtractor.ExtractText(pdfTextExtractOptions));
+        textMarkupAnnotation = PdfAnnotationCollection.Create(page)[i] as PdfTextMarkupAnnotation;
 
-        //Get the highlighted color
-        Color color = textMarkupAnnotation.TextMarkupColor;
+        // Get the highlighted text
+        PdfTextExtractor textExtractor = new PdfTextExtractor(page);
+        PdfTextExtractOptions option = new PdfTextExtractOptions();
+        option.ExtractArea = textMarkupAnnotation.Rectangle;
+        stringBuilder.AppendLine(textExtractor.ExtractText(option));
+
+        // Get the highlighted color
+        Color color = textMarkupAnnotation.Color;
     }
 }
 ```
@@ -924,32 +927,33 @@ replacer.ReplaceText("Adobe Acrobat", "PDF editors");
 
 ---
 
-# spire.pdf csharp text search
-## search text and add hyperlink to pdf
+# 02_Text - SearchTextAndAddHyperlink
+## Search for specified text in a PDF page and add hyperlink annotations to each match.
 ```csharp
-// Create a PdfTextFinder using the first page
-PdfTextFinder finder = new PdfTextFinder(page);
-
-// Set the search parameter to ignore case
-finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.IgnoreCase;
-
-// Find all occurrences of "e-iceblue" in the PDF and store them in a list
-List<PdfTextFragment> finds = finder.Find("e-iceblue");
-
-// Define the hyperlink URL
-String url = "http://www.e-iceblue.com";
-
-// Iterate through each found text fragment
-foreach (PdfTextFragment find in finds)
+private void AddHyperlinksToSearchedText(PdfDocument doc, string searchText, string url)
 {
-    // Create a PdfUriAnnotation object to add a hyperlink for the searched text
-    PdfUriAnnotation uri = new PdfUriAnnotation(find.Bounds[0]);
-    uri.Uri = url;
-    uri.Border = new PdfAnnotationBorder(1f);
-    uri.Color = Color.Blue;
+    PdfPageBase page = doc.Pages[0];
 
-    // Add the annotation to the page's annotation widget
-    page.Annotations.Add(uri);
+    // Create a finder to locate all matched phrases
+    PdfTextFinder finds = new PdfTextFinder(page);
+    finds.Options.Parameter = TextFindParameter.IgnoreCase;
+    List<PdfTextFragment> result = finds.Find(searchText);
+
+    foreach (PdfTextFragment find in result)
+    {
+        RectangleF rect = new RectangleF(
+            find.Positions[0].X,
+            find.Positions[0].Y,
+            find.Sizes[0].Width,
+            find.Sizes[0].Height);
+
+        // Create a URI action and link annotation for the searched text
+        PdfURIAction action = new PdfURIAction(url);
+        PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, action);
+        annotation.Border.Width = 1f;
+        annotation.Color = Color.Blue;
+        PdfAnnotationCollection.Create(page).Add(annotation);
+    }
 }
 ```
 
@@ -3590,574 +3594,460 @@ void table_BeginRowLayout(object sender, BeginRowLayoutEventArgs args)
 
 ---
 
-# spire.pdf csharp annotation
-## add free text annotation to pdf
+# 06_Annotations - AddFreeTextAnnotation
+## Add multiple free text annotations to a PDF page with customized borders, colors, callout endings, and opacity.
 ```csharp
-// Define a rectangle for the free text annotation
-RectangleF rect = new RectangleF(0, 300, 100, 80);
+private void AddFreeTextAnnotations(PdfPageBase page)
+{
+    // Define a rectangle for the free text annotation
+    RectangleF rect = new RectangleF(0, 300, 100, 80);
+    PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 20);
 
-// Create a free text annotation and set its properties
-PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(rect);
-textAnnotation.Text = "\n  Spire.PDF";
+    // Add free text annotation
+    PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+    textAnnotation.Contents = "\n  Spire.PDF";
+    textAnnotation.Border.Width = 1f;
+    textAnnotation.Border.Color = Color.Gray;
+    textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Slash;
+    textAnnotation.Color = Color.LightBlue;
+    textAnnotation.StrokingOpacity = 0.8f;
+    textAnnotation.RefreshAppearances();
+    PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
-// Set border style for annotation
-PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
-textAnnotation.Border = border;
-textAnnotation.BorderColor = Color.Gray;
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.Slash;
+    rect = new RectangleF(150, 200, 150, 40);
+    font = new PdfFont(PdfFontFamily.Helvetica, 10);
+    textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+    textAnnotation.Contents = "\nHigh Fidelity Pdf file Conversion";
+    textAnnotation.Border.Width = 1f;
+    textAnnotation.Border.Color = Color.LightGoldenrodYellow;
+    textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.RClosedArrow;
+    textAnnotation.Color = Color.LightPink;
+    textAnnotation.StrokingOpacity = 0.8f;
+    textAnnotation.RefreshAppearances();
+    PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
-//Set font for annotation
-PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 20);
-textAnnotation.Font = font;
+    rect = new RectangleF(150, 280, 280, 40);
+    font = new PdfFont(PdfFontFamily.Helvetica, 10);
+    textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+    textAnnotation.Contents = "\nEasily Manipulate document and Form fields";
+    textAnnotation.Border.Width = 1f;
+    textAnnotation.Border.Color = Color.Gray;
+    textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
+    textAnnotation.Color = Color.LightSkyBlue;
+    textAnnotation.StrokingOpacity = 0.8f;
+    textAnnotation.RefreshAppearances();
+    PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
-//Set color for text annotation
-textAnnotation.Color = Color.LightBlue;
-textAnnotation.Opacity = 0.8f;
+    rect = new RectangleF(150, 360, 200, 40);
+    font = new PdfFont(PdfFontFamily.Helvetica, 10);
+    textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+    textAnnotation.Contents = "\nSecurity features";
+    textAnnotation.Border.Width = 1f;
+    textAnnotation.Border.Color = Color.Pink;
+    textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.RClosedArrow;
+    textAnnotation.Color = Color.LightGreen;
+    textAnnotation.StrokingOpacity = 0.8f;
+    textAnnotation.RefreshAppearances();
+    PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
-// Add the free text annotation to the page
-page.Annotations.Add(textAnnotation);
+    rect = new RectangleF(150, 440, 200, 40);
+    font = new PdfFont(PdfFontFamily.Helvetica, 10);
+    textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+    textAnnotation.Contents = "\nExtract data from Pdf documents";
+    textAnnotation.Border.Width = 1f;
+    textAnnotation.Border.Color = Color.OrangeRed;
+    textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.RClosedArrow;
+    textAnnotation.Color = Color.LightGoldenrodYellow;
+    textAnnotation.StrokingOpacity = 0.8f;
+    textAnnotation.RefreshAppearances();
+    PdfAnnotationCollection.Create(page).Add(textAnnotation);
+}
 ```
 
 ---
 
-# Spire.PDF C# Ink Annotation
-## Create and add an ink annotation to a PDF page
+# 06_Annotations - AddInkAnnotation
+## Add an ink annotation to a PDF page with configurable color, border, opacity, and contents.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a PDF document
+    PdfDocument pdf = new PdfDocument();
+
+    // Add a page to the document
+    PdfPageBase pdfPage = pdf.Pages.Add();
+
+    // Define the points for the ink annotation
+    System.Collections.Generic.List<PointF[]> inkList = new System.Collections.Generic.List<PointF[]>();
+    PointF[] points = new PointF[] { new PointF(140, 840), new PointF(240, 840), new PointF(240, 740) };
+    inkList.Add(points);
+
+    // Create an ink annotation using the defined points
+    PdfInkAnnotation ia = new PdfInkAnnotation(pdfPage, new RectangleF(140, 740, 100, 100), inkList);
+
+    // Set properties of the ink annotation such as color, border width, opacity, and text
+    ia.Color = Color.Pink;
+    ia.Border.Width = 12;
+    ia.StrokingOpacity = 0.3f;
+    ia.Contents = "e-iceblue";
+
+    // Add the ink annotation to the page's annotation collection
+    PdfAnnotationCollection.Create(pdfPage).Add(ia);
+}
+```
+
+---
+
+# 06_Annotations - Annotation
+## Adds link, file launch, free text, line, text markup, popup, and rubber stamp annotations to a PDF page.
+
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a PDF document
+    PdfDocument doc = new PdfDocument();
+
+    // Set page margins
+    PdfUnitConvertor unitCvtr = new PdfUnitConvertor();
+    PdfMargins margin = new PdfMargins();
+    margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
+    margin.Bottom = margin.Top;
+    margin.Left = unitCvtr.ConvertUnits(3f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
+    margin.Right = margin.Left;
+
+    // Create a page
+    PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, margin);
+
+    float y = 50;
+
+    // Add various annotations
+    y = AddDocumentLinkAnnotation(page, y, margin);
+    y = y + 6;
+    y = AddFileLinkAnnotation(page, y, margin);
+    y = y + 6;
+    y = AddFreeTextAnnotation(page, y, margin);
+    y = y + 6;
+    y = AddLineAnnotation(page, y, margin);
+    y = y + 6;
+    y = AddTextMarkupAnnotation(page, y, margin);
+    y = y + 6;
+    y = AddPopupAnnotation(page, y, margin);
+    y = y + 6;
+    y = AddRubberStampAnnotation(page, y, margin);
+}
+
+// Add a document link annotation
+private float AddDocumentLinkAnnotation(PdfPageBase page, float y, PdfMargins margin)
+{
+    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+    PdfStringFormat format = new PdfStringFormat();
+    format.MeasureTrailingSpaces = true;
+
+    string prompt = "Document Link: ";
+    SizeF size = font.MeasureString(prompt);
+
+    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
+    float x = font.MeasureString(prompt, format).Width;
+
+    PdfXYZExplicitDestination dest = new PdfXYZExplicitDestination(page, 0, y, 2f);
+
+    string label = "Click me, Zoom 200%";
+    size = font.MeasureString(label);
+    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
+    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
+
+    RectangleF rect = new RectangleF(bounds.X + margin.Left, bounds.Y + margin.Top, bounds.Width, bounds.Height);
+    PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, dest);
+    annotation.Color = Color.Blue;
+    PdfAnnotationCollection.Create(page).Add(annotation);
+
+    return bounds.Bottom;
+}
+
+// Add a file link annotation
+private float AddFileLinkAnnotation(PdfPageBase page, float y, PdfMargins margin)
+{
+    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
+    PdfStringFormat format = new PdfStringFormat();
+    format.MeasureTrailingSpaces = true;
+
+    string prompt = "Launch File: ";
+    SizeF size = font.MeasureString(prompt);
+
+    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
+    float x = font.MeasureString(prompt, format).Width;
+
+    string label = @"Launch Notepad.exe";
+    size = font.MeasureString(label);
+    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
+    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
+
+    RectangleF rect = new RectangleF(bounds.X + margin.Left, bounds.Y + margin.Top, bounds.Width, bounds.Height);
+    PdfLaunchAction action = new PdfLaunchAction(@"C:\Windows\Notepad.exe");
+    PdfLinkAnnotation annotation =
+
+---
+
+# 06_Annotations - CreatePdf3DAnnotation
+## Create a 3D annotation on a PDF page with activation and view settings.
+```csharp
+// Create a new PDF document.
+PdfDocument doc = new PdfDocument();
+
+// Add a new page.
+PdfPageBase page = doc.Pages.Add();
+
+// Define the canvas area for the 3D file.
+Rectangle rt = new Rectangle(40, 120, 200, 200);
+
+// Load the U3D artwork and create a 3D annotation.
+Pdf3DArtwork artwork = new Pdf3DArtwork(@"CreatePdf3DAnnotation.u3d", Pdf3DFileFormat.U3D);
+Pdf3DAnnotation annotation = new Pdf3DAnnotation(page, rt, artwork);
+annotation.Activation = new Pdf3DActivation();
+annotation.Activation.ActivationMode = Pdf3DActivationMode.PageOpen;
+
+// Define a 3D view mode.
+Pdf3DView view = new Pdf3DView("3DAnnotation");
+view.Background = new Pdf3DBackground(new PdfRGBColor(Color.Purple));
+view.RenderMode = new Pdf3DRenderMode(PdfRenderModeType.Solid);
+view.InternalName = "3DAnnotation";
+view.LightingScheme = new Pdf3DLightingScheme(PdfLightingSchemeType.Day);
+
+// Set the 3D view mode for the annotation.
+annotation.Views.Add(view);
+
+// Add the annotation to the page.
+PdfAnnotationCollection.Create(page).Add(annotation);
+```
+
+---
+
+# 06_Annotations - CreatePdfLineAnnotation
+## Creates PDF line annotations with different styles, intents, colors, line endings, and leader lines.
+
+```csharp
+// Create a PDF document.
+PdfDocument document = new PdfDocument();
+
+// Add a new page.
+PdfPageBase page = document.Pages.Add();
+
+// Create the first line annotation.
+RectangleF rect = new RectangleF(140, 689, 80, 1);
+PdfLineAnnotation lineAnnotation = new PdfLineAnnotation(
+    page,
+    rect,
+    new PointF(140, 690),
+    new PointF(220, 690)
+);
+lineAnnotation.Contents = "This is the first line annotation";
+lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid;
+lineAnnotation.Border.Width = 1;
+lineAnnotation.Intent = PdfLineIntent.LineDimension;
+lineAnnotation.StartingStyle = PdfLineEndingStyle.Butt;
+lineAnnotation.EndingStyle = PdfLineEndingStyle.Diamond;
+lineAnnotation.Flags = PdfAnnotationFlags.None;
+lineAnnotation.InteriorColor = new PdfRGBColor(Color.Green);
+lineAnnotation.Color = new PdfRGBColor(Color.Green);
+lineAnnotation.LeaderLineExtension = 0;
+lineAnnotation.LeaderLine = 0;
+PdfAnnotationCollection.Create(page).Add(lineAnnotation);
+
+// Create the second line annotation.
+rect = new RectangleF(140, 589, 180, 2);
+lineAnnotation = new PdfLineAnnotation(
+    page,
+    rect,
+    new PointF(140, 590),
+    new PointF(320, 590)
+);
+lineAnnotation.Contents = "This is the second line annotation";
+lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid;
+lineAnnotation.Border.Width = 2;
+lineAnnotation.Intent = PdfLineIntent.LineArrow;
+lineAnnotation.StartingStyle = PdfLineEndingStyle.Circle;
+lineAnnotation.EndingStyle = PdfLineEndingStyle.Diamond;
+lineAnnotation.Flags = PdfAnnotationFlags.None;
+lineAnnotation.InteriorColor = new PdfRGBColor(Color.Pink);
+lineAnnotation.Color = new PdfRGBColor(Color.Pink);
+lineAnnotation.LeaderLineExtension = 0;
+lineAnnotation.LeaderLine = 0;
+PdfAnnotationCollection.Create(page).Add(lineAnnotation);
+
+// Create the third line annotation.
+rect = new RectangleF(140, 489, 180, 2);
+lineAnnotation = new PdfLineAnnotation(
+    page,
+    rect,
+    new PointF(140, 490),
+    new PointF(320, 490)
+);
+lineAnnotation.Contents = "This is the third line annotation";
+lineAnnotation.Border.Style = Spire.Pdf.Interactive.Annotations.PdfBorderStyle.Solid;
+lineAnnotation.Border.Width = 2;
+lineAnnotation.Intent = PdfLineIntent.LineDimension;
+lineAnnotation.StartingStyle = PdfLineEndingStyle.None;
+lineAnnotation.EndingStyle = PdfLineEndingStyle.None;
+lineAnnotation.Flags = PdfAnnotationFlags.None;
+lineAnnotation.InteriorColor = new PdfRGBColor(Color.Blue);
+lineAnnotation.Color = new PdfRGBColor(Color.Blue);
+lineAnnotation.LeaderLineExtension = 1;
+lineAnnotation.LeaderLine = 1;
+PdfAnnotationCollection.Create(page).Add(lineAnnotation);
+```
+
+---
+
+# 06_Annotations - CreatePdfLinkAnnotation
+## Creates a PDF link annotation with a relative launch action and adds it to a page.
+```csharp
+// Create a new PDF document and add a page.
+PdfDocument doc = new PdfDocument();
+PdfPageBase page = doc.Pages.Add();
+
+// Define the annotation bounds and target file for the launch action.
+RectangleF rect = new RectangleF(40, 80, 250, 35);
+string filePath = @"..\..\..\..\..\..\Data\Template_Pdf_3.pdf";
+
+// Create a file link annotation and add it to the page.
+PdfLinkAnnotation link = new PdfLinkAnnotation(
+    page,
+    rect,
+    new PdfLaunchAction(filePath, PdfFilePathType.Relative)
+);
+PdfAnnotationCollection.Create(page).Add(link);
+```
+
+---
+
+# 06_Annotations - CreatePdfPolygonAnnotation
+## Create and configure a polygon annotation on a PDF page.
+```csharp
+// Create a PDF document and add a page.
+PdfDocument pdf = new PdfDocument();
+PdfPageBase page = pdf.Pages.Add();
+
+// Define the polygon vertex points.
+PointF[] points = new PointF[]
+{
+    new PointF(40, 70),
+    new PointF(70, 55),
+    new PointF(100, 70),
+    new PointF(85, 90),
+    new PointF(55, 90),
+    new PointF(40, 70)
+};
+
+// Initialize a PdfPolygonAnnotation with a rectangle and vertex coordinates.
+PdfPolygonAnnotation polygon = new PdfPolygonAnnotation(
+    page,
+    new RectangleF(40, 55, 60, 35),
+    points
+);
+
+// Set the border color, contents, title, border effect, and other properties.
+polygon.Color = Color.PaleVioletRed;
+polygon.Contents = "This is a polygon annotation";
+polygon.Title = "E-ICEBLUE";
+polygon.Subject = "polygon annotation demo";
+polygon.Border.Effect = PdfBorderEffect.Cloudy;
+polygon.Border.EffectIntensity = 2;
+polygon.ModifiedDate = DateTime.Now;
+
+// Add the annotation to the PDF page.
+PdfAnnotationCollection.Create(page).Add(polygon);
+```
+
+---
+
+# 06_Annotations - CreatePolylineAnnotation
+## Create a polyline annotation and add it to a PDF page.
 ```csharp
 // Create a PDF document
 PdfDocument pdf = new PdfDocument();
 
-// Add a page to the document
-PdfPageBase pdfPage = pdf.Pages.Add();
+// Add a new page
+PdfPageBase page = pdf.Pages.Add();
 
-// Define the points for the ink annotation
-System.Collections.Generic.List<int[]> inkList = new System.Collections.Generic.List<int[]>();
-int[] intPoints = new int[]
+// Define the points for the polyline annotation
+PointF[] points = new PointF[]
 {
-    100, 800,
-    200, 800,
-    200, 700
+    new PointF(40, 100),
+    new PointF(70, 85),
+    new PointF(100, 130),
+    new PointF(130, 120)
 };
-inkList.Add(intPoints);
 
-// Create an ink annotation using the defined points
-PdfInkAnnotation ia = new PdfInkAnnotation(inkList);
-
-// Set properties of the ink annotation such as color, border width, opacity, and text
-ia.Color = Color.Pink;
-ia.Border.Width = 12;
-ia.Opacity = 0.3f;
-ia.Text = "e-iceblue";
-
-// Add the ink annotation to the page's annotation widget collection
-pdfPage.Annotations.Add(ia);
-```
-
----
-
-# spire.pdf csharp annotations
-## create various types of annotations in pdf document
-```csharp
-// Add a document link annotation to the page
-private float AddDocumentLinkAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    String prompt = "Document Link: ";
-    SizeF size = font.MeasureString(prompt);
-
-    // Draw the prompt text
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = font.MeasureString(prompt, format).Width;
-
-    // Set up the destination for the link annotation
-    PdfDestination dest = new PdfDestination(page);
-    dest.Mode = PdfDestinationMode.Location;
-    dest.Location = new PointF(0, y);
-    dest.Zoom = 2f;
-
-    String label = "Click me, Zoom 200%";
-    size = font.MeasureString(label);
-
-    // Draw the label text
-    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-
-    // Create a document link annotation and set its properties
-    PdfDocumentLinkAnnotation annotation = new PdfDocumentLinkAnnotation(bounds, dest);
-    annotation.Color = Color.Blue;
-
-    // Add the annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = bounds.Bottom;
-
-    return y;
-}
-
-// Add a file link annotation to the page
-private float AddFileLinkAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    // Draw the prompt text
-    String prompt = "Launch File: ";
-    SizeF size = font.MeasureString(prompt);
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = font.MeasureString(prompt, format).Width;
-
-    // Draw the label text
-    String label = @"Launch Notepad.exe";
-    size = font.MeasureString(label);
-    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-
-    // Create a file link annotation and set its properties
-    PdfFileLinkAnnotation annotation = new PdfFileLinkAnnotation(bounds, @"C:\Windows\Notepad.exe");
-    annotation.Color = Color.Blue;
-
-    // Add the annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = bounds.Bottom;
-
-    return y;
-}
-
-// Add a free text annotation to the page
-private float AddFreeTextAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    // Draw the prompt text
-    String prompt = "Text Markup: ";
-    SizeF size = font.MeasureString(prompt);
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = font.MeasureString(prompt, format).Width;
-
-    // Draw the label text and bounding rectangle
-    String label = @"I'm a text box, not a TV";
-    size = font.MeasureString(label);
-    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
-    page.Canvas.DrawRectangle(new PdfPen(Color.Blue, 0.1f), bounds);
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-
-    // Set up the free text annotation with its properties
-    PointF location = new PointF(bounds.Right + 16, bounds.Top - 16);
-    RectangleF annotaionBounds = new RectangleF(location, new SizeF(80, 32));
-    PdfFreeTextAnnotation annotation = new PdfFreeTextAnnotation(annotaionBounds);
-    annotation.AnnotationIntent = PdfAnnotationIntent.FreeTextCallout;
-    annotation.Border = new PdfAnnotationBorder(0.5f);
-    annotation.BorderColor = Color.Red;
-    location = new PointF(bounds.Right + 16, bounds.Top - 16);
-    annotation.CalloutLines = new PointF[] {
-            new PointF(bounds.Right, bounds.Top),
-            new PointF(bounds.Right+8, bounds.Top - 8),
-            location
-        };
-    annotation.Color = Color.Yellow;
-    annotation.Flags = PdfAnnotationFlags.Locked;
-    annotation.Font = font;
-    annotation.LineEndingStyle = PdfLineEndingStyle.OpenArrow;
-    annotation.MarkupText = "Just a joke.";
-    annotation.Opacity = 0.75f;
-    annotation.TextMarkupColor = Color.Green;
-
-    // Add the free text annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = bounds.Bottom;
-
-    return y;
-}
-
-// Add a line annotation to the page
-private float AddLineAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    // Draw the prompt text
-    String prompt = "Line Annotation: ";
-    SizeF size = font.MeasureString(prompt);
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = font.MeasureString(prompt, format).Width;
-
-    // Draw the label text and bounding rectangle
-    String label = @"Line Annotation";
-    size = font.MeasureString(label);
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
-    int[] linePoints = new int[]
-    {
-         (int)bounds.Left, (int)bounds.Top, (int)bounds.Right, (int)bounds.Bottom
-    };
-
-    // Create a line annotation and set its properties
-    PdfLineAnnotation annotation = new PdfLineAnnotation(linePoints, "Annotation");
-    annotation.BeginLineStyle = PdfLineEndingStyle.ClosedArrow;
-    annotation.EndLineStyle = PdfLineEndingStyle.ClosedArrow;
-    annotation.LineCaption = true;
-    annotation.BackColor = Color.Black;
-    annotation.CaptionType = PdfLineCaptionType.Inline;
-
-    // Add the line annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = bounds.Bottom;
-
-    return y;
-}
-
-// Add a text markup annotation to the page
-private float AddTextMarkupAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    // Draw the prompt text
-    String prompt = "Highlight incorrect spelling: ";
-    SizeF size = font.MeasureString(prompt, format);
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = size.Width;
-
-    // Draw the label text and bounding rectangle
-    String label = "demo of anotation";
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-    size = font.MeasureString("demo of ", format);
-    x = x + size.Width;
-    PointF incorrectWordLocation = new PointF(x, y);
-    String markupText = "Should be 'annotation'";
-
-    // Create a text markup annotation and set its properties
-    PdfTextMarkupAnnotation annotation = new PdfTextMarkupAnnotation(markupText, "anotation", new RectangleF(x, y, 100f, 100f), font);
-    annotation.TextMarkupAnnotationType = PdfTextMarkupAnnotationType.Highlight;
-    annotation.TextMarkupColor = Color.LightSkyBlue;
-
-    // Add the text markup annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = y + size.Height;
-
-    return y;
-}
-
-// Add a popup annotation to the page
-private float AddPopupAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    // Draw the prompt text
-    String prompt = "Markup incorrect spelling: ";
-    SizeF size = font.MeasureString(prompt, format);
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = size.Width;
-
-    // Draw the label text and bounding rectangle
-    String label = "demo of annotation";
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-    x = x + font.MeasureString(label, format).Width;
-    String markupText = "All words were spelled correctly";
-    size = font.MeasureString(markupText);
-
-    // Create a popup annotation and set its properties
-    PdfPopupAnnotation annotation = new PdfPopupAnnotation(new RectangleF(new PointF(x, y), SizeF.Empty), markupText);
-    annotation.Icon = PdfPopupIcon.Paragraph;
-    annotation.Open = true;
-    annotation.Color = Color.Yellow;
-
-    // Add the popup annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = y + size.Height;
-
-    return y;
-}
-
-// Add a rubber stamp annotation to the page
-private float AddRubberStampAnnotation(PdfPageBase page, float y)
-{
-    // Set up font and formatting
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    PdfStringFormat format = new PdfStringFormat();
-    format.MeasureTrailingSpaces = true;
-
-    // Draw the prompt text
-    String prompt = "Markup incorrect spelling: ";
-    SizeF size = font.MeasureString(prompt, format);
-    page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    float x = size.Width;
-
-    // Draw the label text and bounding rectangle
-    String label = "demo of annotation";
-    page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-    x = x + font.MeasureString(label, format).Width;
-    String markupText = "Just a draft, not checked.";
-    size = font.MeasureString(markupText);
-
-    // Create a rubber stamp annotation and set its properties
-    PdfRubberStampAnnotation annotation = new PdfRubberStampAnnotation(new RectangleF(x, y, font.Height, font.Height), markupText);
-    annotation.Icon = PdfRubberStampAnnotationIcon.Draft;
-    annotation.Color = Color.Plum;
-
-    // Add the rubber stamp annotation to the page's annotation collection
-    (page as PdfNewPage).Annotations.Add(annotation);
-    y = y + size.Height;
-
-    return y;
-}
-```
-
----
-
-# spire.pdf csharp 3d annotation
-## create 3d annotation in pdf document
-```csharp
-//Create a new Pdf document.
-PdfDocument doc = new PdfDocument();
-
-//Add a new page to it.
-PdfPageBase page = doc.Pages.Add();
-
-//Draw a rectangle on the page to define the canvas area for the 3D file.
-Rectangle rt = new Rectangle(0, 80, 200, 200);
-
-//Initialize a new object of Pdf3DAnnotation, load the .u3d file as 3D annotation.
-Pdf3DAnnotation annotation = new Pdf3DAnnotation(rt, @"..\..\..\..\..\..\Data\CreatePdf3DAnnotation.u3d");
-annotation.Activation = new Pdf3DActivation();
-annotation.Activation.ActivationMode = Pdf3DActivationMode.PageOpen;
-
-//Define a 3D view mode and set its parameter
-Pdf3DView View = new Pdf3DView();
-View.Background = new Pdf3DBackground(new PdfRGBColor(Color.Purple));
-View.ViewNodeName = "3DAnnotation";
-View.RenderMode = new Pdf3DRendermode(Pdf3DRenderStyle.Solid);
-View.InternalName = "3DAnnotation";
-View.LightingScheme = new Pdf3DLighting();
-View.LightingScheme.Style = Pdf3DLightingStyle.Day;
-
-//Set the 3D view mode for the annotation.
-annotation.Views.Add(View);
-
-//Add the annotation to Pdf.
-page.Annotations.Add(annotation);
-```
-
----
-
-# Spire.PDF CSharp Line Annotation
-## Create PDF line annotations with different styles and properties
-```csharp
-//Create a PDF document.
-PdfDocument document = new PdfDocument();
-
-//Add a new page.
-PdfPageBase page = document.Pages.Add();
-
-//Create a line annotation.
-int[] linePoints = new int[] { 100, 650, 180, 650 };
-PdfLineAnnotation lineAnnotation = new PdfLineAnnotation(linePoints, "This is the first line annotation");
-
-//Set the line border.
-lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Solid;
-lineAnnotation.lineBorder.BorderWidth = 1;
-
-//Set the line intent.
-lineAnnotation.LineIntent = PdfLineIntent.LineDimension;
-
-//Set the line style.
-lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Butt;
-lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond;
-
-//Set the line flag.
-lineAnnotation.Flags = PdfAnnotationFlags.Default;
-
-//Set the line color.
-lineAnnotation.InnerLineColor = new PdfRGBColor(Color.Green);
-lineAnnotation.BackColor = new PdfRGBColor(Color.Green);
-
-//Set the leader line.
-lineAnnotation.LeaderLineExt = 0;
-lineAnnotation.LeaderLine = 0;
-
-//Add the line annotation to the page.
-page.Annotations.Add(lineAnnotation);
-
-//Create another line annotation.
-linePoints = new int[] { 100, 550, 280, 550 };
-lineAnnotation = new PdfLineAnnotation(linePoints, "This is the second line annotation");
-lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Underline;
-lineAnnotation.lineBorder.BorderWidth = 2;
-lineAnnotation.LineIntent = PdfLineIntent.LineArrow;
-lineAnnotation.BeginLineStyle = PdfLineEndingStyle.Circle;
-lineAnnotation.EndLineStyle = PdfLineEndingStyle.Diamond;
-lineAnnotation.Flags = PdfAnnotationFlags.Default;
-lineAnnotation.InnerLineColor = new PdfRGBColor(Color.Pink);
-lineAnnotation.BackColor = new PdfRGBColor(Color.Pink);
-lineAnnotation.LeaderLineExt = 0;
-lineAnnotation.LeaderLine = 0;
-page.Annotations.Add(lineAnnotation);
-
-//Create yet another line annotation.
-linePoints = new int[] { 100, 450, 280, 450 };
-lineAnnotation = new PdfLineAnnotation(linePoints, "This is the third line annotation");
-lineAnnotation.lineBorder.BorderStyle = PdfBorderStyle.Beveled;
-lineAnnotation.lineBorder.BorderWidth = 2;
-lineAnnotation.LineIntent = PdfLineIntent.LineDimension;
-lineAnnotation.BeginLineStyle = PdfLineEndingStyle.None;
-lineAnnotation.EndLineStyle = PdfLineEndingStyle.None;
-lineAnnotation.Flags = PdfAnnotationFlags.Default;
-lineAnnotation.InnerLineColor = new PdfRGBColor(Color.Blue);
-lineAnnotation.BackColor = new PdfRGBColor(Color.Blue);
-lineAnnotation.LeaderLineExt = 1;
-lineAnnotation.LeaderLine = 1;
-page.Annotations.Add(lineAnnotation);
-```
-
----
-
-# Spire.PDF C# Link Annotation
-## Create PDF link annotation with text
-```csharp
-//Declare two parameters that will be passed to the constructor of PdfFileLinkAnnotation class.
-RectangleF rect = new RectangleF(0, 40, 250, 35);
-string filePath = @"..\..\..\..\..\..\Data\Template_Pdf_3.pdf";
-
-//Create a file link annotation based on the two parameters and add the annotation to the new page.
-PdfFileLinkAnnotation link = new PdfFileLinkAnnotation(rect, filePath);
-page.Annotations.Add(link);
-
-//Create a free text annotation based on the same RectangleF, specifying the content.
-PdfFreeTextAnnotation text = new PdfFreeTextAnnotation(rect);
-text.Text = "Click here! This is a link annotation.";
-PdfFont font = new PdfFont(PdfFontFamily.Helvetica, 15);
-text.Font = font;
-page.Annotations.Add(text);
-```
-
----
-
-# Spire.PDF C# Polygon Annotation
-## Create a polygon annotation in PDF document
-```csharp
-//Create a Pdf document.
-PdfDocument pdf = new PdfDocument();
-
-//Add a new page to it.
-PdfPageBase page = pdf.Pages.Add();
-
-//Initialize an instance of PdfPolygonAnnotation, specifying all vertex coordinates which can form a complete shape.
-PdfPolygonAnnotation polygon = new PdfPolygonAnnotation(page, new PointF[] { new PointF(0, 30), new PointF(30, 15), new PointF(60, 30), new PointF(45, 50), new PointF(15, 50), new PointF(0, 30)});
-
-//Set the border color, text, border effect and other properties of polygon annotation.
-polygon.Color = Color.PaleVioletRed;
-polygon.Text = "This is a polygon annotation";
-polygon.Author = "E-ICEBLUE";
-polygon.Subject = "polygon annotation demo";
-polygon.BorderEffect = PdfBorderEffect.BigCloud;
-polygon.ModifiedDate = DateTime.Now;
-
-//Add the annotation to Pdf page.
-page.Annotations.Add(polygon);
-```
-
----
-
-# Spire.PDF Polyline Annotation
-## Create a polyline annotation in a PDF document
-```csharp
-//Create a pdf document
-PdfDocument pdf = new PdfDocument();
-//Add a new page
-PdfPageBase page = pdf.Pages.Add();
-//Create a polyline annotation
-PdfPolyLineAnnotation polyline = new PdfPolyLineAnnotation(page, new PointF[] { new PointF(0, 60), new PointF(30, 45), new PointF(60, 90), new PointF(90, 80) });
-//Set properties of polyline
+// Create a polyline annotation
+PdfPolylineAnnotation polyline = new PdfPolylineAnnotation(
+    page,
+    new RectangleF(40, 85, 90, 45),
+    points
+);
+
+// Set polyline annotation properties
 polyline.Color = Color.PaleVioletRed;
-polyline.Text = "This is a polygon annotation";
-polyline.Author = "E-ICEBLUE";
+polyline.Contents = "This is a polygon annotation";
+polyline.Title = "E-ICEBLUE";
 polyline.Subject = "polygon annotation demo";
 polyline.Name = "Test Annotation";
-polyline.Border = new PdfAnnotationBorder(1f);
+polyline.Border.Width = 1f;
+polyline.Intent = PdfPolyIntent.PolyLineDimension;
 polyline.ModifiedDate = DateTime.Now;
-//Add the annotation into page
-page.Annotations.Add(polyline);
+
+// Add the annotation to the page
+PdfAnnotationCollection.Create(page).Add(polyline);
+polyline.RefreshAppearances();
 ```
 
 ---
 
-# spire.pdf csharp annotations
-## delete all annotations from pdf document
+# 06_Annotations - DeleteAllAnnotations
+## Delete all annotations from a PDF page using Spire.PDF.
 ```csharp
-//Create a new PDF document
+// Create a PDF document object.
 PdfDocument document = new PdfDocument();
 
-//Load the PDF file
-document.LoadFromFile("input.pdf");
-
-//Remove all annotations from the first page
-document.Pages[0].Annotations.Clear();
-
-//Save the modified document
-document.SaveToFile("output.pdf");
+// Remove all annotations from the first page.
+PdfAnnotationCollection.Create(document.Pages[0]).Clear();
 ```
 
 ---
 
-# Spire.PDF C# Annotation Management
-## Delete annotation from PDF document
+# 06_Annotations - DeleteAnnotation
+## Delete the first annotation from the first page of a PDF document.
 ```csharp
-//Open pdf document
-PdfDocument doc = new PdfDocument();
-doc.LoadFromFile(input);
-
-//Remove the first annotation
-doc.Pages[0].Annotations.RemoveAt(0);
-
-//Save pdf document
-doc.SaveToFile(output);
+// Remove the first annotation from the first page
+PdfAnnotationCollection.Create(doc.Pages[0]).RemoveAt(0);
 ```
 
 ---
 
-# spire.pdf extract 3d video
-## extract 3D video data from PDF annotations
+# 06_Annotations - Extract3DViedoFile
+## Extract embedded 3D artwork data from PDF annotations and save it as U3D files.
+
 ```csharp
-//Load PDF document
-PdfDocument pdf = new PdfDocument();
-pdf.LoadFromFile("3D.pdf");
-
-//Get the first page
-PdfPageBase firstPage = pdf.Pages[0];
-
-//Get the annotation collection of the first page
-PdfAnnotationCollection annot = firstPage.Annotations;
-
-//Traverse the annotations
-for (int i = 0; i < annot.Count; i++)
+private void Extract3DViedoFile(PdfDocument pdf)
 {
-    //If it is Pdf3DAnnotation
-    if (annot[i] is Pdf3DAnnotation)
+    PdfPageBase firstPage = pdf.Pages[0];
+
+    PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(firstPage);
+
+    int count = 0;
+
+    for (int i = 0; i < annotations.Count; i++)
     {
-        Pdf3DAnnotation annot3D = annot[i] as Pdf3DAnnotation;
-        
-        //Get the 3D video data
-        byte[] bytes = annot3D._3DData;
-        
-        //Write the data into .u3d format file
-        if (bytes != null)
+        if (annotations[i] is Pdf3DAnnotation)
         {
-            File.WriteAllBytes(String.Format(@"3d-{0}.u3d", count), bytes);
-            count++;
+            Pdf3DAnnotation annotation3D = annotations[i] as Pdf3DAnnotation;
+
+            byte[] bytes = annotation3D.Artwork.Data;
+
+            if (bytes != null)
+            {
+                System.IO.File.WriteAllBytes(string.Format(@"3d-{0}.u3d", count), bytes);
+                count++;
+            }
         }
     }
 }
@@ -4165,451 +4055,321 @@ for (int i = 0; i < annot.Count; i++)
 
 ---
 
-# spire.pdf csharp annotations
-## extract all annotations from a pdf page
+# 06_Annotations - GetAllAnnotationsFromPage
+## Extracts all annotations from a PDF page, excluding popup annotations, and returns their contents and modified dates.
 ```csharp
-//Create a new PDF document.
-PdfDocument pdf = new PdfDocument();
-
-//Load the file from disk.
-pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf");
-
-//Get all annotations from the first page.
-PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
-
-StringBuilder content = new StringBuilder();
-
-for (int i = 0; i < annotations.Count; i++)
+public string GetAllAnnotationsFromPage(PdfDocument pdf)
 {
-    //A text annotation will attach a popup annotation since they are father-son relationship. 
-    //The annotation information exists in the text annotation, so here we mask the blank popup annotation.
-    if (annotations[i] is PdfPopupAnnotationWidget)
-        continue;
-    content.AppendLine("Annotation information: ");
-    content.AppendLine("Text: " + annotations[i].Text);
-    string modifiedDate = annotations[i].ModifiedDate.ToString();
-    content.AppendLine("ModifiedDate: " + modifiedDate);
+    PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
+
+    StringBuilder content = new StringBuilder();
+
+    for (int i = 0; i < annotations.Count; i++)
+    {
+        // A text annotation has a parent-child relationship with a popup annotation.
+        // The annotation information exists in the text annotation, so skip the blank popup annotation.
+        if (annotations[i] is PdfPopupAnnotation)
+            continue;
+
+        content.AppendLine("Annotation information: ");
+        content.AppendLine("Text: " + annotations[i].Contents);
+        string modifiedDate = annotations[i].ModifiedDate.ToString();
+        content.AppendLine("ModifiedDate: " + modifiedDate);
+    }
+
+    return content.ToString();
 }
 ```
 
 ---
 
-# spire.pdf csharp annotation
-## get particular annotation information from pdf
+# 06_Annotations - GetParticularAnnotationInfo
+## Extracts information from a specific annotation in a PDF document.
 ```csharp
-//Create a new PDF document.
-PdfDocument pdf = new PdfDocument();
+// Get the annotation collection from the document.
+PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
 
-//Load the file from disk.
-pdf.LoadFromFile("Template_Pdf_3.pdf");
-
-//Get the annotation collection from the document.
-PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
-
-//Get particular annotation information from the document.
+// Get particular annotation information from the document.
 StringBuilder content = new StringBuilder();
-if (annotations[0] is PdfTextAnnotationWidget)
+if (annotations[0] is PdfTextAnnotation)
 {
-    PdfTextAnnotationWidget textAnnotation = annotations[0] as PdfTextAnnotationWidget;
-    content.AppendLine("Annotation text: " + textAnnotation.Text);
+    PdfTextAnnotation textAnnotation = annotations[0] as PdfTextAnnotation;
+    content.AppendLine("Annotation text: " + textAnnotation.Contents);
     content.AppendLine("Annotation ModifiedDate: " + textAnnotation.ModifiedDate.ToString());
-    content.AppendLine("Annotation author: " + textAnnotation.Author);
+    content.AppendLine("Annotation author: " + textAnnotation.Title);
     content.AppendLine("Annotation Name: " + textAnnotation.Name);
 }
 ```
 
 ---
 
-# spire.pdf csharp annotation
-## create invisible free text annotation in pdf
+# 06_Annotations - InvisibleFreeTextAnnotation
+## Creates a free text annotation that is invisible using the NoView flag.
+
+```csharp
+public void AddInvisibleFreeTextAnnotation(PdfPageBase page)
+{
+    // Define the annotation rectangle.
+    RectangleF rect = new RectangleF(100, 120, 150, 30);
+
+    // Specify the font and default appearance.
+    PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
+    PdfDefaultAppearance defaultAppearance = new PdfDefaultAppearance(font);
+
+    // Create a free text annotation.
+    PdfFreeTextAnnotation freeTextAnnotation = new PdfFreeTextAnnotation(page, rect, defaultAppearance);
+
+    // Set the text content and appearance properties.
+    freeTextAnnotation.Contents = "Invisible Free Text Annotation";
+    freeTextAnnotation.Border.Width = 1f;
+    freeTextAnnotation.Border.Color = Color.Purple;
+    freeTextAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
+    freeTextAnnotation.Color = Color.Green;
+    freeTextAnnotation.StrokingOpacity = 0.8f;
+
+    // Set flags to make the annotation invisible.
+    freeTextAnnotation.Flags = PdfAnnotationFlags.Print | PdfAnnotationFlags.NoView;
+
+    // Add the annotation to the page.
+    PdfAnnotationCollection.Create(page).Add(freeTextAnnotation);
+
+    // Refresh the annotation appearance.
+    freeTextAnnotation.RefreshAppearances();
+}
+```
+
+---
+
+# 06_Annotations - ModifyLineAnnotation
+## Modify the title and subject of a line annotation in a PDF.
+
+```csharp
+// Retrieve the first annotation from the first page
+PdfAnnotation annotation = PdfAnnotationCollection.Create(document.Pages[0])[0];
+
+// Check if the retrieved annotation is a PdfLineAnnotation
+if (annotation is PdfLineAnnotation)
+{
+    // Cast the annotation as PdfLineAnnotation
+    PdfLineAnnotation lineAnn = annotation as PdfLineAnnotation;
+
+    // Modify the line annotation properties
+    lineAnn.Title = "Author_test";
+    lineAnn.Subject = "Subject_test";
+}
+```
+
+---
+
+# 06_Annotations - SetFreeTextAnnotationAlignment
+## Sets the text alignment of a PDF free text annotation.
+
+```csharp
+PdfDocument pdf = new PdfDocument();
+PdfPageBase page = pdf.Pages.Add();
+
+RectangleF rect = new RectangleF(40, 340, 200, 80);
+PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 20);
+
+PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(
+    page, rect, new PdfDefaultAppearance(font));
+textAnnotation.Contents = "\n  Spire.PDF";
+
+// Set the text alignment of the free text annotation to center.
+PdfFreeTextAppearanceBuilder builder = new PdfFreeTextAppearanceBuilder(textAnnotation);
+PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center);
+builder.SetStringFormat(format);
+textAnnotation.Appearances.SetNormalAppearance(builder.Build());
+
+PdfAnnotationCollection.Create(page).Add(textAnnotation);
+```
+
+---
+
+# 06_Annotations - SetFreeTextAnnotationStyle
+## Set styles for free text annotations, including border, color, callout line ending, and opacity.
+
 ```csharp
 // Create a new PDF document.
 PdfDocument doc = new PdfDocument();
 
-// Get the first page of the PDF document.
-PdfPageBase page = doc.Pages[0];
+// Add a page.
+PdfPageBase page = doc.Pages.Add();
 
-// Define a rectangle with specific coordinates and dimensions.
-RectangleF rect = new RectangleF(100, 120, 150, 30);
-
-// Create a new free text annotation using the defined rectangle.
-PdfFreeTextAnnotation FreetextAnnotation = new PdfFreeTextAnnotation(rect);
-
-// Set the text content of the free text annotation.
-FreetextAnnotation.Text = "Invisible Free Text Annotation";
-
-// Specify the font for the free text annotation.
-PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
-
-// Specify the border width for the free text annotation.
-PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
-
-// Set various properties for the free text annotation.
-FreetextAnnotation.Font = font;
-FreetextAnnotation.Border = border;
-FreetextAnnotation.BorderColor = Color.Purple;
-FreetextAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
-FreetextAnnotation.Color = Color.Green;
-FreetextAnnotation.Opacity = 0.8f;
-
-// Set flags to make the free text annotation invisible.
-FreetextAnnotation.Flags = PdfAnnotationFlags.Print | PdfAnnotationFlags.NoView;
-
-// Add the free text annotation to the page's annotations collection.
-page.Annotations.Add(FreetextAnnotation);
-
-// Define a new rectangle for the next free text annotation.
-rect = new RectangleF(100, 180, 150, 30);
-
-// Create another free text annotation using the new rectangle.
-FreetextAnnotation = new PdfFreeTextAnnotation(rect);
-
-// Set properties for the second free text annotation.
-FreetextAnnotation.Text = "Show Free Text Annotation";
-FreetextAnnotation.Font = font;
-FreetextAnnotation.Border = border;
-FreetextAnnotation.BorderColor = Color.LightPink;
-FreetextAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
-FreetextAnnotation.Color = Color.LightGreen;
-FreetextAnnotation.Opacity = 0.8f;
-
-// Add the second free text annotation to the page's annotations collection.
-page.Annotations.Add(FreetextAnnotation);
-```
-
----
-
-# Spire.PDF C# Line Annotation Modification
-## Modify properties of a line annotation in a PDF document
-```csharp
-// Create a new PdfDocument object
-PdfDocument document = new PdfDocument();
-
-// Load an existing PDF file into the document from the specified path
-document.LoadFromFile(@"..\..\..\..\..\..\Data\PdfLineAnnotation.pdf");
-
-// Retrieve the first annotation widget from the first page of the document
-PdfAnnotation annotation = document.Pages[0].Annotations[0];
-
-// Check if the retrieved annotation is a PdfLineAnnotationWidget
-if (annotation is PdfLineAnnotationWidget)
-{
-    // Cast the annotation as a PdfLineAnnotationWidget to access its specific properties and methods
-    PdfLineAnnotationWidget lineAnn = annotation as PdfLineAnnotationWidget;
-
-    // Set the author property of the line annotation to "Author_test"
-    lineAnn.Author = "Author_test";
-
-    // Set the subject property of the line annotation to "Subject_test"
-    lineAnn.Subject = "Subject_test";
-}
-
-// Save the modified document to the specified file path
-document.SaveToFile("ModifyLineAnnotation.pdf");
-```
-
----
-
-# Spire.PDF Free Text Annotation Alignment
-## Setting text alignment for free text annotations in PDF documents
-```csharp
-// Create a new PdfDocument object
-PdfDocument pdf = new PdfDocument();
-
-// Add a new page to the document and assign it to the 'page' variable
-PdfPageBase page = pdf.Pages.Add();
-
-// Define a rectangle with specific coordinates and dimensions
-RectangleF rect = new RectangleF(0, 300, 200, 80);
-
-// Create a new PdfFreeTextAnnotation object and pass the rectangle as a parameter
-PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(rect);
-
-// Set the text content of the free text annotation
-textAnnotation.Text = "\n  Spire.PDF";
-
-// Create a new PdfAnnotationBorder object with a specified width
-PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
-
-// Create a new PdfFont object using the Times Roman font family and a font size of 20
-PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 20);
-
-// Assign the created font to the font property of the free text annotation
-textAnnotation.Font = font;
-
-// Assign the created border to the border property of the free text annotation
-textAnnotation.Border = border;
-
-// Set the border color of the free text annotation to gray
-textAnnotation.BorderColor = Color.Gray;
-
-// Set the line ending style of the free text annotation to slash
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.Slash;
-
-// Set the background color of the free text annotation to light blue
-textAnnotation.Color = Color.LightBlue;
-
-// Set the opacity of the free text annotation to 0.8
-textAnnotation.Opacity = 0.8f;
-
-// Set the alignment of the text within the free text annotation to center
-textAnnotation.TextAlignment = PdfAnnotationTextAlignment.Center;
-
-// Add the free text annotation to the annotations collection of the page
-page.Annotations.Add(textAnnotation);
-```
-
----
-
-# spire.pdf csharp annotation
-## set free text annotation style in pdf
-```csharp
-//Get the first page of PDF file.
-PdfPageBase page = doc.Pages[0];
-
-//Define a rectangle and create a free text annotation object.
+// Initialize a PdfFreeTextAnnotation.
 RectangleF rect = new RectangleF(150, 120, 150, 30);
-PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(rect);
-
-//Specify content.
-textAnnotation.Text = "\nFree Text Annotation Formatting";
-
-//Set free text annotation formatting and add it to page.
 PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
-PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
-textAnnotation.Font = font;
-textAnnotation.Border = border;
-textAnnotation.BorderColor = Color.Purple;
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
+PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+
+// Specify content.
+textAnnotation.Contents = "\nFree Text Annotation Formatting";
+
+// Set free text annotation formatting and add it to page.
+textAnnotation.Border.Width = 1f;
+textAnnotation.Border.Color = Color.Purple;
+textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
 textAnnotation.Color = Color.Green;
-textAnnotation.Opacity = 0.8f;
-page.Annotations.Add(textAnnotation);
+textAnnotation.StrokingOpacity = 0.8f;
+textAnnotation.RefreshAppearances();
+PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
 rect = new RectangleF(150, 200, 150, 40);
-textAnnotation = new PdfFreeTextAnnotation(rect);
-textAnnotation.Text = "\nFree Text Annotation Formatting";
-border = new PdfAnnotationBorder(1f);
 font = new PdfFont(PdfFontFamily.Helvetica, 10);
-textAnnotation.Font = font;
-textAnnotation.Border = border;
-textAnnotation.BorderColor = Color.LightGoldenrodYellow;
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.RClosedArrow;
+textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+textAnnotation.Contents = "\nFree Text Annotation Formatting";
+textAnnotation.Border.Width = 1f;
+textAnnotation.Border.Color = Color.LightGoldenrodYellow;
+textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.RClosedArrow;
 textAnnotation.Color = Color.LightPink;
-textAnnotation.Opacity = 0.8f;
-page.Annotations.Add(textAnnotation);
+textAnnotation.StrokingOpacity = 0.8f;
+textAnnotation.RefreshAppearances();
+PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
 rect = new RectangleF(150, 280, 280, 40);
-textAnnotation = new PdfFreeTextAnnotation(rect);
-textAnnotation.Text = "\noHow to Set Free Text Annotation Formatting in Pdf file";
-border = new PdfAnnotationBorder(1f);
 font = new PdfFont(PdfFontFamily.Helvetica, 10);
-textAnnotation.Font = font;
-textAnnotation.Border = border;
-textAnnotation.BorderColor = Color.Gray;
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
+textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+textAnnotation.Contents = "\noHow to Set Free Text Annotation Formatting in Pdf file";
+textAnnotation.Border.Width = 1f;
+textAnnotation.Border.Color = Color.Gray;
+textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
 textAnnotation.Color = Color.LightSkyBlue;
-textAnnotation.Opacity = 0.8f;
-page.Annotations.Add(textAnnotation);
+textAnnotation.StrokingOpacity = 0.8f;
+textAnnotation.RefreshAppearances();
+PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
 rect = new RectangleF(150, 360, 200, 40);
-textAnnotation = new PdfFreeTextAnnotation(rect);
-textAnnotation.Text = "\nFree Text Annotation Formatting";
-border = new PdfAnnotationBorder(1f);
 font = new PdfFont(PdfFontFamily.Helvetica, 10);
-textAnnotation.Font = font;
-textAnnotation.Border = border;
-textAnnotation.BorderColor = Color.Pink;
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.RClosedArrow;
+textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
+textAnnotation.Contents = "\nFree Text Annotation Formatting";
+textAnnotation.Border.Width = 1f;
+textAnnotation.Border.Color = Color.Pink;
+textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.RClosedArrow;
 textAnnotation.Color = Color.LightGreen;
-textAnnotation.Opacity = 0.8f;
-page.Annotations.Add(textAnnotation);
+textAnnotation.StrokingOpacity = 0.8f;
+textAnnotation.RefreshAppearances();
+PdfAnnotationCollection.Create(page).Add(textAnnotation);
 ```
 
 ---
 
-# spire.pdf csharp annotation
-## set free text annotation subject and properties
+# 06_Annotations - SetFreeTextAnnotationSubject
+## Sets the subject of a free text annotation and adds it to a PDF page.
 ```csharp
-//Get the first page of PDF file.
-PdfPageBase page = doc.Pages[0];
-
-//Initialize a PdfFreeTextAnnotation.
+// Assume the target PDF page is available.
 RectangleF rect = new RectangleF(150, 120, 150, 30);
-PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(rect);
+PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
+PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
 
-//Specify content.
-textAnnotation.Text = "\nSet free text annotation subject";
+// Specify content.
+textAnnotation.Contents = "\nSet free text annotation subject";
 
-//Set subject.
+// Set subject.
 textAnnotation.Subject = "SubjectTest";
 
-// Create a new PdfFont object using the Times Roman font family and a font size of 20
-PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
-
-// Create a new PdfAnnotationBorder object with a specified width
-PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
-
-// Assign the created font to the font property of the free text annotation
-textAnnotation.Font = font;
-
-// Assign the created border to the border property of the free text annotation
-textAnnotation.Border = border;
-
-// Set the border color of the free text annotation to gray
-textAnnotation.BorderColor = Color.Purple;
-
-// Set the line ending style of the free text annotation to slash
-textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
-
-// Set the background color of the free text annotation to light blue
+// Configure and add the annotation to the page.
+textAnnotation.Border.Width = 1f;
+textAnnotation.Border.Color = Color.Purple;
+textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
 textAnnotation.Color = Color.Green;
-
-// Set the opacity of the free text annotation to 0.8
-textAnnotation.Opacity = 0.8f;
-page.Annotations.Add(textAnnotation);
+textAnnotation.StrokingOpacity = 0.8f;
+textAnnotation.RefreshAppearances();
+PdfAnnotationCollection.Create(page).Add(textAnnotation);
 ```
 
 ---
 
-# spire.pdf text annotation properties
-## copy text annotation properties from one pdf to another
+# 06_Annotations - TextAnnotationProperties
+## Copies free text annotation properties from a source PDF page to newly created annotations in another PDF document.
+
 ```csharp
-// Get the first page of the loaded document
-PdfPageBase firstPage = pdf.Pages[0];
-
-// Create a new PDF document object to store the copied annotations
-PdfDocument newPdf = new PdfDocument();
-
-// Iterate through each annotation in the first page's annotation list
-foreach (PdfAnnotation annotation in firstPage.Annotations.List)
+private void CopyFreeTextAnnotationProperties(PdfPageBase sourcePage, PdfDocument targetDocument)
 {
-    // Check if the annotation is a free text annotation
-    if (annotation is PdfFreeTextAnnotationWidget)
+    // Traverse the annotations of the source page.
+    foreach (PdfAnnotation annotation in PdfAnnotationCollection.Create(sourcePage))
     {
-        // Convert the annotation to a free text annotation object
-        PdfFreeTextAnnotationWidget textAnnotation = annotation as PdfFreeTextAnnotationWidget;
+        // Process only free text annotations.
+        if (annotation is PdfFreeTextAnnotation)
+        {
+            PdfFreeTextAnnotation textAnnotation = annotation as PdfFreeTextAnnotation;
 
-        // Retrieve the rectangle bounds of the annotation
-        var rect = textAnnotation.Bounds;
+            // Get its bounds and text.
+            var rect = textAnnotation.Rectangle;
+            var text = textAnnotation.Contents;
 
-        // Retrieve the text content of the annotation
-        var text = textAnnotation.Text;
+            // Add a new page to the target document.
+            PdfPageBase newPage = targetDocument.Pages.Add(sourcePage.Size);
 
-        // Create a new page in the new PDF document with the same size as the first page
-        PdfPageBase newPage = newPdf.Pages.Add(firstPage.Size);
+            // Add an annotation with the same settings as the source annotation.
+            PdfFont font = new PdfFont(PdfFontFamily.Helvetica, 10);
+            PdfFreeTextAnnotation newAnnotation = new PdfFreeTextAnnotation(
+                newPage,
+                rect,
+                new PdfDefaultAppearance(font));
 
-        // Create a new free text annotation with the same rectangle bounds
-        PdfFreeTextAnnotation newAnnotation = new PdfFreeTextAnnotation(rect);
+            newAnnotation.Contents = text;
+            newAnnotation.CalloutLine = textAnnotation.CalloutLine;
+            newAnnotation.CalloutLineEndingStyle = textAnnotation.CalloutLineEndingStyle;
+            newAnnotation.RectangleDifferences = textAnnotation.RectangleDifferences;
+            newAnnotation.Color = textAnnotation.Color;
+            newAnnotation.Intent = PdfFreeTextIntent.FreeTextCallout;
 
-        // Set the text content of the new annotation
-        newAnnotation.Text = text;
-
-        // Copy the callout lines information from the original annotation
-        newAnnotation.CalloutLines = textAnnotation.CalloutLines;
-
-        // Copy the line ending style from the original annotation
-        newAnnotation.LineEndingStyle = textAnnotation.LineEndingStyle;
-
-        // Set the annotation intent to indicate it's a free text callout
-        newAnnotation.AnnotationIntent = PdfAnnotationIntent.FreeTextCallout;
-
-        // Copy the rectangular differences information from the original annotation
-        newAnnotation.RectangleDifferences = textAnnotation.RectangularDifferenceArray;
-
-        // Set the color of the new annotation to match the original annotation
-        newAnnotation.Color = textAnnotation.Color;
-
-        // Add the new annotation to the annotations widget of the new page
-        newPage.Annotations.Add(newAnnotation);
+            PdfAnnotationCollection.Create(newPage).Add(newAnnotation);
+        }
     }
 }
 ```
 
 ---
 
-# Spire.PDF C# Free Text Annotation Update
-## Update color of free text annotations in a PDF document
-```csharp
-// Get the collection of annotations from the first page of the PDF document.
-PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
+# 06_Annotations - UpdateFreeTextAnnotation
+## Updates free text annotations on the first PDF page by changing their color and refreshing their appearances.
 
-// Iterate through each free text annotation in the collection.
-foreach (PdfFreeTextAnnotationWidget annotation in annotations)
+```csharp
+private void UpdateFreeTextAnnotations(PdfDocument pdf)
 {
-    // Change the color of the annotation to YellowGreen.
-    annotation.Color = Color.YellowGreen;
+    // Get the annotation collection from the first page.
+    PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
+
+    // Iterate through each free text annotation.
+    foreach (PdfFreeTextAnnotation annotation in annotations)
+    {
+        // Change the color of the annotation to YellowGreen.
+        annotation.Color = Color.YellowGreen;
+        annotation.RefreshAppearances();
+    }
 }
 ```
 
 ---
 
-# Spire.PDF C# Attachments
-## Add attachments and attachment annotations to PDF documents
+# 07_Attachments - Attachment
+## Adds document attachments and file attachment annotations to a PDF document.
 ```csharp
-// Create a pdf document
-PdfDocument doc = new PdfDocument();
+void AddAttachmentsAndAnnotations(
+    byte[] headerData,
+    byte[] footerData,
+    byte[] salesReportData,
+    byte[] sciencePersonificationData,
+    byte[] wikipediaScienceData,
+    byte[] fontData)
+{
+    PdfDocument doc = new PdfDocument();
+    PdfPageBase page = doc.Pages.Add();
 
-// Get the first page of the PDF document
-PdfPageBase page = doc.Pages[0];
+    // Add document-level attachments.
+    PdfAttachment headerAttachment = new PdfAttachment("Header.png");
+    headerAttachment.Data = headerData;
+    headerAttachment.Description = "Page header picture of demo.";
+    headerAttachment.MimeType = "image/png";
+    doc.Attachments.Add(headerAttachment);
 
-// Add an attachment to the PDF document
-PdfAttachment attachment = new PdfAttachment("Header.png");
-attachment.Data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\Header.png");
-attachment.Description = "Page header picture of demo.";
-attachment.MimeType = "image/png";
-doc.Attachments.Add(attachment);
+    PdfAttachment footerAttachment = new PdfAttachment("Footer.png");
+    footerAttachment.Data = footerData;
+    footerAttachment.Description = "Page footer picture of demo.";
+    footerAttachment.MimeType = "image/png";
+    doc.Attachments.Add(footerAttachment);
 
-// Add another attachment to the PDF document
-attachment = new PdfAttachment("Footer.png");
-attachment.Data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\Footer.png");
-attachment.Description = "Page footer picture of demo.";
-attachment.MimeType = "image/png";
-doc.Attachments.Add(attachment);
 
-// Define bounds for the annotation
-RectangleF bounds = new RectangleF(50, 350, 20, 20);
-
-// Create a PdfAttachmentAnnotation for the Sales Report Chart attachment
-byte[] data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\SalesReportChart.png");
-PdfAttachmentAnnotation annotation1 = new PdfAttachmentAnnotation(bounds, "SalesReportChart.png", data);
-annotation1.Color = Color.Teal;
-annotation1.Flags = PdfAnnotationFlags.ReadOnly;
-annotation1.Icon = PdfAttachmentIcon.Graph;
-annotation1.Text = "Sales Report Chart";
-
-// Add the annotation to the page
-page.Annotations.Add(annotation1);
-
-// Create another annotation
-data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\SciencePersonificationBoston.jpg");
-PdfAttachmentAnnotation annotation2
-    = new PdfAttachmentAnnotation(bounds, "SciencePersonificationBoston.jpg", data);
-annotation2.Color = Color.Orange;
-annotation2.Flags = PdfAnnotationFlags.NoZoom;
-annotation2.Icon = PdfAttachmentIcon.PushPin;
-annotation2.Text = "SciencePersonificationBoston.jpg, from Wikipedia, the free encyclopedia";
-page.Annotations.Add(annotation2);
-
-// Create another annotation
-data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\Wikipedia_Science.png");
-PdfAttachmentAnnotation annotation3
-    = new PdfAttachmentAnnotation(bounds, "Wikipedia_Science.png", data);
-annotation3.Color = Color.SaddleBrown;
-annotation3.Flags = PdfAnnotationFlags.Locked;
-annotation3.Icon = PdfAttachmentIcon.Tag;
-annotation3.Text = "Wikipedia_Science.png, from Wikipedia, the free encyclopedia";
-page.Annotations.Add(annotation3);
-
-// Create another annotation
-data = File.ReadAllBytes(@"..\..\..\..\..\..\Data\PT_Serif-Caption-Web-Regular.ttf");
-PdfAttachmentAnnotation annotation4
-    = new PdfAttachmentAnnotation(bounds, "PT_Serif-Caption-Web-Regular.ttf", data);
-annotation4.Color = Color.CadetBlue;
-annotation4.Flags = PdfAnnotationFlags.NoRotate;
-annotation4.Icon = PdfAttachmentIcon.Paperclip;
-annotation4.Text = "PT_Serif-Caption-Web-Regular, from https://company.paratype.com";
-page.Annotations.Add(annotation4);
-```
 
 ---
 
@@ -6695,40 +6455,38 @@ for (int c = 0; c < pdf.Pages.Count; c++)
 
 ---
 
-# spire.pdf csharp datetime stamp
-## add date time stamp to pdf document
+# 10_StampsAndWatermarks - AddDateTimeStamp
+## Add a date-time stamp annotation to the first page of a PDF document.
 ```csharp
-// Get the first page of the document
-PdfPageBase page = document.Pages[0];
+private void AddDateTimeStamp(PdfDocument document)
+{
+    // Get the first page of the document
+    PdfPageBase page = document.Pages[0];
 
-// Set the font and brush for the text
-PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Regular), true);
-PdfSolidBrush brush = new PdfSolidBrush(Color.Blue);
+    // Set the font and brush for the text
+    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Regular), true);
+    // Use the following code for netstandard DLLs:
+    // PdfTrueTypeFont font = new PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, true);
 
-// Generate a string representing the current date and time
-String timeString = DateTime.Now.ToString("MM/dd/yy hh:mm:ss tt ");
+    PdfSolidBrush brush = new PdfSolidBrush(Color.Blue);
 
-// Create a template with specified dimensions
-PdfTemplate template = new PdfTemplate(140, 15);
+    // Generate a string representing the current date and time
+    string timeString = DateTime.Now.ToString("MM/dd/yy hh:mm:ss");
 
-// Define a rectangle to position the template on the page
-RectangleF rect = new RectangleF(new PointF(page.ActualSize.Width - template.Width - 10, page.ActualSize.Height - template.Height - 10), template.Size);
+    // Create a template and rectangle, then draw the string
+    PdfTemplate template = new PdfTemplate(140, 15);
+    RectangleF rect = new RectangleF(
+        new PointF(page.ActualSize.Width - template.Width - 10, page.ActualSize.Height - template.Height - 10),
+        template.Size);
+    template.Graphics.DrawString(timeString, font, brush, new PointF(0, 0));
 
-// Draw the time string onto the template
-template.Graphics.DrawString(timeString, font, brush, new PointF(0, 0));
+    // Create stamp annotation
+    PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(page, rect);
+    stamp.Appearances.SetNormalAppearance(new PdfAppearance(template));
 
-// Create a rubber stamp annotation
-PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(rect);
-
-// Create a custom appearance for the stamp annotation
-PdfAppearance appearance = new PdfAppearance(stamp);
-appearance.Normal = template;
-
-// Assign the custom appearance to the stamp annotation
-stamp.Appearance = appearance;
-
-// Add the stamp annotation to the page's annotations widget
-page.Annotations.Add(stamp);
+    // Draw stamp into page
+    PdfAnnotationCollection.Create(page).Add(stamp);
+}
 ```
 
 ---
@@ -6769,85 +6527,72 @@ doc.Pages[1].Canvas.DrawString(header2, font, brush, rect, format);
 
 ---
 
-# Spire.PDF Image Stamp
-## Add an image stamp to PDF document
+# 10_StampsAndWatermarks - AddImageStamp
+## Adds an image-based rubber stamp annotation to a PDF page.
 ```csharp
-// Create a rubber stamp annotation with a specified rectangle for its size and position
-PdfRubberStampAnnotation loStamp = new PdfRubberStampAnnotation(new RectangleF(new PointF(0, 0), new SizeF(60, 60)));
+// Create a rubber stamp annotation
+PdfRubberStampAnnotation loStamp = new PdfRubberStampAnnotation(page, new RectangleF(new PointF(0, 0), new SizeF(60, 60)));
 
-// Create an instance of PdfAppearance for the rubber stamp annotation
-PdfAppearance loApprearance = new PdfAppearance(loStamp);
-
-// Load an image file to be used as the stamp
+// Load the image to use as the stamp
 PdfImage image = PdfImage.FromFile(@"image stamp.jpg");
 
-// Create a template with specific dimensions
+// Create a template for the stamp appearance
 PdfTemplate template = new PdfTemplate(210, 210);
 
-// Draw the loaded image onto the template
+// Draw the image into the template
 template.Graphics.DrawImage(image, 60, 60);
+loStamp.Appearances.SetNormalAppearance(new PdfAppearance(template));
 
-// Set the normal appearance of the stamp to use the created template
-loApprearance.Normal = template;
-
-// Assign the custom appearance to the rubber stamp annotation
-loStamp.Appearance = loApprearance;
-
-// Add the rubber stamp annotation to the page's annotations widget
-page.Annotations.Add(loStamp);
+// Add the rubber stamp annotation to the PDF page
+PdfAnnotationCollection.Create(page).Add(loStamp);
 ```
 
 ---
 
-# spire.pdf csharp text stamp
-## add text stamp to pdf document
+# 10_StampsAndWatermarks - AddTextStamp
+## Add a text stamp to a PDF page using a rubber stamp annotation.
 ```csharp
-// Create a template with specific dimensions to hold the stamp
-PdfTemplate template = new PdfTemplate(125, 55);
+private void AddTextStamp(PdfPageBase page)
+{
+    // Create a template with specific dimensions to hold the stamp
+    PdfTemplate template = new PdfTemplate(125, 55);
 
-// Set the font, brush, and pen for drawing the stamp
-PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Elephant", 10f, FontStyle.Italic), true);
-PdfSolidBrush brush = new PdfSolidBrush(Color.DarkRed);
-PdfPen pen = new PdfPen(brush);
+    // Set the font, brush, and pen for drawing the stamp
+    PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Elephant", 10f, FontStyle.Italic), true);
+    PdfSolidBrush brush = new PdfSolidBrush(Color.DarkRed);
+    PdfPen pen = new PdfPen(brush);
 
-// Define a rectangle that represents the bounds of the stamp
-RectangleF rectangle = new RectangleF(new PointF(5, 5), template.Size);
+    // Define a rectangle that represents the bounds of the stamp
+    RectangleF rectangle = new RectangleF(new PointF(5, 5), template.Size);
 
-// Define the corner radius for the stamp's rounded corners
-int CornerRadius = 20;
+    // Define the corner radius for the stamp's rounded corners
+    int CornerRadius = 20;
 
-// Create a path for the stamp shape using arcs and lines
-PdfPath path = new PdfPath();
-path.AddArc(template.GetBounds().X, template.GetBounds().Y, CornerRadius, CornerRadius, 180, 90);
-path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y, CornerRadius, CornerRadius, 270, 90);
-path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 0, 90);
-path.AddArc(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 90, 90);
-path.AddLine(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, template.GetBounds().X, template.GetBounds().Y + CornerRadius / 2);
+    // Create a path for the stamp shape using arcs and lines
+    PdfPath path = new PdfPath();
+    path.AddArc(template.GetBounds().X, template.GetBounds().Y, CornerRadius, CornerRadius, 180, 90);
+    path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y, CornerRadius, CornerRadius, 270, 90);
+    path.AddArc(template.GetBounds().X + template.Width - CornerRadius, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 0, 90);
+    path.AddArc(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, CornerRadius, CornerRadius, 90, 90);
+    path.AddLine(template.GetBounds().X, template.GetBounds().Y + template.Height - CornerRadius, template.GetBounds().X, template.GetBounds().Y + CornerRadius / 2);
 
-// Draw the stamp shape on the template
-template.Graphics.DrawPath(pen, path);
+    // Draw the stamp shape on the template
+    template.Graphics.DrawPath(pen, path);
 
-// Draw the stamp text on the template
-String s1 = "REVISED\n";
-String s2 = "by E-iceblue at " + DateTime.Now.ToString("MM dd, yyyy");
-template.Graphics.DrawString(s1, font1, brush, new PointF(5, 10));
-PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 9f, FontStyle.Bold), true);
-template.Graphics.DrawString(s2, font2, brush, new PointF(2, 30));
+    // Draw the stamp text on the template
+    String s1 = "REVISED\n";
+    String s2 = "by E-iceblue at " + DateTime.Now.ToString("MM dd, yyyy");
+    template.Graphics.DrawString(s1, font1, brush, new PointF(5, 10));
+    PdfTrueTypeFont font2 = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 9f, FontStyle.Bold), true);
+    template.Graphics.DrawString(s2, font2, brush, new PointF(2, 30));
 
-// Create a rubber stamp annotation with the specified rectangle for its size and position
-PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(rectangle);
+    // Create a rubber stamp
+    PdfRubberStampAnnotation stamp = new PdfRubberStampAnnotation(page, rectangle);
+    stamp.Appearances.SetNormalAppearance(new PdfAppearance(template));
 
-// Create an appearance object for the rubber stamp annotation
-PdfAppearance apprearance = new PdfAppearance(stamp);
-
-// Set the normal appearance of the stamp to use the created template
-apprearance.Normal = template;
-
-// Assign the custom appearance to the rubber stamp annotation
-stamp.Appearance = apprearance;
-
-// Add the rubber stamp annotation to the page's annotations widget
-page.Annotations.Add(stamp);
+    // Draw stamp into page
+    PdfAnnotationCollection.Create(page).Add(stamp);
+}
 ```
 
 ---
@@ -7275,23 +7020,19 @@ private void DrawPageNumber(PdfDocument doc, PdfMargins margin, int startNumber,
 
 ---
 
-# spire.pdf csharp stamp properties
-## set properties for rubber stamp annotations in pdf
+# 10_StampsAndWatermarks - SetPropertiesForStamp
+## Set properties (title, subject, creation date, and modification date) for rubber stamp annotations in a PDF page.
 ```csharp
-// Get the first page from the document.
-PdfPageBase page = pdf.Pages[0];
-
-// Traverse through each annotation widget on the page.
-foreach (PdfAnnotation annotation in page.Annotations.List)
+// Iterate through all annotations on the page
+foreach (PdfAnnotation annotation in PdfAnnotationCollection.Create(page))
 {
-    // Check if the current annotation is a rubber stamp annotation.
-    if (annotation is PdfRubberStampAnnotationWidget)
+    // Check if the annotation is a rubber stamp annotation
+    if (annotation is PdfRubberStampAnnotation)
     {
-        // Cast the annotation to a PdfRubberStampAnnotationWidget.
-        PdfRubberStampAnnotationWidget stamp = annotation as PdfRubberStampAnnotationWidget;
+        PdfRubberStampAnnotation stamp = annotation as PdfRubberStampAnnotation;
 
-        // Set properties for the rubber stamp annotation.
-        stamp.Author = "TestUser";
+        // Set stamp properties
+        stamp.Title = "TestUser";
         stamp.Subject = "E-iceblue";
         stamp.CreationDate = DateTime.Now;
         stamp.ModifiedDate = DateTime.Now;
@@ -8463,72 +8204,49 @@ else
 
 ---
 
-# spire.pdf csharp actions
-## create PDF document with various actions including goto actions, named actions, and JavaScript actions
+# 12_LinksAndActions - Action
+## Demonstrates PDF link annotations with GoTo actions, a named action on open, and a JavaScript action on close.
 ```csharp
-//Create a pdf document
+// Create PDF document and page
 PdfDocument doc = new PdfDocument();
+PdfPageBase page = doc.Pages.Add();
 
-//Set margin
-PdfUnitConvertor unitCvtr = new PdfUnitConvertor();
-PdfMargins margin = new PdfMargins();
-margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
-margin.Bottom = margin.Top;
-margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
-margin.Right = margin.Left;
+// Create destinations for internal navigation
+PdfXYZExplicitDestination tableTopDest = new PdfXYZExplicitDestination(page, 0, 10, 1f);
+PdfXYZExplicitDestination tableBottomDest = new PdfXYZExplicitDestination(page, 0, page.Canvas.ClientSize.Height, 1f);
 
-//Create one page
-PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, margin);
-
-float y = 10;
-
-//Table top
-PdfDestination tableTopDest = new PdfDestination(page);
-tableTopDest.Location = new PointF(0, y);
-tableTopDest.Mode = PdfDestinationMode.Location;
-tableTopDest.Zoom = 1f;
-
-//Table bottom
-PdfDestination tableBottomDest = new PdfDestination(page);
-tableBottomDest.Location = new PointF(0, y);
-tableBottomDest.Mode = PdfDestinationMode.Location;
-tableBottomDest.Zoom = 1f;
-
-//Go to table bottom
-float x = page.Canvas.ClientSize.Width - 70;
-PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
-RectangleF buttonBounds = new RectangleF(x, y, 70, 15);
+// Draw "To Bottom" button and attach a GoToAction link
+float buttonWidth = 70;
+float buttonHeight = 20;
+float x = page.Canvas.ClientSize.Width - buttonWidth;
+PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+RectangleF buttonBounds = new RectangleF(x, 10, buttonWidth, buttonHeight);
 page.Canvas.DrawRectangle(PdfBrushes.DarkGray, buttonBounds);
-page.Canvas.DrawString("To Bottom", new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold)), PdfBrushes.CadetBlue, buttonBounds, format2);
-PdfGoToAction action1 = new PdfGoToAction(tableBottomDest);
-PdfActionAnnotation annotation1 = new PdfActionAnnotation(buttonBounds, action1);
-annotation1.Border = new PdfAnnotationBorder(0.75f);
-annotation1.Color = Color.LightGray;
-(page as PdfNewPage).Annotations.Add(annotation1);
+page.Canvas.DrawString("To Bottom", new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold)), PdfBrushes.CadetBlue, buttonBounds, format);
 
-//Go to table top
-float tableBottom = y + 5;
-buttonBounds = new RectangleF(x, tableBottom, 70, 15);
-page.Canvas.DrawRectangle(PdfBrushes.DarkGray, buttonBounds);
-page.Canvas.DrawString("To Top", new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold)), PdfBrushes.CadetBlue, buttonBounds, format2);
-PdfGoToAction action2 = new PdfGoToAction(tableTopDest);
-PdfActionAnnotation annotation2 = new PdfActionAnnotation(buttonBounds, action2);
-annotation2.Border = new PdfAnnotationBorder(0.75f);
-annotation2.Color = Color.LightGray;
-(page as PdfNewPage).Annotations.Add(annotation2);
+PdfGoToAction goToBottomAction = new PdfGoToAction(tableBottomDest);
+PdfLinkAnnotation bottomLink = new PdfLinkAnnotation(page, buttonBounds, goToBottomAction);
+bottomLink.Border.Width = 0.75f;
+bottomLink.Color = Color.LightGray;
+PdfAnnotationCollection.Create(page).Add(bottomLink);
 
-//Go to last page
-PdfNamedAction action3 = new PdfNamedAction(PdfActionDestination.LastPage);
-doc.AfterOpenAction = action3;
+// Draw "To Top" button and attach a GoToAction link
+RectangleF topButtonBounds = new RectangleF(x, page.Canvas.ClientSize.Height - buttonHeight - 10, buttonWidth, buttonHeight);
+page.Canvas.DrawRectangle(PdfBrushes.DarkGray, topButtonBounds);
+page.Canvas.DrawString("To Top", new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold)), PdfBrushes.CadetBlue, topButtonBounds, format);
 
-//Script
-String script = "app.alert({"
-    + "    cMsg: \"Oh no, you want to leave me.\","
-    + "    nIcon: 3,"
-    + "    cTitle: \"JavaScript Action\""
-    + "});";
-PdfJavaScriptAction action4 = new PdfJavaScriptAction(script);
-doc.BeforeCloseAction = action4;
+PdfGoToAction goToTopAction = new PdfGoToAction(tableTopDest);
+PdfLinkAnnotation topLink = new PdfLinkAnnotation(page, topButtonBounds, goToTopAction);
+topLink.Border.Width = 0.75f;
+topLink.Color = Color.LightGray;
+PdfAnnotationCollection.Create(page).Add(topLink);
+
+// Add a named action to go to the last page when the document is opened
+doc.AfterOpenAction = new PdfNamedAction(PdfPredefinedAction.LastPage);
+
+// Add a JavaScript action to show an alert before the document is closed
+string script = "app.alert({ cMsg: \"Oh no, you want to leave me.\", nIcon: 3, cTitle: \"JavaScript Action\" });";
+doc.BeforeCloseAction = new PdfJavaScriptAction(script);
 ```
 
 ---
@@ -8582,160 +8300,156 @@ doc.Close();
 
 ---
 
-# spire.pdf csharp launch action
-## add PDF launch action to open file when clicking on text
+# 12_LinksAndActions - AddPdfLaunchAction
+## Demonstrates adding a PDF launch action to a link annotation that opens a specified file when clicked.
 ```csharp
-// Create a new PDF document 
+// Create a new PDF document
 PdfDocument doc = new PdfDocument();
 
 // Add a page to the document
 PdfPageBase page = doc.Pages.Add();
 
 // Create a PDF Launch Action that will open a text file
-PdfLaunchAction launchAction = new PdfLaunchAction("text.txt");
+PdfLaunchAction launchAction = new PdfLaunchAction("..\\..\\..\\..\\..\\..\\Data\\text.txt", PdfFilePathType.Relative);
 
 // Create a PDF Action Annotation with the PDF Launch Action
 string text = "Click here to open file";
 PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 13f));
 RectangleF rect = new RectangleF(50, 50, 230, 15);
 page.Canvas.DrawString(text, font, PdfBrushes.ForestGreen, rect);
-PdfActionAnnotation annotation = new PdfActionAnnotation(rect, launchAction);
+rect = new RectangleF(90, 90, 230, 15);
+PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, launchAction);
 
-// Add the PDF Action Annotation to the page
-(page as PdfNewPage).Annotations.Add(annotation);
+// Add the PDF Action Annotation to page
+PdfAnnotationCollection.Create(page).Add(annotation);
 ```
 
 ---
 
-# Spire.PDF C# Table of Contents
-## Add a table of contents with navigation links to a PDF document
+# 12_LinksAndActions - AddTableOfContent
+## Create a table of contents page with clickable links to PDF pages.
 ```csharp
-// Get the total number of pages in the document.
-int pageCount = doc.Pages.Count;
-
-// Insert a blank page at the beginning of the PDF document.
-PdfPageBase tocPage = doc.Pages.Insert(0);
-
-// Set the title for the table of contents.
-string title = "Table Of Contents";
-PdfTrueTypeFont titleFont = new PdfTrueTypeFont(new Font("Arial", 20, FontStyle.Bold));
-PdfStringFormat centerAlignment = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
-PointF location = new PointF(tocPage.Canvas.ClientSize.Width / 2, titleFont.MeasureString(title).Height);
-tocPage.Canvas.DrawString(title, titleFont, PdfBrushes.CornflowerBlue, location, centerAlignment);
-
-// Draw the table of contents entries.
-PdfTrueTypeFont titlesFont = new PdfTrueTypeFont(new Font("Arial", 14));
-String[] titles = new String[pageCount];
-for (int i = 0; i < titles.Length; i++)
+private void AddTableOfContent(PdfDocument doc)
 {
-    titles[i] = string.Format("This is page {0}", i + 1);
-}
-float y = titleFont.MeasureString(title).Height + 10;
-float x = 0;
+    // Get the total number of pages in the document.
+    int pageCount = doc.Pages.Count;
 
-for (int i = 1; i <= pageCount; i++)
-{
-    string text = titles[i - 1];
-    SizeF titleSize = titlesFont.MeasureString(text);
+    // Insert a blank page at the beginning of the PDF document.
+    PdfPageBase tocPage = doc.Pages.Insert(0);
 
-    // Get the page that the table of contents entry will navigate to.
-    PdfPageBase navigatedPage = doc.Pages[i];
+    // Set the title for the table of contents.
+    string title = "Table Of Contents";
+    PdfTrueTypeFont titleFont = new PdfTrueTypeFont(new Font("Arial", 20, FontStyle.Bold));
+    PdfStringFormat centerAlignment = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+    PointF location = new PointF(tocPage.Canvas.ClientSize.Width / 2, titleFont.MeasureString(title).Height);
+    tocPage.Canvas.DrawString(title, titleFont, PdfBrushes.CornflowerBlue, location, centerAlignment);
 
-    string pageNumText = (i + 1).ToString();
-    SizeF pageNumTextSize = titlesFont.MeasureString(pageNumText);
-
-    // Draw the entry text.
-    tocPage.Canvas.DrawString(text, titlesFont, PdfBrushes.CadetBlue, 0, y);
-
-    float dotLocation = titleSize.Width + 2 + x;
-    float pageNumlocation = tocPage.Canvas.ClientSize.Width - pageNumTextSize.Width;
-
-    // Draw dots between the entry text and page number.
-    for (float j = dotLocation; j < pageNumlocation; j++)
+    // Draw the table of contents entries.
+    PdfTrueTypeFont titlesFont = new PdfTrueTypeFont(new Font("Arial", 14));
+    String[] titles = new String[pageCount];
+    for (int i = 0; i < titles.Length; i++)
     {
-        if (dotLocation >= pageNumlocation)
-        {
-            break;
-        }
-        tocPage.Canvas.DrawString(".", titlesFont, PdfBrushes.Gray, dotLocation, y);
-        dotLocation += 3;
+        titles[i] = string.Format("This is page {0}", i + 1);
     }
 
-    // Draw the page number.
-    tocPage.Canvas.DrawString(pageNumText, titlesFont, PdfBrushes.CadetBlue, pageNumlocation, y);
+    float y = titleFont.MeasureString(title).Height + 10;
+    float x = 0;
 
-    // Add the table of contents action.
-    location = new PointF(0, y);
-    RectangleF titleBounds = new RectangleF(location, new SizeF(tocPage.Canvas.ClientSize.Width, titleSize.Height));
-    PdfDestination Dest = new PdfDestination(navigatedPage, new PointF(-doc.PageSettings.Margins.Top, -doc.PageSettings.Margins.Left));
-    PdfActionAnnotation action = new PdfActionAnnotation(titleBounds, new PdfGoToAction(Dest));
-    action.Border = new PdfAnnotationBorder(0);
-    (tocPage as PdfNewPage).Annotations.Add(action);
-    y += titleSize.Height + 10;
-}
-```
+    for (int i = 1; i <= pageCount; i++)
+    {
+        string text = titles[i - 1];
+        SizeF titleSize = titlesFont.MeasureString(text);
+
+        // Get the page that the table of contents entry will navigate to.
+        PdfPageBase navigatedPage = doc.Pages[i];
+
+        string pageNumText = (i + 1).ToString();
+        SizeF pageNumTextSize = titlesFont.MeasureString(pageNumText);
+
+        // Draw the entry text.
+        tocPage.Canvas.DrawString(text, titlesFont, PdfBrushes.CadetBlue, 0, y);
+
+        float dotLocation = titleSize.Width + 2 + x;
+        float pageNumlocation = tocPage.Canvas.ClientSize.Width - pageNumTextSize.Width;
+
+        // Draw dots between the entry text and page number.
+        for (float j = dotLocation; j < pageNumlocation; j++)
+        {
+            if (dotLocation >= pageNumlocation)
+            {
+                break;
+            }
+            tocPage.Canvas.DrawString(".", titlesFont, PdfBrushes.Gray, dotLocation, y);
+            dotLocation += 3;
+        }
+
+        // Draw the page number.
+        tocPage.Canvas.DrawString(pageNumText, titlesFont, PdfBrushes.CadetBlue, pageNumlocation, y);
+
+        // Add the table of contents action.
+        location = new PointF(0 + 40, y + 40);
+        RectangleF titleBounds = new RectangleF(location, new SizeF(tocPage.Canvas.ClientSize.Width, titleSize.Height));
+        PdfXYZExplicitDestination Dest = new PdfXYZExplicitDestination(navigatedPage, -doc.PageSettings.Margins.Top, -doc.PageSettings.Margins.Left);
+        PdfLinkAnnotation annotation = new PdfLinkAnnotation(tocPage, titleBounds, new Pdf
 
 ---
 
-# Spire.PDF Document Link Annotation
-## Create a document link annotation in PDF that links to another page
+# 12_LinksAndActions - DocumentLinkAnnotation
+## Create a document link annotation in a PDF document to navigate to a specified page and location.
+
 ```csharp
-// Create a new PDF document
+// Create a new PDF document.
 PdfDocument doc = new PdfDocument();
 
-// Add pages
-PdfPageBase page1 = doc.Pages.Add(PdfPageSize.A4, margin);
-PdfPageBase page2 = doc.Pages.Add(PdfPageSize.A4, margin);
+// Add two pages with A4 size.
+PdfPageBase page1 = doc.Pages.Add(PdfPageSize.A4);
+PdfPageBase page2 = doc.Pages.Add(PdfPageSize.A4);
 
-// Add a DocumentLinkAnnotation on the first page and link it to the second page
+// Define a brush and font.
+PdfBrush brush = PdfBrushes.Black;
+PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f, FontStyle.Bold), true);
+PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Left);
+
+float x = 0;
+float y = 50;
+
+// Draw text on the first page.
+string specification = "The sample demonstrates how to create a local document link in a PDF document.";
+page1.Canvas.DrawString(specification, font, brush, x, y, format);
+y += font.MeasureString(specification, format).Height + 10;
+
+// Draw text on the second page.
+string pageContent = "This is the second page!";
+page2.Canvas.DrawString(pageContent, font, brush, x, y, format);
+
+// Add a document link annotation on the first page linking to the second page.
 AddDocumentLinkAnnotation(doc, 0, 1, y);
 
-private static void AddDocumentLinkAnnotation(PdfDocument pdf, int AddPage, int DestinationPage, float y)
+// Method to add document link annotation.
+void AddDocumentLinkAnnotation(PdfDocument pdf, int addPage, int destinationPage, float y)
 {
-    // Define a font for text
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
-    
-    // Set the string format for text alignment
-    PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Left);
-    
-    // Specify the prompt text for the link
-    String prompt = "Local document Link: ";
-    
-    // Draw the prompt text on the page at the specified vertical position
-    pdf.Pages[AddPage].Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
-    
-    // Use MeasureString to get the width of the prompt string
-    float x = font.MeasureString(prompt, format).Width;
-    
-    // Create a PdfDestination with the specified destination page
-    PdfDestination dest = new PdfDestination(pdf.Pages[DestinationPage]);
-    
-    // Set the location of the destination
-    dest.Location = new PointF(0, y);
-    
-    // Set the zoom factor for the destination
+    PdfTrueTypeFont linkFont = new PdfTrueTypeFont(new Font("Arial", 12f));
+    PdfStringFormat linkFormat = new PdfStringFormat(PdfTextAlignment.Left);
+    string prompt = "Local document Link: ";
+    pdf.Pages[addPage].Canvas.DrawString(prompt, linkFont, PdfBrushes.DodgerBlue, 0, y);
+    float x = linkFont.MeasureString(prompt, linkFormat).Width;
+
+    // Create a destination to the specified page at y position with 50% zoom.
+    PdfXYZExplicitDestination dest = new PdfXYZExplicitDestination(pdf.Pages[destinationPage], 0, y);
     dest.Zoom = 0.5f;
-    
-    // Specify the label string for the link
-    String label = "Click here to link the second page.";
-    
-    // Use MeasureString to get the SizeF of the label string
-    SizeF size = font.MeasureString(label);
-    
-    // Create a rectangle that defines the area for the link
-    RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
-    
-    // Draw the label string on the page
-    pdf.Pages[AddPage].Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-    
-    // Create a PdfDocumentLinkAnnotation on the rectangle and link it to the destination
-    PdfDocumentLinkAnnotation annotation = new PdfDocumentLinkAnnotation(bounds, dest);
-    
-    // Set the color for the annotation
+
+    string label = "Click here to link the second page.";
+    SizeF size = linkFont.MeasureString(label);
+    pdf.Pages[addPage].Canvas.DrawString(label, linkFont, PdfBrushes.OrangeRed, x, y);
+
+    float left = pdf.Pages[addPage].Section.PageSettings.Margins.Left;
+    float top = pdf.Pages[addPage].Section.PageSettings.Margins.Top;
+    RectangleF bounds = new RectangleF(x + left, y + top, size.Width, size.Height);
+
+    // Create and add link annotation.
+    PdfLinkAnnotation annotation = new PdfLinkAnnotation(pdf.Pages[addPage], bounds, dest);
     annotation.Color = Color.Blue;
-    
-    // Add the annotation to the page
-    (pdf.Pages[AddPage] as PdfNewPage).Annotations.Add(annotation);
+    PdfAnnotationCollection.Create(pdf.Pages[addPage]).Add(annotation);
 }
 ```
 
@@ -8760,122 +8474,105 @@ doc.AfterOpenAction = soundAction;
 
 ---
 
-# spire.pdf csharp link extraction and update
-## extract and update web link annotations in a pdf document
+# 12_LinksAndActions - ExtractAndUpdateLink
+## Extract link annotations from a PDF page and update their URI actions.
 ```csharp
-//Create a pdf document
-PdfDocument doc = new PdfDocument();
-
-//Load file from disk
-doc.LoadFromFile("LinkAnnotation.pdf");
-
-//Get the first page
+// Get the first page
 PdfPageBase page = doc.Pages[0];
 
-//Get the annotation collection
-PdfAnnotationCollection annotations = page.Annotations;
+// Get the annotation collection
+PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(page);
 
-//Verify whether widgetCollection is not null or not
+// Check whether annotations exist
 if (annotations.Count > 0)
 {
-    //traverse the PdfAnnotationCollection
+    // Traverse the annotation collection
     foreach (PdfAnnotation pdfAnnotation in annotations)
     {
-        //if it is PdfTextWebLinkAnnotationWidget
-        if (pdfAnnotation is PdfTextWebLinkAnnotationWidget)
+        // If the annotation is a link annotation
+        if (pdfAnnotation is PdfLinkAnnotation)
         {
+            // Get the link annotation
+            PdfLinkAnnotation annotation = pdfAnnotation as PdfLinkAnnotation;
 
-            //Get the link annotation
-            PdfTextWebLinkAnnotationWidget annotation = pdfAnnotation as PdfTextWebLinkAnnotationWidget;
-
-            //Change the url
-            annotation.Url = "http://www.e-iceblue.com/Introduce/pdf-for-net-introduce.html";
-
+            // Change the URL
+            (annotation.Action as PdfURIAction).URI = "http://www.e-iceblue.com/Introduce/pdf-for-net-introduce.html";
         }
     }
 }
-
-//Save the document
-doc.SaveToFile("ExtractAndUpdateLink_out.pdf");
 ```
 
 ---
 
-# spire.pdf csharp file link annotation
-## create file link annotation in PDF document
+# 12_LinksAndActions - FileLinkAnnotation
+## Creates a file link annotation on a PDF page to launch a specified file.
 ```csharp
 private static void AddFileLinkAnnotation(PdfPageBase page, float y)
 {
-    //Define a font
+    // Define the font for the link label
     PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 12f));
 
-    //Set the string format 
+    // Set text alignment
     PdfStringFormat format = new PdfStringFormat(PdfTextAlignment.Left);
 
-    //Text string
-    String prompt = "Launch a File: ";
-
-    //Draw text string on page canvas
+    // Draw the prompt text
+    string prompt = "Launch a File: ";
     page.Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
 
-    //Use MeasureString to get the width of string
+    // Measure prompt width to position the file label
     float x = font.MeasureString(prompt, format).Width;
 
-    //String of file name
-    String label = "Sample.pdf";
-
-    //Use MeasureString to get the SizeF of string
+    // File label text
+    string label = "Sample.pdf";
     SizeF size = font.MeasureString(label);
 
-    //Create a rectangle
+    // Bounds for the link annotation
     RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
 
-    //Draw label string
+    // Draw the file label
     page.Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
 
-    //Create PdfFileLinkAnnotation on the rectangle and link file "Sample.pdf"
-    PdfFileLinkAnnotation annotation = new PdfFileLinkAnnotation(bounds, @"..\..\..\..\..\..\Data\Sample.pdf");
-   
-    //Set color for annotation
+    // Create a launch action for the target file
+    PdfLaunchAction action = new PdfLaunchAction("Sample.pdf", PdfFilePathType.Relative);
+
+    // Create a file link annotation over the label bounds
+    PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, bounds, action);
+
+    // Set annotation border color
     annotation.Color = Color.Blue;
 
-    //Add annotation to the page
-    (page as PdfNewPage).Annotations.Add(annotation);
+    // Add the annotation to the page
+    PdfAnnotationCollection.Create(page).Add(annotation);
 }
 ```
 
 ---
 
-# Spire.PDF Get Link Annotations
-## Extract web link annotations from PDF document
+# 12_LinksAndActions - GetLinkAnnotation
+## Extracts link annotations and their URLs and text from a PDF page.
 ```csharp
-//Create a pdf document
-PdfDocument doc = new PdfDocument();
-
-//Load file from disk
-doc.LoadFromFile(@"..\..\..\..\..\..\Data\LinkAnnotation.pdf");
-
-//Get the first page
+// Get the first page
 PdfPageBase page = doc.Pages[0];
 
-//Get the annotation collection
-PdfAnnotationCollection annotations = page.Annotations;
+// Get the annotation collection
+PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(page);
 
-//Verify whether widgetCollection is not null or not
+StringBuilder content = new StringBuilder();
+
 if (annotations.Count > 0)
 {
-    //traverse the PdfAnnotationCollection
+    // Traverse the annotation collection
     foreach (PdfAnnotation pdfAnnotation in annotations)
     {
-        //if it is PdfTextWebLinkAnnotationWidget
-        if (pdfAnnotation is PdfTextWebLinkAnnotationWidget)
+        // Check whether the annotation is a link annotation
+        if (pdfAnnotation is PdfLinkAnnotation)
         {
-            //Get the Url
-            PdfTextWebLinkAnnotationWidget WebLinkAnnotation = pdfAnnotation as PdfTextWebLinkAnnotationWidget;
-            string url = WebLinkAnnotation.Url;
-            
-            //Get the text content
-            string text = WebLinkAnnotation.Text;
+            // Get the URL and contents of the link annotation
+            PdfLinkAnnotation linkAnnotation = pdfAnnotation as PdfLinkAnnotation;
+            string url = (linkAnnotation.Action as PdfURIAction).URI;
+
+            content.AppendLine("The url of link annotation is " + url);
+            content.AppendLine("The text of link annotation is " + linkAnnotation.Contents);
         }
     }
 }
@@ -8883,237 +8580,131 @@ if (annotations.Count > 0)
 
 ---
 
-# Spire.PDF GoTo Actions
-## Implementation of GoTo actions in PDF documents
+# 12_LinksAndActions - GoToAction
+## Creates PDF GoTo and embedded GoTo link annotations for navigating to locations or attachments.
+
 ```csharp
-/// <summary>
-/// GoToE action
-/// </summary>
-/// <param name="pdf"></param>
-private static void EmbeddedGoToAction(PdfDocument pdf, PdfPageBase page)
+public class GoToActionExample
 {
-    // Add an attachment to the PDF.
-    PdfAttachment attachment = new PdfAttachment("GoToAction.pdf");
-    pdf.Attachments.Add(attachment);
+    private static void EmbeddedGoToAction(PdfDocument pdf, PdfPageBase page, PdfAttachment attachment)
+    {
+        // Add the attachment as the embedded go-to target.
+        pdf.Attachments.Add(attachment);
 
-    // Specify the text to be displayed on the page.
-    string text = "Test embedded go-to action! Clicking this will open the attached PDF in a new window.";
+        // Text area that acts as the link.
+        string text = "Test embedded go-to action! Clicking this will open the attached PDF in a new window.";
+        PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 13f));
+        float width = 490f;
+        float height = font.Height * 2.2f;
+        RectangleF rect = new RectangleF(0, 100, width, height);
 
-    // Define the font and dimensions of the text box.
-    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Arial", 13f));
-    float width = 490f;
-    float height = font.Height * 2.2f;
-    RectangleF rect = new RectangleF(0, 100, width, height);
+        page.Canvas.DrawString(text, font, PdfBrushes.Black, rect);
 
-    // Draw the text on the page.
-    page.Canvas.DrawString(text, font, PdfBrushes.Black, rect);
+        // Create a GoToE action targeting the attached PDF.
+        PdfGoToEmbeddedAction action = new PdfGoToEmbeddedAction(attachment.FileName, 1, 2f);
+        action.NewWindow = true;
 
-    // Create a PdfDestination with a specific page, location, and zoom factor.
-    PdfDestination dest = new PdfDestination(page, new PointF(0, 842));
+        // Add the link annotation over the text.
+        RectangleF annotationRect = new RectangleF(rect.X + 40, rect.Y + 40, rect.Width, rect.Height);
+        PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, annotationRect, action);
+        PdfAnnotationCollection.Create(page).Add(annotation);
+    }
 
-    // Create a GoToE (Go-To Embedded) action with the specified destination.
-    PdfEmbeddedGoToAction action = new PdfEmbeddedGoToAction(attachment.FileName, dest, true);
+    private static void JumpToSpecificLocationAction(PdfDocument pdf, PdfPageBase page)
+    {
+        // Add the destination page.
+        PdfPageBase pagetwo = pdf.Pages.Add();
 
-    // Create a PdfActionAnnotation with the action and the annotation rectangle.
-    PdfActionAnnotation annotation = new PdfActionAnnotation(rect, action);
+        // Create a GoTo action targeting a specific location on the second page.
+        PdfXYZExplicitDestination pageBottomDest = new PdfXYZExplicitDestination(pagetwo, 0, 5, 1f);
+        PdfGoToAction action = new PdfGoToAction(pageBottomDest);
 
-    // Add the annotation to the page.
-    (page as PdfNewPage).Annotations.Add(annotation);
-}
+        // Draw the clickable button area.
+        PdfTrueTypeFont buttonFont = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold));
+        float buttonWidth = 70;
+        float buttonHeight = buttonFont.Height * 1.5f;
+        PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+        RectangleF buttonBounds = new RectangleF(0, 200, buttonWidth, buttonHeight);
 
-private static void JumpToSpecificLocationAction(PdfDocument pdf, PdfPageBase page)
+        page.Canvas.DrawRectangle(PdfBrushes.DarkGray, buttonBounds);
+        page.Canvas.DrawString("To Last Page", buttonFont, PdfBrushes.CadetBlue, buttonBounds, format2);
+
+        // Add the link annotation over the button.
+        RectangleF annotationRect = new RectangleF(buttonBounds.X + 40, buttonBounds.Y + 40, buttonBounds.Width, buttonBounds.Height);
+        PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, annotationRect, action);
+        annotation.Border.Width = 0.75f;
+        annotation.Color = Color.LightGray;
+        PdfAnnotationCollection.Create(page
+
+---
+
+# 12_LinksAndActions - LaunchFileInNewWindow
+## Add a launch action to a PDF text link that opens a target file in a new window.
+```csharp
+private void AddLaunchFileInNewWindowAction(PdfDocument pdf)
 {
-    // Add a new page to the PDF document.
-    PdfPageBase pagetwo = pdf.Pages.Add();
+    string searchText = "Spire.PDF";
 
-    // Draw text on the second page.
-    pagetwo.Canvas.DrawString("This is Page Two.",
-                               new PdfFont(PdfFontFamily.Helvetica, 20f),
-                               new PdfSolidBrush(Color.Black),
-                               10, 10);
+    foreach (PdfPageBase page in pdf.Pages)
+    {
+        PdfTextFinder finder = new PdfTextFinder(page);
+        finder.Options.Parameter = Spire.Pdf.Texts.TextFindParameter.WholeWord;
 
-    // Create a PdfDestination instance and link it to a PdfGoToAction.
-    PdfDestination pageBottomDest = new PdfDestination(pagetwo);
-    pageBottomDest.Location = new PointF(0, 5);
-    pageBottomDest.Mode = PdfDestinationMode.Location;
-    pageBottomDest.Zoom = 1f;
-    PdfGoToAction action = new PdfGoToAction(pageBottomDest);
+        List<PdfTextFragment> results = finder.Find(searchText);
 
-    // Define the font, dimensions, and formatting for a button.
-    PdfTrueTypeFont buttonFont = new PdfTrueTypeFont(new Font("Arial", 10f, FontStyle.Bold));
-    float buttonWidth = 70;
-    float buttonHeight = buttonFont.Height * 1.5f;
-    PdfStringFormat format2 = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
-    RectangleF buttonBounds = new RectangleF(0, 200, buttonWidth, buttonHeight);
+        foreach (PdfTextFragment result in results)
+        {
+            PdfLaunchAction launchAction = new PdfLaunchAction(
+                @"..\..\..\..\..\..\Data\Sample.pdf",
+                PdfFilePathType.Relative);
 
-    // Create a rectangle and draw text on the first page.
-    page.Canvas.DrawRectangle(PdfBrushes.DarkGray, buttonBounds);
-    page.Canvas.DrawString("To Last Page", buttonFont, PdfBrushes.CadetBlue, buttonBounds, format2);
+            // Open the target document in a new window.
+            launchAction.NewWindow = true;
 
-    // Add the annotation to the first page.
-    PdfActionAnnotation annotation = new PdfActionAnnotation(buttonBounds, action);
-    annotation.Border = new PdfAnnotationBorder(0.75f);
-    annotation.Color = Color.LightGray;
-    (page as PdfNewPage).Annotations.Add(annotation);
+            RectangleF rect = new RectangleF(
+                result.Positions[0].X,
+                result.Positions[0].Y,
+                result.Sizes[0].Width,
+                result.Sizes[0].Height);
+
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, rect, launchAction);
+            PdfAnnotationCollection.Create(page).Add(annotation);
+        }
+    }
 }
 ```
 
 ---
 
-# Spire.PDF C# Launch File Action
-## Create PDF annotation that launches a file in a new window when clicked
+# 12_LinksAndActions - Link
+## Add URI, JavaScript, and email link annotations to a PDF page.
 ```csharp
-// Create a PdfLaunchAction to launch a file when the annotation is clicked.
-PdfLaunchAction launchAction = new PdfLaunchAction(@"..\..\..\..\..\..\Data\Sample.pdf", PdfFilePathType.Relative);
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new PDF document.
+    PdfDocument doc = new PdfDocument();
 
-// Set the launch action to open the file in a new window.
-launchAction.IsNewWindow = true;
+    // Set margins for the document.
+    PdfUnitConvertor unitCvtr = new PdfUnitConvertor();
+    PdfMargins margin = new PdfMargins();
+    margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
+    margin.Bottom = margin.Top;
+    margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
+    margin.Right = margin.Left;
 
-// Get the position and size of the found text fragment.
-RectangleF rect = new RectangleF(find.Positions[0].X, find.Positions[0].Y, find.Sizes[0].Width, find.Sizes[0].Height);
+    // Create a new page with specified size and margins.
+    PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, margin);
 
-// Create a PdfActionAnnotation with the launch action and the annotation rectangle.
-PdfActionAnnotation annotation = new PdfActionAnnotation(rect, launchAction);
+    float y = 100;
+    float x = 10;
 
-// Add the annotation to the current page.
-(page as PdfPageWidget).Annotations.Add(annotation);
-```
+    // Set font and label for the first text link.
+    PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 14));
+    String label = "Simple Text Link: ";
 
----
-
-# spire.pdf csharp links
-## create various types of links in pdf document
-```csharp
-// Create a new PDF document
-PdfDocument doc = new PdfDocument();
-
-// Set margins for the document
-PdfUnitConvertor unitCvtr = new PdfUnitConvertor();
-PdfMargins margin = new PdfMargins();
-margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
-margin.Bottom = margin.Top;
-margin.Left = unitCvtr.ConvertUnits(3.17f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point);
-margin.Right = margin.Left;
-
-// Create a new page with specified size and margins
-PdfPageBase page = doc.Pages.Add(PdfPageSize.A4, margin);
-
-float y = 100;
-float x = 10;
-
-// Set font and label for the first text link
-PdfTrueTypeFont font = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 14));
-String label = "Simple Text Link: ";
-
-// Draw the label on the page
-PdfStringFormat format = new PdfStringFormat();
-format.MeasureTrailingSpaces = true;
-page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-
-x = font.MeasureString(label, format).Width;
-
-// Set font and URL for the first text link
-PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Lucida Sans Unicode", 14, FontStyle.Underline));
-String url1 = "http://www.e-iceblue.com";
-
-// Draw the URL on the page
-page.Canvas.DrawString(url1, font1, PdfBrushes.CadetBlue, x, y);
-y = y + font1.MeasureString(url1).Height + 25;
-
-// Set font and label for the second web link
-label = "Web Link: ";
-page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-x = font.MeasureString(label, format).Width;
-
-// Set text and properties for the second web link
-String text = "E-iceblue home";
-PdfTextWebLink link2 = new PdfTextWebLink();
-link2.Text = text;
-link2.Url = url1;
-link2.Font = font1;
-link2.Brush = PdfBrushes.CadetBlue;
-
-// Draw the second web link on the page
-link2.DrawTextWebLink(page.Canvas, new PointF(x, y));
-y = y + font1.MeasureString(text).Height + 30;
-
-// Set font and label for the URI annotation
-label = "URI Annotation: ";
-page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-x = font.MeasureString(label, format).Width;
-text = "Google";
-PointF location = new PointF(x, y);
-SizeF size = font1.MeasureString(text);
-RectangleF linkBounds = new RectangleF(location, size);
-
-// Create a URI annotation and set its properties
-PdfUriAnnotation link3 = new PdfUriAnnotation(linkBounds);
-link3.Border = new PdfAnnotationBorder(0);
-link3.Uri = "http://www.google.com";
-
-// Add the URI annotation to the page's annotations collection
-(page as PdfNewPage).Annotations.Add(link3);
-
-// Draw the text for the URI annotation
-page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, x, y);
-y = y + size.Height + 30;
-
-// Set font and label for the URI annotation with an action
-label = "URI Annotation Action: ";
-page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-x = font.MeasureString(label, format).Width;
-text = "JavaScript Action (Click Me)";
-location = new PointF(x - 2, y - 2);
-size = font1.MeasureString(text);
-size = new SizeF(size.Width + 5, size.Height + 5);
-linkBounds = new RectangleF(location, size);
-
-// Create a URI annotation with border and color
-PdfUriAnnotation link4 = new PdfUriAnnotation(linkBounds);
-link4.Border = new PdfAnnotationBorder(0.75f);
-link4.Color = Color.CadetBlue;
-
-// Define JavaScript action script
-String script = "app.alert({" +
-    "cMsg: \"Hello.\"," +
-    "nIcon: 3," +
-    "cTitle: \"JavaScript Action\"" +
-    "});";
-
-// Create a JavaScript action and assign it to the URI annotation
-PdfJavaScriptAction action = new PdfJavaScriptAction(script);
-link4.Action = action;
-
-// Add the URI annotation with the JavaScript action to the page's annotations collection
-(page as PdfNewPage).Annotations.Add(link4);
-
-// Draw the text for the URI annotation with the JavaScript action
-page.Canvas.DrawString(text, font1, PdfBrushes.CadetBlue, x, y);
-y = y + size.Height + 30;
-
-label = "Need Help:  ";
-page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-x = font.MeasureString(label, format).Width;
-text = "Go to forum to ask questions";
-link2 = new PdfTextWebLink();
-link2.Text = text;
-link2.Url = "https://www.e-iceblue.com/forum/components-f5.html";
-link2.Font = font1;
-link2.Brush = PdfBrushes.CadetBlue;
-link2.DrawTextWebLink(page.Canvas, new PointF(x, y));
-y = y + font1.MeasureString(text).Height + 30;
-
-label = "Contct us:  ";
-page.Canvas.DrawString(label, font, PdfBrushes.Orange, 0, y, format);
-x = font.MeasureString(label, format).Width;
-text = "Send an email";
-link2 = new PdfTextWebLink();
-link2.Text = text;
-link2.Url = "mailto:support@e-iceblue.com";
-link2.Font = font1;
-link2.Brush = PdfBrushes.CadetBlue;
-link2.DrawTextWebLink(page.Canvas, new PointF(x, y));
-```
+    // Draw the label on the page.
+    PdfStringFormat format = new PdfStringFormat();
+    format.MeasureTrailingSp
 
 ---
 
@@ -9137,42 +8728,38 @@ document.SaveToFile(result);
 
 ---
 
-# spire.pdf hyperlink removal
-## remove hyperlinks from pdf document
+# 12_LinksAndActions - RemoveHyperlinks
+## Removes hyperlink annotations from the first page of a PDF document.
 ```csharp
-// Load an existing PDF file.
-PdfDocument document = new PdfDocument();
-document.LoadFromFile("RemoveHyperlinks.pdf");
-
-// Get the first page of the document.
-PdfPageBase page = document.Pages[0];
-
-// Get the collection of annotations on the page.
-PdfAnnotationCollection widgetCollection = page.Annotations;
-
-// Check if the widgetCollection is not null and contains annotations.
-if (widgetCollection.Count > 0)
+public void RemoveHyperlinks(PdfDocument document)
 {
-    // Iterate over the annotations in reverse order.
-    for (int i = widgetCollection.Count - 1; i >= 0; i--)
+    // Get the first page of the document.
+    PdfPageBase page = document.Pages[0];
+
+    // Get the collection of annotations on the page.
+    PdfAnnotationCollection widgetCollection = PdfAnnotationCollection.Create(page);
+
+    // Check if the collection contains annotations.
+    if (widgetCollection.Count > 0)
     {
-        // Get the current annotation.
-        PdfAnnotation annotation = widgetCollection[i];
-
-        // Check if the annotation is a TextWebLink Annotation.
-        if (annotation is PdfTextWebLinkAnnotationWidget)
+        // Iterate over the annotations in reverse order.
+        for (int i = widgetCollection.Count - 1; i >= 0; i--)
         {
-            // Cast the annotation to TextWebLink Annotation.
-            PdfTextWebLinkAnnotationWidget link = annotation as PdfTextWebLinkAnnotationWidget;
+            // Get the current annotation.
+            PdfAnnotation annotation = widgetCollection[i];
 
-            // Remove the TextWebLink annotation from the collection.
-            widgetCollection.Remove(link);
+            // Check if the annotation is a link annotation.
+            if (annotation is PdfLinkAnnotation)
+            {
+                // Cast the annotation to a link annotation.
+                PdfLinkAnnotation link = annotation as PdfLinkAnnotation;
+
+                // Remove the link annotation from the collection.
+                widgetCollection.Remove(link);
+            }
         }
     }
 }
-
-// Save the modified document to a new file.
-document.SaveToFile("RemoveHyperlinks-result.pdf");
 ```
 
 ---
@@ -9189,29 +8776,35 @@ document.AfterOpenAction = null;
 
 ---
 
-# spire.pdf csharp hyperlink zoom
-## set inherit zoom for PDF hyperlinks
+# 12_LinksAndActions - SetInheritZoomForHyperLink
+## Set PDF hyperlink annotation destinations to inherit the current zoom level.
+
 ```csharp
-// Get the PdfAnnotationCollection of the first page
-PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
-
-// Iterate through each annotation in the collection
-for (int i = 0; i < annotations.Count; i++)
+private void SetInheritZoomForHyperLink(PdfDocument pdf)
 {
-    // Cast the current annotation to a PdfDocumentLinkAnnotationWidget
-    PdfDocumentLinkAnnotationWidget anno = annotations[i] as PdfDocumentLinkAnnotationWidget;
+    // Get the annotation collection of the first page
+    PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
 
-    // Get the destination of the annotation
-    PdfDestination dest = anno.Destination;
+    // Iterate through each annotation in the collection
+    for (int i = 0; i < annotations.Count; i++)
+    {
+        // Cast the current annotation to a PDF link annotation
+        PdfLinkAnnotation anno = annotations[i] as PdfLinkAnnotation;
 
-    // Set the mode of the destination to Location
-    dest.Mode = PdfDestinationMode.Location;
-
-    // Set the zoom level of the destination to 0
-    dest.Zoom = 0;
-
-    // Set the new destination for the annotation
-    anno.Destination = dest;
+        // Get the destination of the annotation
+        PdfXYZExplicitDestination dest = anno.Destination as PdfXYZExplicitDestination;
+        if (dest != null)
+        {
+            // Set zoom to 0 to inherit the current zoom level
+            dest.Zoom = 0;
+        }
+        else
+        {
+            anno.Destination = new PdfXYZExplicitDestination(
+                ((anno.Action as PdfGoToAction).Destination as PdfExplicitDestination).Page,
+                0, 0, 0);
+        }
+    }
 }
 ```
 
@@ -12746,33 +12339,63 @@ replacer.ReplaceAllText("PDF", "Pdf");
 
 ---
 
-# PDF Text Markup Annotation Bounds Extraction
-## Extract coordinates of highlight annotation widgets in PDF documents
+# 06_Annotations - GetBoundsOfTextMarkupAnnotationWidget
+## Retrieves the quad points (bounds) of highlight text markup annotations from PDF pages.
 ```csharp
-// Create a PdfDocument object
-PdfDocument doc = new PdfDocument();
-
-// Loop through each page in the document
-foreach (PdfPageBase page in doc.Pages)
+public StringBuilder GetTextMarkupAnnotationBounds(PdfDocument doc)
 {
-    // Get all annotations on the page
-    PdfAnnotationCollection annotations = page.Annotations;
-    
-    // Loop through the annotations
-    foreach (PdfAnnotation annotation in annotations)
+    StringBuilder sb = new StringBuilder();
+
+    foreach (PdfPageBase page in doc.Pages)
     {
-        // Check if the annotation is a highlight annotation
-        if (annotation is PdfTextMarkupAnnotationWidget highlightAnnotation)
+        PdfAnnotationCollection annotations = page.Annotations;
+
+        foreach (PdfAnnotation annotation in annotations)
         {
-            // Check if it's a highlight type
-            if (highlightAnnotation.TextMarkupAnnotationType == PdfTextMarkupAnnotationType.Highlight)
+            if (annotation is PdfTextMarkupAnnotationWidget highlightAnnotation)
             {
-                // Get the coordinates of each point in the annotation
-                for (int i = 0; i < highlightAnnotation.QuadPoints.Length; i++)
+                if (highlightAnnotation.TextMarkupAnnotationType == PdfTextMarkupAnnotationType.Highlight)
                 {
-                    float x = highlightAnnotation.QuadPoints[i].X;
-                    float y = highlightAnnotation.QuadPoints[i].Y;
+                    for (int i = 0; i < highlightAnnotation.QuadPoints.Length; i++)
+                    {
+                        sb.AppendLine("Point" + i + " X:" + highlightAnnotation.QuadPoints[i].X.ToString());
+                        sb.AppendLine("Point" + i + " Y:" + highlightAnnotation.QuadPoints[i].Y.ToString());
+                    }
                 }
+            }
+        }
+    }
+
+    return sb;
+}
+```
+
+---
+
+# 06_Annotations - GetDataFromRichMediaAnnotationWidget
+## Extracts rich media data and names from rich media annotation widgets in a PDF document.
+```csharp
+public void GetRichMediaAnnotationWidgetData(PdfDocument doc)
+{
+    for (int i = 0; i < doc.Pages.Count; i++)
+    {
+        PdfPageBase page = doc.Pages[i];
+
+        // Get the annotation collection of the page
+        PdfAnnotationCollection annotations = page.Annotations;
+
+        for (int j = 0; j < annotations.Count; j++)
+        {
+            // Convert to Rich Media Annotations
+            PdfRichMediaAnnotationWidget mediaWidget = annotations[j] as PdfRichMediaAnnotationWidget;
+
+            if (mediaWidget != null)
+            {
+                // Obtain data from rich media annotations
+                byte[] data = mediaWidget.RichMediaData;
+
+                // Obtain names from rich media annotations
+                string embedFileName = mediaWidget.RichMediaName;
             }
         }
     }
@@ -12781,69 +12404,32 @@ foreach (PdfPageBase page in doc.Pages)
 
 ---
 
-# PDF Rich Media Annotation Data Extraction
-## Extract data from rich media annotation widgets in PDF files
+# 06_Annotations - ObtainVideoAudio
+## Extracts embedded rich media (video/audio) from PDF annotations and saves each media file.
 ```csharp
-//Create a pdf instance
-PdfDocument doc = new PdfDocument();
-
-//Iterate through pages
-for (int i = 0; i < doc.Pages.Count; i++)
+private void button1_Click(object sender, EventArgs e)
 {
-    PdfPageBase page = doc.Pages[i];
-    //Get the annotation collection of the page
-    PdfAnnotationCollection ancoll = page.Annotations;
-    for (int j = 0; j < ancoll.Count; j++)
+    PdfDocument pdf = new PdfDocument();
+    pdf.LoadFromFile("..\\..\\..\\..\\..\\..\\Data\\ObtainVideoAudio.pdf");
+
+    for (int i = 0; i < pdf.Pages.Count; i++)
     {
-        //Convert to Rich Media Annotations
-        PdfRichMediaAnnotationWidget MediaWidget = ancoll[j] as PdfRichMediaAnnotationWidget;
-        //Obtain data from rich media annotations
-        byte[] data = MediaWidget.RichMediaData;
-        //Obtain names from rich media annotations
-        string embedFileName = MediaWidget.RichMediaName;
+        PdfPageBase page = pdf.Pages[i];
+        PdfAnnotationCollection annotations = page.Annotations;
+
+        for (int j = 0; j < annotations.Count; j++)
+        {
+            PdfRichMediaAnnotationWidget mediaWidget = (PdfRichMediaAnnotationWidget)annotations[j];
+
+            byte[] data = mediaWidget.RichMediaData;
+            string embedFileName = mediaWidget.RichMediaName;
+
+            File.WriteAllBytes(embedFileName, data);
+        }
     }
+
+    pdf.Close();
 }
-```
-
----
-
-# PDF Media Extraction
-## Extract and save video and audio files from PDF documents
-```csharp
-// Create a PDF document
-PdfDocument pdf = new PdfDocument();
-
-// Load the PDF file
-pdf.LoadFromFile("path_to_pdf_file");
-
-// Loop through each page in the PDF document
-for (int i = 0; i < pdf.Pages.Count; i++)
-{
-    // Get the current page
-    PdfPageBase page = pdf.Pages[i];
-
-    // Get all annotations on the current page
-    PdfAnnotationCollection annotations = page.Annotations;
-
-    // Loop through each annotation on the page
-    for (int j = 0; j < annotations.Count; j++)
-    {
-        // Cast the annotation to a rich media annotation widget
-        PdfRichMediaAnnotationWidget MediaWidget = (PdfRichMediaAnnotationWidget)annotations[j];
-
-        // Get the embedded media data (e.g., video, audio)
-        byte[] data = MediaWidget.RichMediaData;
-
-        // Get the original file name of the embedded media
-        String embedFileName = MediaWidget.RichMediaName;
-
-        // Save the embedded media data to a file
-        File.WriteAllBytes(embedFileName, data);
-    }
-}
-
-// Close the PDF document
-pdf.Close();
 ```
 
 ---
@@ -12992,6 +12578,718 @@ foreach (PdfHatchStyle type in Enum.GetValues(typeof(PdfHatchStyle)))
     Color backColor = Color.FromArgb(255, 78, 167, 46);
     PdfHatchBrush brush = new PdfHatchBrush(type, foreColor, backColor);
     canves.DrawRectangle(brush, 100, 100, 300, 200);
+}
+```
+
+---
+
+# 06_Annotations - CaretAnnotation
+## Create and configure a caret annotation on a PDF page.
+```csharp
+PdfDocument doc = new PdfDocument();
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the caret annotation
+RectangleF rect = new RectangleF(150, 112, 20, 20);
+
+// Create a caret annotation
+PdfCaretAnnotation annotation = new PdfCaretAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Title = "CaretTest";
+annotation.Contents = "A caret annotation with a paragraph symbol.";
+annotation.Name = "CaretName";
+annotation.Subject = "Caret";
+annotation.Color = Color.Red;
+annotation.Border.Width = 2f;
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.Intent = "ParaCaret";
+annotation.RectangleDifferences = new PdfRectangleDifferences(5, 5, 3, 3);
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - CircleAnnotation
+## Create circle annotations on a PDF page with border effects and interior colors.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Create a circle annotation with a cloudy border effect
+RectangleF rect = new RectangleF(100, 100, 150, 150);
+PdfCircleAnnotation annotation = new PdfCircleAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Title = "CircleWithEffect";
+annotation.Contents = "A circle annotation with a cloudy border effect.";
+annotation.Name = "CircleName";
+annotation.Subject = "Circle";
+annotation.Color = new PdfRGBColor(128, 0, 128);
+annotation.InteriorColor = new PdfRGBColor(255, 255, 200);
+annotation.Border.Width = 2f;
+annotation.Border.Style = PdfBorderStyle.Solid;
+annotation.Border.Effect = PdfBorderEffect.Cloudy;
+annotation.Border.EffectIntensity = 2;
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.RectangleDifferences = new PdfRectangleDifferences(5, 5, 5, 5);
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+
+// Create a second circle annotation with a different interior color
+RectangleF rect2 = new RectangleF(300, 300, 200, 100);
+PdfCircleAnnotation annotation2 = new PdfCircleAnnotation(page, rect2);
+annotation2.Title = "Circle2";
+annotation2.Contents = "A circle annotation with a green interior.";
+annotation2.Color = Color.Red;
+annotation2.InteriorColor = new PdfRGBColor(0, 255, 0);
+annotation2.Border.Width = 2f;
+annotation2.RectangleDifferences = new PdfRectangleDifferences(15, 25, 5, 5);
+PdfAnnotationCollection.Create(page).Add(annotation2);
+annotation2.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - FileAttachmentAnnotation
+## Create and configure a file attachment annotation on a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the file attachment annotation
+RectangleF rect = new RectangleF(100, 100, 200, 100);
+
+// Create a file specification that references an existing data file
+PdfFileSpecification fileSpecification = new PdfFileSpecification(@"..\..\..\..\..\..\Data\Summary_of_Science.txt");
+
+// Create a file attachment annotation with the file specification
+PdfFileAttachmentAnnotation annotation = new PdfFileAttachmentAnnotation(page, rect, fileSpecification);
+
+// Set the annotation properties
+annotation.Title = "FileAttachment";
+annotation.Icon = PdfFileIcon.PushPin;
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+annotation.Color = Color.Red;
+annotation.Border.Width = 2f;
+annotation.Flags = PdfAnnotationFlags.Print;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - HighlightAnnotation
+## Create and configure a highlight annotation on a PDF page.
+```csharp
+// Create a PDF document and add a page
+PdfDocument doc = new PdfDocument();
+PdfPageBase page = doc.Pages.Add();
+
+// Define the rectangle to highlight
+RectangleF rect = new RectangleF(135, 140, 90, 25);
+
+// Create a highlight annotation
+PdfHighlightAnnotation annotation = new PdfHighlightAnnotation(page, rect);
+
+// Set annotation properties
+annotation.Title = "HighlightTitle";
+annotation.Contents = "A highlight markup annotation.";
+annotation.Name = "HighlightName";
+annotation.Subject = "Highlight";
+annotation.Color = new PdfRGBColor(Color.Yellow);
+annotation.StrokingOpacity = 0.8f;
+annotation.NonstrokingOpacity = 0.8f;
+annotation.Intent = "Highlight";
+annotation.Border.Width = 2f;
+annotation.Flags = PdfAnnotationFlags.Print;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - MovieAnnotation
+## Create and add a movie annotation to a PDF page.
+```csharp
+PdfDocument doc = new PdfDocument();
+PdfPageBase page = doc.Pages.Add();
+
+RectangleF rect = new RectangleF(100, 100, 300, 200);
+PdfFileSpecification fileSpec = new PdfFileSpecification(@"..\..\..\..\..\..\Data\Video.mp4");
+
+PdfMovieAnnotation annotation = new PdfMovieAnnotation(page, rect, fileSpec);
+
+annotation.Title = "Movie";
+annotation.Contents = "Movie annotation";
+annotation.Name = "MovieName";
+annotation.Color = Color.Red;
+annotation.Border.Width = 2f;
+annotation.Flags = PdfAnnotationFlags.Print;
+
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - PopupAnnotation
+## Create a PDF popup annotation linked to a parent text annotation.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new PDF document
+    PdfDocument doc = new PdfDocument();
+
+    // Add a page
+    PdfPageBase page = doc.Pages.Add();
+
+    // Create a parent text annotation
+    RectangleF textRect = new RectangleF(100, 100, 200, 100);
+    PdfTextAnnotation parent = new PdfTextAnnotation(page, textRect);
+    parent.Icon = PdfTextIcon.Note;
+    parent.Title = "ParentNote";
+    parent.Contents = "This is the parent text annotation.";
+    parent.Color = new PdfRGBColor(255, 255, 0);
+
+    // Define a rectangle for the popup annotation
+    RectangleF popupRect = new RectangleF(330, 80, 200, 120);
+
+    // Create a popup annotation and link it to the parent
+    PdfPopupAnnotation annotation = new PdfPopupAnnotation(page, popupRect);
+    annotation.Parent = parent;
+    annotation.Open = true;
+    annotation.Contents = "Contents";
+    annotation.Name = "Name";
+    annotation.Color = Color.Red;
+    annotation.Border.Width = 2f;
+    annotation.Flags = PdfAnnotationFlags.Print;
+
+    // Add the parent and the popup annotation to the page
+    PdfAnnotationCollection.Create(page).Add(parent);
+    PdfAnnotationCollection.Create(page).Add(annotation);
+}
+```
+
+---
+
+# 06_Annotations - RichMediaAnnotation
+## Create and configure a rich media annotation on a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the rich media annotation
+RectangleF rect = new RectangleF(100, 100, 300, 200);
+
+// Create a rich media content and a rich media annotation
+PdfRichMediaContent content = new PdfRichMediaContent();
+PdfRichMediaAnnotation annotation = new PdfRichMediaAnnotation(page, rect, content);
+annotation.Content = new PdfRichMediaContent();
+
+// Set the annotation properties
+annotation.Color = Color.Green;
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.Border.Width = 2f;
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - RubberStampAnnotation
+## Create and configure a rubber stamp annotation on a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the rubber stamp annotation
+RectangleF rect = new RectangleF(100, 100, 120, 30);
+
+// Create a rubber stamp annotation
+PdfRubberStampAnnotation annotation = new PdfRubberStampAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Icon = PdfStampIcon.Confidential;
+annotation.Intent = PdfStampIntent.Stamp;
+annotation.Subject = "Subj";
+annotation.Title = "Title";
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+annotation.Color = new PdfRGBColor(200, 0, 0);
+annotation.Border.Width = 1f;
+annotation.Flags = PdfAnnotationFlags.Print;
+
+DateTime date = new DateTime(2024, 1, 15, 10, 30, 0);
+annotation.CreationDate = date;
+annotation.ModifiedDate = date;
+annotation.StrokingOpacity = 0.5f;
+annotation.NonstrokingOpacity = 0.8f;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - ScreenAnnotation
+## Create and configure a screen annotation in a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the screen annotation
+RectangleF rect = new RectangleF(100, 100, 200, 100);
+
+// Create a screen annotation
+PdfScreenAnnotation annotation = new PdfScreenAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Title = "My Screen";
+annotation.Color = Color.Red;
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.Border.Width = 2f;
+annotation.Border.Style = PdfBorderStyle.Dashed;
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - SoundAnnotation
+## Creates a PDF sound annotation with a speaker icon and configurable annotation properties.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the sound annotation
+RectangleF rect = new RectangleF(100, 100, 20, 15);
+
+// Generate minimal raw PCM sound data (1 second of silence, 8-bit, mono)
+byte[] soundData = new byte[8000];
+for (int i = 0; i < soundData.Length; i++)
+{
+    soundData[i] = 128; // Middle value for unsigned 8-bit audio
+}
+
+// Create a sound object from the byte array
+PdfSound sound = new PdfSound(soundData);
+
+// Create a sound annotation with the sound object
+PdfSoundAnnotation annotation = new PdfSoundAnnotation(page, rect, sound);
+
+// Set the annotation properties
+annotation.Icon = PdfSoundIcon.Speaker;
+annotation.Color = Color.Red;
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.Border.Width = 2f;
+annotation.Subject = "Subject";
+annotation.Title = "Title";
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - SquareAnnotation
+## Create and configure square annotations in a PDF page
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new PDF document
+    PdfDocument doc = new PdfDocument();
+
+    // Add a page
+    PdfPageBase page = doc.Pages.Add();
+
+    // Create a square annotation with a cloudy border effect
+    RectangleF rect = new RectangleF(100, 100, 200, 150);
+    PdfSquareAnnotation annotation = new PdfSquareAnnotation(page, rect);
+
+    // Set the annotation properties
+    annotation.Title = "SquareWithEffect";
+    annotation.Contents = "A square annotation with a cloudy border effect.";
+    annotation.Name = "SquareName";
+    annotation.Subject = "Square";
+    annotation.Color = new PdfRGBColor(128, 0, 128);
+    annotation.InteriorColor = new PdfRGBColor(255, 255, 200);
+    annotation.Border.Width = 2f;
+    annotation.Border.Style = PdfBorderStyle.Solid;
+    annotation.Border.Effect = PdfBorderEffect.Cloudy;
+    annotation.Border.EffectIntensity = 2;
+    annotation.Flags = PdfAnnotationFlags.Print;
+    annotation.RectangleDifferences = new PdfRectangleDifferences(5, 5, 5, 5);
+
+    // Add the annotation to the page and refresh its appearance
+    PdfAnnotationCollection.Create(page).Add(annotation);
+    annotation.RefreshAppearances();
+
+    // Create a second square annotation with a different interior color
+    RectangleF rect2 = new RectangleF(300, 300, 200, 100);
+    PdfSquareAnnotation annotation2 = new PdfSquareAnnotation(page, rect2);
+    annotation2.Title = "Square2";
+    annotation2.Contents = "A square annotation with a green interior.";
+    annotation2.Color = Color.Red;
+    annotation2.InteriorColor = new PdfRGBColor(0, 255, 0);
+    annotation2.Border.Width = 2f;
+    annotation2.RectangleDifferences = new PdfRectangleDifferences(15, 25, 5, 5);
+    PdfAnnotationCollection.Create(page).Add(annotation2);
+    annotation2.RefreshAppearances();
+}
+```
+
+---
+
+# 06_Annotations - SquigglyAnnotation
+## Create and configure a squiggly PDF annotation and add it to a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the squiggly annotation
+RectangleF rect = new RectangleF(130, 145, 100, 25);
+
+// Create a squiggly annotation
+PdfSquigglyAnnotation annotation = new PdfSquigglyAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Color = Color.Red;
+annotation.StrokingOpacity = 0.8f;
+annotation.NonstrokingOpacity = 0.5f;
+annotation.Intent = "Squiggly";
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.Border.Width = 2f;
+annotation.Subject = "Subj";
+annotation.Title = "Title";
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+annotation.ModifiedDate = new DateTime(2024, 1, 15, 10, 30, 0);
+annotation.CreationDate = annotation.ModifiedDate;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - StrikeOutAnnotation
+## Create a strikeout annotation on a PDF page and configure its visual and metadata properties.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the strikeout annotation
+RectangleF rect = new RectangleF(130, 135, 100, 25);
+
+// Create a strikeout annotation
+PdfStrikeOutAnnotation annotation = new PdfStrikeOutAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Color = Color.Red;
+annotation.StrokingOpacity = 1f;
+annotation.NonstrokingOpacity = 0.8f;
+annotation.Flags = PdfAnnotationFlags.Print;
+annotation.Border.Width = 2f;
+annotation.Subject = "Subj";
+annotation.Title = "Title";
+annotation.Contents = "Contents";
+annotation.Name = "Name";
+annotation.ModifiedDate = new DateTime(2024, 1, 15, 10, 30, 0);
+annotation.CreationDate = annotation.ModifiedDate;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - TextAnnotation
+## Create and configure text annotations with different icons on a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define a rectangle for the text annotation
+RectangleF rect = new RectangleF(100, 100, 20, 20);
+
+// Create a text annotation
+PdfTextAnnotation annotation = new PdfTextAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Icon = PdfTextIcon.Note;
+annotation.Title = "TextAnnotation";
+annotation.Contents = "A text annotation with a note icon.";
+annotation.Name = "TextName";
+annotation.Subject = "Text";
+annotation.Open = true;
+annotation.Color = Color.Yellow;
+annotation.Border.Width = 2f;
+annotation.Flags = PdfAnnotationFlags.Print;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+
+// Add several text annotations with different icons
+PdfTextIcon[] icons = new PdfTextIcon[]
+{
+    PdfTextIcon.Comment, PdfTextIcon.Key, PdfTextIcon.Help,
+    PdfTextIcon.NewParagraph, PdfTextIcon.Paragraph, PdfTextIcon.Insert
+};
+for (int i = 0; i < icons.Length; i++)
+{
+    RectangleF iconRect = new RectangleF(100 + (i % 3) * 200, 200 + (i / 3) * 100, 20, 20);
+    PdfTextAnnotation iconAnnotation = new PdfTextAnnotation(page, iconRect);
+    iconAnnotation.Icon = icons[i];
+    iconAnnotation.Title = "Icon_" + icons[i];
+    iconAnnotation.Contents = "Text annotation with the " + icons[i] + " icon.";
+    PdfAnnotationCollection.Create(page).Add(iconAnnotation);
+    iconAnnotation.RefreshAppearances();
+}
+```
+
+---
+
+# 06_Annotations - UnderlineAnnotation
+## Create and configure an underline annotation on a PDF page.
+```csharp
+// Create a new PDF document
+PdfDocument doc = new PdfDocument();
+
+// Add a page
+PdfPageBase page = doc.Pages.Add();
+
+// Define the underline annotation bounds
+RectangleF rect = new RectangleF(134, 139, 100, 25);
+
+// Create an underline annotation
+PdfUnderlineAnnotation annotation = new PdfUnderlineAnnotation(page, rect);
+
+// Set the annotation properties
+annotation.Title = "UnderlineTitle";
+annotation.Contents = "An underline markup annotation.";
+annotation.Name = "UnderlineName";
+annotation.Subject = "Underline";
+annotation.Color = Color.Red;
+annotation.StrokingOpacity = 0.8f;
+annotation.NonstrokingOpacity = 0.8f;
+annotation.Intent = "Underline";
+annotation.Border.Width = 2f;
+annotation.Flags = PdfAnnotationFlags.Print;
+
+// Add the annotation to the page and refresh its appearance
+PdfAnnotationCollection.Create(page).Add(annotation);
+annotation.RefreshAppearances();
+```
+
+---
+
+# 06_Annotations - UnknownAnnotation
+## Demonstrates creating and retrieving a PDF text annotation, exposing unrecognized annotation types as the base PdfAnnotation class.
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new PDF document
+    PdfDocument doc = new PdfDocument();
+
+    // Add a page
+    PdfPageBase page = doc.Pages.Add();
+
+    // Define a rectangle for the text annotation
+    RectangleF rect = new RectangleF(100, 100, 200, 100);
+
+    // Create a text annotation
+    PdfTextAnnotation annotation = new PdfTextAnnotation(page, rect);
+    annotation.Contents = "Contents";
+    annotation.Name = "Name";
+    annotation.Color = Color.Red;
+    annotation.Border.Width = 1f;
+    annotation.Flags = PdfAnnotationFlags.Print;
+
+    // Add the annotation to the page
+    PdfAnnotationCollection.Create(page).Add(annotation);
+
+    // Read the annotations back from the page. Annotation types that
+    // are not recognized by Spire.Pdf are exposed as unknown annotations.
+    PdfAnnotation retrieved = PdfAnnotationCollection.Create(page)[0] as PdfAnnotation;
+}
+```
+
+---
+
+# 06_Annotations - WatermarkAnnotation
+## Creates and configures a watermark annotation with fixed print settings and a tiled text appearance.
+
+```csharp
+private void button1_Click(object sender, EventArgs e)
+{
+    // Create a new PDF document
+    PdfDocument doc = new PdfDocument();
+
+    // Add a page
+    PdfPageBase page = doc.Pages.Add();
+
+    // Define a rectangle for the watermark annotation
+    RectangleF rect = new RectangleF(100, 100, 300, 300);
+
+    // Create a watermark annotation
+    PdfWatermarkAnnotation annotation = new PdfWatermarkAnnotation(page, rect);
+
+    // Set the annotation properties
+    annotation.Color = Color.Red;
+    annotation.Flags = PdfAnnotationFlags.Print;
+    annotation.Contents = "Contents";
+    annotation.Name = "Name";
+
+    // Configure the FixedPrint settings
+    PdfFixedPrint fixedPrint = new PdfFixedPrint();
+    fixedPrint.HorizontalTranslation = 50;
+    fixedPrint.VerticalTranslation = 30;
+    annotation.FixedPrint = fixedPrint;
+
+    // Set the normal appearance of the annotation
+    annotation.Appearances.SetNormalAppearance(CreateAppearance(300, 300));
+
+    // Add the annotation to the page
+    PdfAnnotationCollection.Create(page).Add(annotation);
+}
+
+private PdfAppearance CreateAppearance(float width, float height)
+{
+    // Create a true type font for the watermark text
+    System.Drawing.Font font = new System.Drawing.Font("Arial", 15);
+    PdfTrueTypeFont trueTypeFont = new PdfTrueTypeFont(font, true);
+
+    // Create a template with the specified size
+    PdfTemplate template = new PdfTemplate(width, height);
+
+    // Create a tiling brush and draw the watermark text in it
+    SizeF size = new SizeF(100, 100);
+    PdfTilingBrush brush = new PdfTilingBrush(size);
+
+    brush.Graphics.SetTransparency(0.3f);
+    brush.Graphics.Save();
+    brush.Graphics.TranslateTransform((float)brush.Size.Width / 2, (float)brush.Size.Height / 2);
+    brush.Graphics.RotateTransform(-45);
+    brush.Graphics.DrawString("watermark", trueTypeFont, PdfBrushes.Gray, 0, 0, new PdfStringFormat(PdfTextAlignment.Center));
+    brush.Graphics.Restore();
+    brush.Graphics.SetTransparency(1);
+
+    // Fill the template with the tiling brush
+    template.Graphics.DrawRectangle(brush, new RectangleF(0, 0, width, height));
+
+    // Return the appearance built from the template
+    return new PdfAppearance(template);
+}
+```
+
+---
+
+# 06_Annotations - WidgetAnnotation
+## Modifies a widget annotation's color, flags, border width, and appearance.
+```csharp
+// Get the first annotation from the first page as a widget annotation
+PdfPageBase page = doc.Pages[0];
+PdfWidgetAnnotation annotation = PdfAnnotationCollection.Create(page)[0] as PdfWidgetAnnotation;
+
+if (annotation != null)
+{
+    // Set the annotation properties
+    annotation.Color = Color.Red;
+    annotation.Flags = PdfAnnotationFlags.Print;
+    annotation.Border.Width = 3f;
+    annotation.RefreshAppearances();
+}
+```
+
+---
+
+# 11_SecurityAndSignatures - SignatureWithSHA256Algorithm
+## Signs a PDF document using a PKCS#7 digital signature with the SHA256 hash algorithm.
+```csharp
+private void SignPdfWithSHA256(PdfDocument pdf, X509Certificate2 cert)
+{
+    // Create a PKCS#7 signature formatter using the certificate
+    IPdfSignatureFormatter formatter = new PdfPKCS7Formatter(cert, false);
+
+    // Initialize the MDP signature maker with the PDF document and formatter
+    PdfMDPSignatureMaker pdfMDPSignatureMaker = new PdfMDPSignatureMaker(pdf, formatter);
+
+    // Get the signature object from the signature maker
+    PdfSignature signature = pdfMDPSignatureMaker.Signature;
+
+    // Set signer information
+    signature.Name = "e-iceblue";
+    signature.ContactInfo = "028-81705109";
+    signature.Location = "chengdu";
+    signature.Reason = "Sign a pdf document.";
+
+    // Create a signature appearance object to customize the visual layout
+    PdfSignatureAppearance appearance = new PdfSignatureAppearance(signature);
+
+    // Set custom labels for the signature appearance
+    appearance.NameLabel = "Signer: ";
+    appearance.ContactInfoLabel = "ContactInfo: ";
+    appearance.LocationLabel = "Location: ";
+    appearance.ReasonLabel = "Reason: ";
+
+    // Apply the signature to the first page at the specified coordinates and size
+    pdfMDPSignatureMaker.MakeSignature("signName", pdf.Pages[0], 300, 550, 200, 100, appearance);
+
+    // Set the hash algorithm to SHA256
+    formatter.Properties.HashAlgorithm = HashAlgorithmType.SHA256;
 }
 ```
 

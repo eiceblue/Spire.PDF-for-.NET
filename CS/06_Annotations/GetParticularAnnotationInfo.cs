@@ -1,5 +1,5 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,22 +29,24 @@ namespace GetParticularAnnotationInfo
             pdf.LoadFromFile(@"..\..\..\..\..\..\Data\Template_Pdf_3.pdf");
 
             //Get the annotation collection from the document.
-            PdfAnnotationCollection annotations = pdf.Pages[0].Annotations;
+            PdfAnnotationCollection annotations = PdfAnnotationCollection.Create(pdf.Pages[0]);
 
             //Get particular annotation information from the document.
             StringBuilder content = new StringBuilder();
-            if (annotations[0] is PdfTextAnnotationWidget)
+            if (annotations[0] is PdfTextAnnotation)
             {
-                PdfTextAnnotationWidget textAnnotation = annotations[0] as PdfTextAnnotationWidget;
-                content.AppendLine("Annotation text: " + textAnnotation.Text);
+                PdfTextAnnotation textAnnotation = annotations[0] as PdfTextAnnotation;
+                content.AppendLine("Annotation text: " + textAnnotation.Contents);
                 content.AppendLine("Annotation ModifiedDate: " + textAnnotation.ModifiedDate.ToString());
-                content.AppendLine("Annotation author: " + textAnnotation.Author);
+                content.AppendLine("Annotation author: " + textAnnotation.Title);
                 content.AppendLine("Annotation Name: " + textAnnotation.Name);
             }
 
             String result = "GetParticularAnnotationInfo_out.txt";
             //Save to file.
             File.WriteAllText(result, content.ToString());
+
+            pdf.Close();
 
             //Launch the file.
             DocumentViewer(result);

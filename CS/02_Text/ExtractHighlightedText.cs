@@ -1,12 +1,10 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Spire.Pdf;
-using Spire.Pdf.Graphics;
-using Spire.Pdf.Actions;
-using Spire.Pdf.Annotations;
-using System.Text;
 using System.IO;
+using System.Text;
+using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Texts;
 
 namespace ExtractHighlightedText
@@ -27,23 +25,23 @@ namespace ExtractHighlightedText
             doc.LoadFromFile(@"..\..\..\..\..\..\Data\ExtractHighlightedText.pdf");
 
             PdfPageBase page = doc.Pages[0];
-            PdfTextMarkupAnnotationWidget textMarkupAnnotation;
+            PdfTextMarkupAnnotation textMarkupAnnotation;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("Extracted hightlighted text:");
-            PdfTextExtractor pdfTextExtractor = new PdfTextExtractor(page);
             //Get PdfTextMarkupAnnotationWidget objects
             for (int i = 0; i < page.Annotations.Count; i++)
             {
-                if (page.Annotations[i] is PdfTextMarkupAnnotationWidget)
+                if (PdfAnnotationCollection.Create(page)[i] is PdfTextMarkupAnnotation)
                 {
-                    textMarkupAnnotation = page.Annotations[i] as PdfTextMarkupAnnotationWidget;
+                    textMarkupAnnotation = PdfAnnotationCollection.Create(page)[i] as PdfTextMarkupAnnotation;
                     //Get the highlighted text
-                    PdfTextExtractOptions pdfTextExtractOptions = new PdfTextExtractOptions();
-                    pdfTextExtractOptions.ExtractArea = textMarkupAnnotation.Bounds;
-                    stringBuilder.AppendLine(pdfTextExtractor.ExtractText(pdfTextExtractOptions));
+                    PdfTextExtractor textExtractor = new PdfTextExtractor(page);
+                    PdfTextExtractOptions option = new PdfTextExtractOptions();
+                    option.ExtractArea = textMarkupAnnotation.Rectangle;
+                    stringBuilder.AppendLine(textExtractor.ExtractText(option));
 
                     //Get the highlighted color
-                    Color color = textMarkupAnnotation.TextMarkupColor;
+                    Color color = textMarkupAnnotation.Color;
                 }
             }
             String result="ExtractHighlightedText.txt";

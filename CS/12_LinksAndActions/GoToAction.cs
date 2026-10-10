@@ -1,15 +1,11 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Actions;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Attachments;
-using Spire.Pdf.General;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Actions;
+using Spire.Pdf.Destinations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GoToAction
@@ -68,17 +64,17 @@ namespace GoToAction
             // Draw the text on the page.
             page.Canvas.DrawString(text, font, PdfBrushes.Black, rect);
 
-            // Create a PdfDestination with a specific page, location, and zoom factor.
-            PdfDestination dest = new PdfDestination(page, new PointF(0, 842));
+            //create a PdfDestination with specific page, location and 200% zoom factor
+            //PdfXYZExplicitDestination dest = new PdfXYZExplicitDestination(1, new PointF(0, 842), 2f);
 
-            // Create a GoToE (Go-To Embedded) action with the specified destination.
-            PdfEmbeddedGoToAction action = new PdfEmbeddedGoToAction(attachment.FileName, dest, true);
+            //create GoToE action with dest
+            PdfGoToEmbeddedAction action = new PdfGoToEmbeddedAction(attachment.FileName, 1, 2f);
+            action.NewWindow = true;
+            RectangleF annotationRect = new RectangleF(rect.X + 40, rect.Y + 40, rect.Width, rect.Height);
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, annotationRect, action);
+            //add the annotation
+            PdfAnnotationCollection.Create(page).Add(annotation);
 
-            // Create a PdfActionAnnotation with the action and the annotation rectangle.
-            PdfActionAnnotation annotation = new PdfActionAnnotation(rect, action);
-
-            // Add the annotation to the page.
-            (page as PdfNewPage).Annotations.Add(annotation);
         }
 
         private static void JumpToSpecificLocationAction(PdfDocument pdf, PdfPageBase page)
@@ -92,11 +88,8 @@ namespace GoToAction
                                        new PdfSolidBrush(Color.Black),
                                        10, 10);
 
-            // Create a PdfDestination instance and link it to a PdfGoToAction.
-            PdfDestination pageBottomDest = new PdfDestination(pagetwo);
-            pageBottomDest.Location = new PointF(0, 5);
-            pageBottomDest.Mode = PdfDestinationMode.Location;
-            pageBottomDest.Zoom = 1f;
+            //create PdfDestination instance and link to PdfGoToAction
+            PdfXYZExplicitDestination pageBottomDest = new PdfXYZExplicitDestination(pagetwo, 0, 5, 1f);
             PdfGoToAction action = new PdfGoToAction(pageBottomDest);
 
             // Define the font, dimensions, and formatting for a button.
@@ -115,10 +108,12 @@ namespace GoToAction
             page.Canvas.DrawString("To Last Page", buttonFont, PdfBrushes.CadetBlue, buttonBounds, format2);
 
             // Add the annotation to the first page.
-            PdfActionAnnotation annotation = new PdfActionAnnotation(buttonBounds, action);
-            annotation.Border = new PdfAnnotationBorder(0.75f);
+            RectangleF annotationRect = new RectangleF(buttonBounds.X + 40, buttonBounds.Y + 40, buttonBounds.Width, buttonBounds.Height);
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(page, annotationRect, action);
+            annotation.Border.Width = 0.75f;
             annotation.Color = Color.LightGray;
-            (page as PdfNewPage).Annotations.Add(annotation);
+            PdfAnnotationCollection.Create(page).Add(annotation);
+
         }
         private void PDFDocumentViewer(string fileName)
         {

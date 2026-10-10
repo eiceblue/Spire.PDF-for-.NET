@@ -1,144 +1,135 @@
-﻿Imports Spire.Pdf
-Imports Spire.Pdf.Annotations
+Imports Spire.Pdf
+Imports Spire.Pdf.Interactive.Annotations
 Imports Spire.Pdf.General
 Imports Spire.Pdf.Graphics
+Imports Spire.Pdf.Destinations
+Imports System
+Imports System.Drawing
+Imports System.Windows.Forms
 
 Namespace DocumentLinkAnnotation
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Public Partial Class Form1 : Inherits Form
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-		Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles button1.Click
-			' Create a new PdfDocument
-			Dim doc As New PdfDocument()
+        Private Sub button1_Click(ByVal sender As Object, ByVal e As EventArgs)
+            ' Create a new PDF document.
+            Dim doc As PdfDocument = New PdfDocument()
 
-			' Create a PdfUnitConvertor for unit conversion
-			Dim unitCvtr As New PdfUnitConvertor()
+            ' Create a PdfUnitConvertor to convert units.
+            Dim unitCvtr As PdfUnitConvertor = New PdfUnitConvertor()
 
-			' Create a PdfMargins object for setting margins
-			Dim margin As New PdfMargins()
+            ' Set the page margins.
+            Dim margin As PdfMargins = New PdfMargins()
+            margin.Top = unitCvtr.ConvertUnits(2.54f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
+            margin.Bottom = margin.Top
+            margin.Left = unitCvtr.ConvertUnits(2.0f, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
+            margin.Right = margin.Left
 
-			' Set the top margin using unit conversion
-			margin.Top = unitCvtr.ConvertUnits(2.54F, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
+            ' Add the first page with specified size and margins.
+            Dim page1 As PdfPageBase = doc.Pages.Add(PdfPageSize.A4, margin)
 
-			' Set the bottom margin equal to the top margin
-			margin.Bottom = margin.Top
+            ' Define a brush for drawing.
+            Dim brush1 As PdfBrush = PdfBrushes.Black
 
-			' Set the left margin using unit conversion
-			margin.Left = unitCvtr.ConvertUnits(2.0F, PdfGraphicsUnit.Centimeter, PdfGraphicsUnit.Point)
+            ' Define a font for text.
+            Dim font1 As PdfTrueTypeFont = New PdfTrueTypeFont(New Font("Arial", 12f, FontStyle.Bold), True)
+            '''///////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             Dim font1 As PdfTrueTypeFont = New PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Bold, True)
+            */
 
-			' Set the right margin equal to the left margin
-			margin.Right = margin.Left
+            ' Set the string format for text alignment.
+            Dim format1 As PdfStringFormat = New PdfStringFormat(PdfTextAlignment.Left)
 
-			' Add a new page with A4 size and specified margins
-			Dim page1 As PdfPageBase = doc.Pages.Add(PdfPageSize.A4, margin)
+            ' Set the position for drawing text.
+            Dim x As Single = 0
+            Dim y As Single = 50
 
-			' Set the brush for drawing text
-			Dim brush1 As PdfBrush = PdfBrushes.Black
+            ' Specify the text string.
+            Dim specification As String = "The sample demonstrates how to create a local document link in a PDF document."
 
-			' Set the font for the text
-			Dim font1 As New PdfTrueTypeFont(New Font("Arial", 12.0F, FontStyle.Bold), True)
-			' =============================================================================
-			' Use the following code for netstandard dlls
-			' =============================================================================
-			'Dim font1 As New PdfTrueTypeFont("Arial", 18.0F, FontStyle.Bold, True)
-			' =============================================================================
+            ' Draw the text string on the first page.
+            page1.Canvas.DrawString(specification, font1, brush1, x, y, format1)
 
-			' Set the string format for the text alignment
-			Dim format1 As New PdfStringFormat(PdfTextAlignment.Left)
+            ' Use MeasureString to get the height of the string.
+            y = y + font1.MeasureString(specification, format1).Height + 10
 
-			' Set the initial x and y coordinates for drawing text
-			Dim x As Single = 0
-			Dim y As Single = 50
+            ' Add the second page with specified size and margins.
+            Dim page2 As PdfPageBase = doc.Pages.Add(PdfPageSize.A4, margin)
 
-			' Specify the specification string
-			Dim specification As String = "The sample demonstrates how to create a local document link in PDF document."
+            ' Specify the text string for the second page.
+            Dim pageContent As String = "This Is the second page!"
 
-			' Draw the specification string on page 1
-			page1.Canvas.DrawString(specification, font1, brush1, x, y, format1)
+            ' Draw the text string on the second page.
+            page2.Canvas.DrawString(pageContent, font1, brush1, x, y, format1)
 
-			' Update the y-coordinate for the next content
-			y = y + font1.MeasureString(specification, format1).Height + 10
+            ' Add a DocumentLinkAnnotation on the first page and link it to the second page.
+            AddDocumentLinkAnnotation(doc, 0, 1, y)
 
-			' Add a new page with A4 size and specified margins
-			Dim page2 As PdfPageBase = doc.Pages.Add(PdfPageSize.A4, margin)
+            ' Specify the output file name.
+            Dim result As String = "DocumentLinkAnnotation_out.pdf"
 
-			' Specify the content string for page 2
-			Dim PageContent As String = "This is the second page!"
+            ' Save the document to the output file.
+            doc.SaveToFile(result)
 
-			' Draw the content string on page 2
-			page2.Canvas.DrawString(PageContent, font1, brush1, x, y, format1)
+            'Launch the Pdf file
+            PDFDocumentViewer(result)
+        End Sub
+        Private Shared Sub AddDocumentLinkAnnotation(ByVal pdf As PdfDocument, ByVal AddPage As Integer, ByVal DestinationPage As Integer, ByVal y As Single)
+            ' Define a font for text.
+            Dim font As PdfTrueTypeFont = New PdfTrueTypeFont(New Font("Arial", 12f))
+            '''///////////////Use the following code for netstandard dlls/////////////////////////
+            /*
+             Dim font As PdfTrueTypeFont = New PdfTrueTypeFont("Arial", 12f, PdfFontStyle.Regular, True)
+            */
 
-			' Add a document link annotation between page 1 and page 2 at the specified y-coordinate
-			AddDocumentLinkAnnotation(doc, 0, 1, y)
+            ' Set the string format for text alignment.
+            Dim format As PdfStringFormat = New PdfStringFormat(PdfTextAlignment.Left)
 
-			' Specify the output file path
-			Dim result As String = "DocumentLinkAnnotation_out.pdf"
+            ' Specify the prompt text for the link.
+            Dim prompt As String = "Local document Link: "
 
-			' Save the document to the output file
-			doc.SaveToFile(result)
+            'Draw text string on page that
+            pdf.Pages[AddPage].Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y)
 
-			' Close the document
-			doc.Close()
+            'Use MeasureString to get the width of string
+            Dim x As Single = font.MeasureString(prompt, format).Width
 
-			' Launch the Pdf file
-			PDFDocumentViewer(result)
-		End Sub
-		Private Shared Sub AddDocumentLinkAnnotation(ByVal pdf As PdfDocument, ByVal AddPage As Integer, ByVal DestinationPage As Integer, ByVal y As Single)
-			' Create a TrueType font with Arial, size 12
-			Dim font As New PdfTrueTypeFont(New Font("Arial", 12.0F))
-			' =============================================================================
-			' Use the following code for netstandard dlls
-			' =============================================================================
-			'Dim font As New PdfTrueTypeFont("Arial", 12.0F, PdfFontStyle.Regular, True)
-			' =============================================================================
+            'Create a PdfDestination with specific page
+            Dim dest As PdfXYZExplicitDestination = New PdfXYZExplicitDestination(pdf.Pages[DestinationPage], 0, y)
 
-			' Create a StringFormat for left alignment
-			Dim format As New PdfStringFormat(PdfTextAlignment.Left)
+            'Set 50% zoom factor
+            dest.Zoom = 0.5f
 
-			' Specify the prompt for the local document link
-			Dim prompt As String = "Local document Link: "
+            'Label string
+            Dim label As String = "Click here to link the second page."
 
-			' Draw the prompt on the specified page's canvas at position (0, y)
-			pdf.Pages(AddPage).Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y)
+            'Use MeasureString to get the SizeF of string
+            Dim size As SizeF = font.MeasureString(label)
 
-			' Calculate the x-coordinate based on the width of the prompt
-			Dim x As Single = font.MeasureString(prompt, format).Width
+            'Draw label string
+            pdf.Pages[AddPage].Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y)
+            Dim left As Single = pdf.Pages[AddPage].Section.PageSettings.Margins.Left
+            Dim top As Single = pdf.Pages[AddPage].Section.PageSettings.Margins.Top
+            'Create a rectangle
+            Dim bounds As RectangleF = New RectangleF(x + left, y + top, size.Width, size.Height)
+            'Create PdfDocumentLinkAnnotation on the rectangle and link to the destination  
+            Dim annotation As PdfLinkAnnotation = New PdfLinkAnnotation(pdf.Pages[AddPage], bounds, dest)
+            'Set color for annotation
+            annotation.Color = Color.Blue
 
-			' Create a destination for the link pointing to the specified page
-			Dim dest As New PdfDestination(pdf.Pages(DestinationPage))
-			dest.Location = New PointF(0, y)
-			dest.Zoom = 0.5F
+            'Add annotation to the page
+            PdfAnnotationCollection.Create(pdf.Pages[AddPage]).Add(annotation)
 
-			' Specify the label text for the link
-			Dim label As String = "Click here to link the second page."
+        End Sub
 
-			' Measure the size of the label text
-			Dim size As SizeF = font.MeasureString(label)
-
-			' Define the bounds for the annotation
-			Dim bounds As New RectangleF(x, y, size.Width, size.Height)
-
-			' Draw the label text on the specified page's canvas at position (x, y)
-			pdf.Pages(AddPage).Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y)
-
-			' Create a document link annotation with the specified bounds and destination
-			Dim annotation As New PdfDocumentLinkAnnotation(bounds, dest)
-
-			' Set the color of the annotation
-			annotation.Color = Color.Blue
-
-			' Add the annotation to the specified page's annotations collection
-			TryCast(pdf.Pages(AddPage), PdfNewPage).Annotations.Add(annotation)
-		End Sub
-
-		Private Sub PDFDocumentViewer(ByVal fileName As String)
-			Try
-				Process.Start(fileName)
-			Catch
-			End Try
-		End Sub
-	End Class
+        Private Sub PDFDocumentViewer(ByVal fileName As String)
+            Try
+                System.Diagnostics.Process.Start(fileName)
+        Catch
+        End Try
+        End Sub
+    End Class
 End Namespace

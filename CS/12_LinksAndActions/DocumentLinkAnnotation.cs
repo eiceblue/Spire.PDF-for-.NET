@@ -1,16 +1,10 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Actions;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.General;
 using Spire.Pdf.Graphics;
+using Spire.Pdf.Destinations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DocumentLinkAnnotation
@@ -102,41 +96,38 @@ namespace DocumentLinkAnnotation
             // Specify the prompt text for the link.
             String prompt = "Local document Link: ";
 
-            // Draw the prompt text on the page at the specified vertical position.
+            //Draw text string on page that
             pdf.Pages[AddPage].Canvas.DrawString(prompt, font, PdfBrushes.DodgerBlue, 0, y);
 
-            // Use MeasureString to get the width of the prompt string.
+            //Use MeasureString to get the width of string
             float x = font.MeasureString(prompt, format).Width;
 
-            // Create a PdfDestination with the specified destination page.
-            PdfDestination dest = new PdfDestination(pdf.Pages[DestinationPage]);
+            //Create a PdfDestination with specific page
+            PdfXYZExplicitDestination dest = new PdfXYZExplicitDestination(pdf.Pages[DestinationPage], 0, y);
 
-            // Set the location of the destination.
-            dest.Location = new PointF(0, y);
-
-            // Set the zoom factor for the destination.
+            //Set 50% zoom factor
             dest.Zoom = 0.5f;
 
-            // Specify the label string for the link.
+            //Label string
             String label = "Click here to link the second page.";
 
-            // Use MeasureString to get the SizeF of the label string.
+            //Use MeasureString to get the SizeF of string
             SizeF size = font.MeasureString(label);
 
-            // Create a rectangle that defines the area for the link.
-            RectangleF bounds = new RectangleF(x, y, size.Width, size.Height);
-
-            // Draw the label string on the page.
+            //Draw label string
             pdf.Pages[AddPage].Canvas.DrawString(label, font, PdfBrushes.OrangeRed, x, y);
-
-            // Create a PdfDocumentLinkAnnotation on the rectangle and link it to the destination.
-            PdfDocumentLinkAnnotation annotation = new PdfDocumentLinkAnnotation(bounds, dest);
-
-            // Set the color for the annotation.
+            float left = pdf.Pages[AddPage].Section.PageSettings.Margins.Left;
+            float top = pdf.Pages[AddPage].Section.PageSettings.Margins.Top;
+            //Create a rectangle
+            RectangleF bounds = new RectangleF(x + left, y + top, size.Width, size.Height);
+            //Create PdfDocumentLinkAnnotation on the rectangle and link to the destination  
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(pdf.Pages[AddPage], bounds, dest);
+            //Set color for annotation
             annotation.Color = Color.Blue;
 
-            // Add the annotation to the page.
-            (pdf.Pages[AddPage] as PdfNewPage).Annotations.Add(annotation);
+            //Add annotation to the page
+            PdfAnnotationCollection.Create(pdf.Pages[AddPage]).Add(annotation);
+
         }
 
         private void PDFDocumentViewer(string fileName)

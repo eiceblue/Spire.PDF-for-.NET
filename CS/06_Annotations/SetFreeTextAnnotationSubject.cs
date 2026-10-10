@@ -1,5 +1,5 @@
-﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
 using System;
 using System.Collections.Generic;
@@ -33,43 +33,28 @@ namespace SetFreeTextAnnotationSubject
 
             //Initialize a PdfFreeTextAnnotation.
             RectangleF rect = new RectangleF(150, 120, 150, 30);
-            PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(rect);
+            PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
+            PdfFreeTextAnnotation textAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
 
             //Specify content.
-            textAnnotation.Text = "\nSet free text annotation subject";
+            textAnnotation.Contents = "\nSet free text annotation subject";
 
             //Set subject.
             textAnnotation.Subject = "SubjectTest";
 
-            // Create a new PdfFont object using the Times Roman font family and a font size of 20
-            PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
-
-            // Create a new PdfAnnotationBorder object with a specified width
-            PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
-
-            // Assign the created font to the font property of the free text annotation
-            textAnnotation.Font = font;
-
-            // Assign the created border to the border property of the free text annotation
-            textAnnotation.Border = border;
-
-            // Set the border color of the free text annotation to gray
-            textAnnotation.BorderColor = Color.Purple;
-
-            // Set the line ending style of the free text annotation to slash
-            textAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
-
-            // Set the background color of the free text annotation to light blue
+            //Set free text annotation formatting and add it to page.
+            textAnnotation.Border.Width = 1f;
+            textAnnotation.Border.Color = Color.Purple;
+            textAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
             textAnnotation.Color = Color.Green;
-
-            // Set the opacity of the free text annotation to 0.8
-            textAnnotation.Opacity = 0.8f;
-            page.Annotations.Add(textAnnotation);
+            textAnnotation.StrokingOpacity = 0.8f;
+            textAnnotation.RefreshAppearances();
+            PdfAnnotationCollection.Create(page).Add(textAnnotation);
 
             //Save the document
-            String result = "SetFreeTextAnnotationSubject_out.pdf";
+            String result = "SetFreeTextAnnotationSubject.pdf";
             doc.SaveToFile(result);
-
+            doc.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

@@ -1,5 +1,5 @@
 ﻿using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 using Spire.Pdf.Graphics;
 using System;
 using System.Collections.Generic;
@@ -34,55 +34,61 @@ namespace InvisibleFreeTextAnnotation
             // Define a rectangle with specific coordinates and dimensions.
             RectangleF rect = new RectangleF(100, 120, 150, 30);
 
-            // Create a new free text annotation using the defined rectangle.
-            PdfFreeTextAnnotation FreetextAnnotation = new PdfFreeTextAnnotation(rect);
-
-            // Set the text content of the free text annotation.
-            FreetextAnnotation.Text = "Invisible Free Text Annotation";
-
             // Specify the font for the free text annotation.
             PdfFont font = new PdfFont(PdfFontFamily.TimesRoman, 10);
 
-            // Specify the border width for the free text annotation.
-            PdfAnnotationBorder border = new PdfAnnotationBorder(1f);
+            // Specify a default appearance for the free text annotation.
+            PdfDefaultAppearance defaultAppearance = new PdfDefaultAppearance(font);
+
+            // Create a new free text annotation using the page, the rectangle and the default appearance.
+            PdfFreeTextAnnotation FreetextAnnotation = new PdfFreeTextAnnotation(page, rect, defaultAppearance);
+
+            // Set the text content of the free text annotation.
+            FreetextAnnotation.Contents = "Invisible Free Text Annotation";
 
             // Set various properties for the free text annotation.
-            FreetextAnnotation.Font = font;
-            FreetextAnnotation.Border = border;
-            FreetextAnnotation.BorderColor = Color.Purple;
-            FreetextAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
+            FreetextAnnotation.Border.Width = 1f;
+            FreetextAnnotation.Border.Color = Color.Purple;
+            FreetextAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
             FreetextAnnotation.Color = Color.Green;
-            FreetextAnnotation.Opacity = 0.8f;
+            FreetextAnnotation.StrokingOpacity = 0.8f;
 
             // Set flags to make the free text annotation invisible.
             FreetextAnnotation.Flags = PdfAnnotationFlags.Print | PdfAnnotationFlags.NoView;
 
             // Add the free text annotation to the page's annotations collection.
-            page.Annotations.Add(FreetextAnnotation);
+            PdfAnnotationCollection.Create(page).Add(FreetextAnnotation);
+
+            // Refresh the appearance of the free text annotation.
+            FreetextAnnotation.RefreshAppearances();
 
             // Define a new rectangle for the next free text annotation.
             rect = new RectangleF(100, 180, 150, 30);
 
             // Create another free text annotation using the new rectangle.
-            FreetextAnnotation = new PdfFreeTextAnnotation(rect);
+            FreetextAnnotation = new PdfFreeTextAnnotation(page, rect, new PdfDefaultAppearance(font));
 
             // Set properties for the second free text annotation.
-            FreetextAnnotation.Text = "Show Free Text Annotation";
-            FreetextAnnotation.Font = font;
-            FreetextAnnotation.Border = border;
-            FreetextAnnotation.BorderColor = Color.LightPink;
-            FreetextAnnotation.LineEndingStyle = PdfLineEndingStyle.Circle;
+            FreetextAnnotation.Contents = "Show Free Text Annotation";
+            FreetextAnnotation.Border.Width = 1f;
+            FreetextAnnotation.Border.Color = Color.LightPink;
+            FreetextAnnotation.CalloutLineEndingStyle = PdfLineEndingStyle.Circle;
             FreetextAnnotation.Color = Color.LightGreen;
-            FreetextAnnotation.Opacity = 0.8f;
+            FreetextAnnotation.StrokingOpacity = 0.8f;
 
             // Add the second free text annotation to the page's annotations collection.
-            page.Annotations.Add(FreetextAnnotation);
+            PdfAnnotationCollection.Create(page).Add(FreetextAnnotation);
+
+            // Refresh the appearance of the second free text annotation.
+            FreetextAnnotation.RefreshAppearances();
 
             // Specify the filename for the output PDF document.
-            String result = "InvisibleFreeTextAnnotation_out.pdf";
+            String result = "InvisibleFreeTextAnnotation.pdf";
 
             // Save the document with the specified filename.
             doc.SaveToFile(result);
+
+            doc.Close();
 
             //Launch the Pdf file
             PDFDocumentViewer(result);

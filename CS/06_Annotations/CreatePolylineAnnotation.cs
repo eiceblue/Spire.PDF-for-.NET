@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Spire.Pdf;
-using Spire.Pdf.Annotations;
+using Spire.Pdf.Interactive.Annotations;
 
 namespace CreatePolylineAnnotation
 {
@@ -16,25 +16,29 @@ namespace CreatePolylineAnnotation
         private void button1_Click(object sender, EventArgs e)
         {
             //Output file
-            string output = "CreatePolylineAnnotation_result.pdf";
+            string output = "CreatePolylineAnnotation.pdf";
             //Create a pdf document
             PdfDocument pdf = new PdfDocument();
             //Add a new page
             PdfPageBase page = pdf.Pages.Add();
             //Create a polyline annotation
-            PdfPolyLineAnnotation polyline = new PdfPolyLineAnnotation(page, new PointF[] { new PointF(0, 60), new PointF(30, 45), new PointF(60, 90), new PointF(90, 80) });
+            PointF[] points = new PointF[] { new PointF(40, 100), new PointF(70, 85), new PointF(100, 130), new PointF(130, 120) };
+            PdfPolylineAnnotation polyline = new PdfPolylineAnnotation(page, new RectangleF(40, 85, 90, 45), points);
             //Set properties of polyline
             polyline.Color = Color.PaleVioletRed;
-            polyline.Text = "This is a polygon annotation";
-            polyline.Author = "E-ICEBLUE";
+            polyline.Contents = "This is a polygon annotation";
+            polyline.Title = "E-ICEBLUE";
             polyline.Subject = "polygon annotation demo";
             polyline.Name = "Test Annotation";
-            polyline.Border = new PdfAnnotationBorder(1f);
+            polyline.Border.Width = 1f;
+            polyline.Intent = PdfPolyIntent.PolyLineDimension;
             polyline.ModifiedDate = DateTime.Now;
             //Add the annotation into page
-            page.Annotations.Add(polyline);
+            PdfAnnotationCollection.Create(page).Add(polyline);
+            polyline.RefreshAppearances();
             //Save pdf
             pdf.SaveToFile(output, FileFormat.PDF);
+            pdf.Close();
             //Launch the Pdf file
             FileViewer(output);
         }
